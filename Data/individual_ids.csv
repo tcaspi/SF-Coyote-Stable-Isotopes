@@ -1,0 +1,115 @@
+individual,sfcoy,sex,group
+S21-1084,Fail,NA,NA
+S21-1088,Fail,female,NA
+S21-3428,Fail,NA,NA
+S23-0158,Fail,NA,NA
+S21-3433,Marin,male,NA
+S21-3434,Marin,male,NA
+S21-3435,Marin,male,NA
+S21-3437,Marin,male,NA
+S21-3438,Marin,male,NA
+S21-3439,Marin,male,NA
+S21-3440,Marin,male,NA
+S21-3441,Marin,female,NA
+S21-3442,Marin,female,NA
+S21-3443,Marin,female,NA
+S23-4125,Marin,NA,NA
+S23-0157,SFCoy103,male,Presidio
+S19-8780,SFCoy106,male,Presidio
+S21-1206,SFCoy109,male,Coit
+S19-8785,SFCoy12,female,Presidio
+S22-0888,SFCoy122,male,Bernal
+S22-0877,SFCoy123,male,Merced
+S24-1423,SFCoy13,male,Corona Heights
+S22-0874,SFCoy144,male,NA
+S19-8768,SFCoy15,female,Merced
+S21-1204,SFCoy16,male,Presidio
+S21-1085,SFCoy17,male,Glen
+S23-0165,SFCoy170,male,Glen
+S22-0873,SFCoy174,male,Glen
+S19-8772,SFCoy18,female,Presidio
+S21-1202,SFCoy181,female,GGP - West
+S19-8741,SFCoy185,male,Merced
+S19-8742,SFCoy186,female,NA
+S19-8743,SFCoy187,female,McLaren
+S19-8744,SFCoy188,female,Coit
+S19-8745,SFCoy189,female,NA
+S19-8746,SFCoy190,female,NA
+S19-8747,SFCoy191,male,Coit
+S19-8748,SFCoy192,male,Presidio
+S19-8749,SFCoy193,female,Merced
+S19-8750,SFCoy194,male,Merced
+S19-8751,SFCoy195,male,Merced
+S19-8752,SFCoy196,male,GGP - West
+S19-8753,SFCoy197,female,GGP - West
+S19-8754,SFCoy198,female,Coit
+S19-8755,SFCoy199,male,Presidio
+S22-3045,SFCoy2,male,St. Francis
+S19-8756,SFCoy200,male,NA
+S19-8757,SFCoy201,male,GGP - West
+S19-8758,SFCoy202,male,GGP - West
+S19-8759,SFCoy203,female,NA
+S19-8760,SFCoy204,male,NA
+S19-8761,SFCoy205,female,GGP - West
+S19-8765,SFCoy208,female,McLaren
+S19-8767,SFCoy210,female,NA
+S19-8769,SFCoy211,male,NA
+S19-8771,SFCoy213,male,McLaren
+S19-8773,SFCoy214,male,Presidio
+S19-8774,SFCoy215,male,Presidio
+S19-8775,SFCoy216,male,Presidio
+S19-8775-2,SFCoy216,male,NA
+S19-8776,SFCoy217,male,Presidio
+S19-8777,SFCoy218,female,Presidio
+S19-8778,SFCoy219,male,Presidio
+S19-8779,SFCoy220,male,Presidio
+S19-8781,SFCoy221,female,Presidio
+S19-8782,SFCoy222,female,Presidio
+S19-8783,SFCoy223,female,Presidio
+S19-8784,SFCoy224,male,Presidio
+S19-8787,SFCoy225,female,Presidio
+S21-1079,SFCoy231,male,NA
+S21-1080,SFCoy232,male,NA
+S21-1205,SFCoy232,male,NA
+S21-1081,SFCoy233,male,NA
+S21-1082,SFCoy234,female,St. Francis
+S21-1087,SFCoy235,male,NA
+S21-1201,SFCoy236,female,NA
+S21-1203,SFCoy237,male,NA
+S21-1207,SFCoy238,male,Presidio
+S19-8786,SFCoy24,female,NA
+S19-8786-2,SFCoy24,female,Presidio
+S21-3427,SFCoy241,female,GGP - East
+S21-3430,SFCoy242,male,St. Francis
+S21-3431,SFCoy243,male,NA
+S22-0875,SFCoy245,male,NA
+S22-0876,SFCoy246,male,NA
+S22-0882,SFCoy248,male,NA
+S22-0883,SFCoy249,female,NA
+S22-0884,SFCoy250,female,Presidio
+S22-0885,SFCoy251,male,NA
+S22-0886,SFCoy252,female,NA
+S22-1017,SFCoy253,female,NA
+S22-3047,SFCoy254,male,McLaren
+S23-0159,SFCoy255,female,NA
+S23-0160,SFCoy256,female,NA
+S23-0161,SFCoy257,male,NA
+S23-0162,SFCoy258,female,Bernal
+S23-0164,SFCoy259,male,NA
+S21-1083,SFCoy26,male,McLaren
+S24-1424,SFCoy265,male,GGP - East
+S24-1425,SFCoy266,female,GGP - East
+S23-0163,SFCoy31,female,Corona Heights
+S19-8762,SFCoy32,male,Merced
+S21-1089,SFCoy35,female,Merced
+S22-0889,SFCoy50,male,Bernal
+S22-0887,SFCoy55,male,Merced
+S21-1086,SFCoy6,female,Glen
+S21-3429,SFCoy73,male,GGP - East
+S22-3046,SFCoy80,male,GGP - East
+S24-1419,SFCoy89,female,GGP - East
+S22-0871,SFCoy97,female,St. Francis
+S19-8763,SFCoy206,male,GGP - West
+S19-8764,SFCoy207,male,McLaren
+S22-0881,SFCoy247,male,GGP - West
+S23-2156,SFCoy260,male,Corona Heights
