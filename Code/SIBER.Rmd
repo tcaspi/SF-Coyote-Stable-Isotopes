@@ -1,0 +1,273 @@
+---
+title: "SIBER"
+author: "Tali Caspi"
+date: "2025-03-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(SIBER)
+library(plotrix)
+library(coda)
+library(ggridges)
+
+theme_custom <- function() {
+  theme_classic()+
+  theme(panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.background = element_rect(fill = "white", color = NA),
+        plot.title = element_text(size = 7),
+        strip.background = element_blank(),
+        axis.text.y = element_text(size=5),
+        axis.text.x = element_text(size=10),
+        axis.title.y = element_text(size=10),
+        axis.title.x = element_text(size=10))}
+```
+
+Make data frame for SIBER:
+
+```{r}
+data_clean <- read.csv("Cleaned_Data/cleaned_whiskerdata.csv")
+
+siber_df <- data_clean %>% 
+  select(SampleID, seg_num, C_raw, N_raw, individual, whisker, count, urban, sex) %>% 
+  filter(count >=5) # remove whiskers with fewer than 5 segments (required for SIBER)
+```
+
+# Comparing SF and Marin (population-level)
+
+Make SIBER object:
+
+```{r}
+# Make SIBER dataframe
+siber.data <- data.frame(
+  iso1 = siber_df$C_raw,
+  iso2 = siber_df$N_raw,
+  group = siber_df$urban,
+  community = siber_df$urban) %>% 
+  mutate_if(is.character, as.factor) # turn group and community into factors
+
+# Create SIBER object
+siber.object <- createSiberObject(siber.data)
+```
+
+Plot SIBER object:
+
+```{r}
+# Plot convex hulls and 95% ellipses for each population
+plotSiberObject(siber.object,
+                  ax.pad = 2, 
+                  hulls = FALSE, 
+                  ellipses = FALSE,
+                  group.hulls = T,
+                  bty = "L",
+                  iso.order = c(1,2),
+                  xlab = expression({delta}^13*C~'permille'),
+                  ylab = expression({delta}^15*N~'permille'),
+                  points.order = c(24,22)
+                  )
+
+addEllipse(siber.object$ML.mu$nonurban[c(1:2)],
+                     siber.object$ML.cov[["nonurban"]][,,1],
+                     m = NULL,
+                     n = 100,
+                     p.interval = 0.95,
+                     ci.mean = FALSE,
+                     col = 1,
+                     lty = 3,
+                     lwd = 2)
+
+addEllipse(siber.object$ML.mu$urban[c(1:2)],
+                     siber.object$ML.cov[["urban"]][,,1],
+                     m = NULL,
+                     n = 100,
+                     p.interval = 0.95,
+                     ci.mean = FALSE,
+                     col = "navy",
+                     lty = 3,
+                     lwd = 2)
+```
+
+Fit Bayesian model:
+
+```{r}
+# Set model options
+parms <- list()
+parms$n.iter <- 20000   # number of iterations to run the model for
+parms$n.burnin <- 1000 # discard the first set of values
+parms$n.thin <- 10     # thin the posterior by this many
+parms$n.chains <- 2        # run this many chains
+
+# Define the priors
+priors <- list()
+priors$R <- 1 * diag(2)
+priors$k <- 2
+priors$tau.mu <- 1.0E-3
+
+# Fit the ellipses
+ellipses.posterior <- siberMVN(siber.object, parms, priors)
+
+# Extract posterior estimates for each population and calculate mean with 95% HPD intervals
+SEA.B <- siberEllipses(ellipses.posterior)
+
+mean(SEA.B[,1]) %>% round(2); HPDinterval(as.mcmc(SEA.B[,1])) %>% round(2) # nonurban
+mean(SEA.B[,2]) %>% round(2); HPDinterval(as.mcmc(SEA.B[,2])) %>% round(2) # urban
+
+# Fromat data frame for plotting
+SEA.B.pops <- as.data.frame(SEA.B) %>% 
+  dplyr::rename(Nonurban = V1,
+         Urban = V2) %>% 
+  pivot_longer(cols = everything(), names_to = "Site", values_to = "Value")
+
+
+# Plot SEAb posteriors for each population
+fig.3a <- ggplot()+
+  stat_density_ridges(data = SEA.B.pops, 
+                      aes(x=Value, y="Urban/Nonurban", fill=Site, 
+                          height = ..density.., scale = 1.5), alpha=0.6,
+                      quantile_lines = T, quantiles=2)+
+  labs(y="Density", x="Bayesian Standard Ellipse Area")+
+  scale_fill_manual(values = c("Urban" = "#C0362D", "Nonurban" = "#284A45"))+
+  scale_x_continuous(limits=c(0,19), breaks=c(0,5,10,15))+
+  scale_y_discrete(expand=c(0,0))+
+  theme_custom()+
+  theme(legend.position = "none",
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+fig.3a
+```
+
+# Comparing SF and Marin (individual-level)
+
+Make SIBER object:
+
+```{r}
+# Make SIBER dataframe
+siber.data.inds <- data.frame(
+  iso1 = siber_df$C_raw,
+  iso2 = siber_df$N_raw,
+  group = siber_df$individual,
+  community = siber_df$urban) %>% 
+  mutate_if(is.character, as.factor) # turn group and community into factors
+
+# Create SIBER object
+siber.object.inds <- createSiberObject(siber.data.inds)
+```
+
+Fit Bayesian model:
+
+```{r}
+# Fit the ellipses
+ellipses.posterior.inds <- siberMVN(siber.object.inds, parms, priors)
+
+# Calculate SEAb values for each individual in each population
+SEA.B.all.inds <- siberEllipses(ellipses.posterior.inds)
+
+names_df <- siber_df %>% distinct(individual,urban) %>% arrange(urban) # extract id names
+
+names <- names_df$individual
+
+colnames(SEA.B.all.inds) <- names # add id names
+
+# Calculate means and 95% HPD intervals for each individual
+extract_vals <- SEA.B.all.inds %>%
+  as.data.frame() %>% 
+  dplyr::summarise(across(everything(), list(
+    mean = ~ mean(.),
+    hpd = ~ HPDinterval(as.mcmc(.), prob = 0.95)
+  ))) %>% 
+   pivot_longer(cols = everything(), names_to = c("sampleID", "stat"), names_sep = "_") %>%
+   pivot_wider(names_from = stat, values_from = value)
+  
+results_df <- data.frame(individual = extract_vals$sampleID,
+                       SEAb = extract_vals$mean[,1],
+                       lower = extract_vals$hpd[,1],
+                       upper = extract_vals$hpd[,2])  %>% 
+  left_join(data_clean %>% select(sex, individual, urban) %>% distinct()) # add sex/site info
+
+# Calculate mean SEAb and standard errors for individuals in SF vs Marin
+results_df %>% 
+  group_by(urban) %>% 
+  summarize(meanSEAb = mean(SEAb),
+            seSEAb = std.error(SEAb))
+```
+
+Fit Bayesian model:
+
+```{r}
+# fit the ellipses
+ellipses.posterior.inds <- siberMVN(siber.object.inds, parms, priors)
+
+# calculate SEA.B values for each individual in each population
+SEA.B.all.inds <- siberEllipses(ellipses.posterior.inds)
+
+names_df <- siber_df %>% distinct(individual,urban) %>% arrange(urban)
+
+names <- names_df$individual
+
+colnames(SEA.B.all.inds) <- names
+
+#saveRDS(SEA.B.all.inds, "Code/Model_Output/SEA.B.inds.rds")
+SEA.B.all.inds <- readRDS("Code/Model_Output/SEA.B.inds.rds")
+
+# Calculate means and 95% HPD intervals for each individual
+extract_vals <- SEA.B.all.inds %>%
+  as.data.frame() %>% 
+  dplyr::summarise(across(everything(), list(
+    mean = ~ mean(.),
+    hpd = ~ HPDinterval(as.mcmc(.), prob = 0.95)
+  ))) %>% 
+   pivot_longer(cols = everything(), names_to = c("sampleID", "stat"), names_sep = "_") %>%
+   pivot_wider(names_from = stat, values_from = value)
+  
+results_df <- data.frame(individual = extract_vals$sampleID,
+                       SEAb = extract_vals$mean[,1],
+                       lower = extract_vals$hpd[,1],
+                       upper = extract_vals$hpd[,2])  %>% 
+  left_join(data %>% select(sex, individual, urban) %>% distinct()) # add sex/site info
+
+# Calculate individual mean for SF and Marin
+results_df %>% 
+  group_by(urban) %>% 
+  summarize(meanSEAb = mean(SEAb),
+            medianSEAb = median(SEAb),
+            seSEAb = std.error(SEAb))
+
+# Plot
+fig.3b <- ggplot(data=results_df) +
+  geom_errorbar(aes(y = SEAb, ymin = lower, ymax = upper, 
+                    x= reorder(as.factor(individual), SEAb), color=urban),
+                width = 0, linewidth=0.5) +
+  geom_point(aes(y = SEAb,  x= reorder(as.factor(individual), SEAb), shape = sex),
+             size = 0.7, color = "black") +
+  labs(x = "Individual", y = "Bayesian Standard Ellipse Area") +
+  scale_y_continuous(limits=c(0,10.2), breaks=c(0,2,4,6,8,10), expand = c(0, 0)) +
+  theme_custom() +
+  scale_color_manual(values = c("urban" = "#C0362D", "nonurban" = "#284A45")) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+fig.3b
+```
+
+Arrange plots for Figure 3:
+
+```{r}
+ggarrange(
+  fig.3a, fig.3b,
+  ncol = 2, nrow = 1, 
+  labels = c("a", "b"),
+  align = "hv",
+  label.x = c(0.1,0.1),
+  widths=c(1,1), heights=c(1,1))
+
+ggsave("Figures/Figure3.png",dpi=600, width=8, height=4)
+```
+
+
+
+

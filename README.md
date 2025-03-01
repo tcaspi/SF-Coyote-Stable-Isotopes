@@ -1,2 +1,5 @@
 # SF-Coyote-Stable-Isotopes
-Stable isotope study coyotes in the San Francisco Bay Area
+
+**Title**: Urbanization facilitates individual dietary specialization in a generalist carnivore
+
+**Abstract:**

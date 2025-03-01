@@ -1,0 +1,144 @@
+---
+title: "Clean_Data"
+author: "Tali Caspi"
+date: "2025-02-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(plotrix)
+```
+
+
+Combine data sets from different runs with metadata. 
+
+```{r}
+# Load SI data from all runs
+data1 <- read.csv("Data/pilot_and_20231003.csv")
+data2 <- read.csv("Data/20240102_data.csv")
+data3 <- read.csv("Data/20240910_data.csv")
+
+# Bind data frames
+all.data <- rbind(data1, data2, data3) %>% 
+  arrange(SampleID)
+
+# Load metadata and select relevant columns
+metadata <- read.csv("Data/whisker_metadata.csv") %>% 
+  select(c(whisker, urban, site, dead))
+
+# Join SI data to metadata
+joined <- left_join(all.data, metadata, by="whisker")
+
+# Load individual ID and territory data
+ids <- read.csv("Data/individual_ids.csv")
+
+# Define duplicate whisker samples to remove
+dups.to.remove <- c("S22-0889-A", "S21-3433-2", "S22-0870", "S21-1080")
+```
+
+Make clean data frame by removing samples missing isotope data, with incomplete lipid extraction, missing sex information, and duplicate whisker samples from the same individual on the same collection day.
+
+```{r}
+# Make clean data frame
+data_clean <- joined %>% 
+  
+  # Remove samples with no returned isotope data (n=2)
+  filter(!is.na(C_raw)) %>% 
+  
+  # Remove samples with incomplete lipid extraction
+  mutate(C.N_ratio = C_total/N_total, .after=N_total) %>% 
+  filter(C.N_ratio < 3.2) %>% 
+  
+  # Add whisker segment count
+  group_by(whisker) %>% 
+  add_count(name="count") %>% 
+  relocate(count, .after=whisker) %>%
+  
+  # Remove duplicates
+  filter(!whisker %in% dups.to.remove) %>% 
+  
+  # Add column of segment numbers
+  mutate(seg_num = row_number(), .after="SampleID") %>% 
+  
+  # Add id data
+  left_join(ids, by = "individual") %>% 
+  
+  # Remove samples without sex data
+  filter(!is.na(sex))
+
+write.csv(data_clean, "Cleaned_Data/cleaned_whiskerdata.csv", row.names=F)  
+
+
+# Sample counts
+nrow(data_clean) # 1421 whiser segements
+table(data_clean$urban) # 87 marin, 1334 sf
+```
+
+Create data frame of isotopic averages per individual:
+
+```{r}
+data_average <- data_clean %>% 
+  group_by(whisker, individual) %>% 
+  summarize(C_avg=mean(C_raw), 
+            N_avg=mean(N_raw),
+            C_sd = sd(C_raw),
+            N_sd=sd(N_raw),
+            C_se=std.error(C_raw),
+            N_se=std.error(N_raw),
+            count=mean(count)) %>% 
+  ungroup() %>% 
+  left_join(metadata, by="whisker") %>% 
+  left_join(ids, by="individual")
+
+write.csv(data_average, "Cleaned_Data/averaged_whiskerdata.csv", row.names=F)
+
+# Sample counts
+table(data_average$urban) # 10 marin, 97 sf
+
+mean(data_average$count) # average whisker segments per individual
+sd(data_average$count) # sd whisker segments per individual
+
+table(data_average$dead) # counts of sample collection types
+```
+
+Summary statistics:
+
+```{r}
+# Calculate mean, sd, and ranges across all whisker segments in each population
+
+summary_stats <- data_clean %>%
+  dplyr::group_by(urban) %>%
+  dplyr::summarise(
+    mean_C = mean(C_raw, na.rm = T),
+    sd_C_sd = sd(C_raw, na.rm = T),
+    mean_N = mean(N_raw, na.rm = T),
+    sd_N = sd(N_raw, na.rm = T),
+    max_C = max(C_raw),
+    min_C = min(C_raw),
+    max_N = max(N_raw),
+    min_N = min(N_raw)) %>% 
+  dplyr::mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  as.data.frame()
+
+summary_stats
+
+# Calculate average mean and sd d13C and d15N per individual in each population
+ind_summary_stats <- data_average %>%
+  dplyr::group_by(urban) %>%
+  dplyr::summarise(
+    mean_C_avg = mean(C_avg, na.rm = T),
+    mean_C_sd = mean(C_sd, na.rm = T),
+    mean_N_avg = mean(N_avg, na.rm = T),
+    mean_N_sd = mean(N_sd, na.rm = T)) %>% 
+  dplyr::mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  as.data.frame()
+
+ind_summary_stats
+```
+
+
+
+

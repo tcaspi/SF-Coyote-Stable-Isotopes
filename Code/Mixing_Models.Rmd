@@ -1,0 +1,516 @@
+---
+title: "Mixing_Models"
+author: "Tali Caspi"
+date: "2025-03-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(MixSIAR)
+library(plotrix)
+library(parallel)
+
+# Custom theme for plotting
+theme_custom <- function() {
+  theme_classic()+
+  theme(panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.background = element_rect(fill = "white", color = NA),
+        plot.title = element_text(size = 7),
+        strip.background = element_blank(),
+        axis.text.y = element_text(size=6),
+        axis.text.x = element_text(size=6),
+        axis.title.y = element_text(size=10),
+        axis.title.x = element_text(size=10))}
+
+# Colors
+cols <- c("ff_chicken" = "#C0362D",
+          "wet.food"= "#F57E77",
+          "medium.mammal"= "#687E90", 
+          "rat"= "#B6CEE2",
+          "gopher"= "#004D40",
+          "fruit"= "#10B397")
+
+species.names <- c("ff_chicken" = "Chicken",
+          "wet.food"= "Pet Food",
+          "medium.mammal"= "Medium Mammals", 
+          "rat"= "Rats",
+          "gopher"= "Gophers",
+          "fruit"= "Fruit")
+
+cols.paired <- c("Mean_ff_chicken" = "#C0362D",
+          "Mean_wet.food"= "#F57E77",
+          "Mean_medium.mammal"= "#687E90", 
+          "Mean_rat"= "#B6CEE2",
+          "Mean_gopher"= "#004D40",
+          "Mean_fruit"= "#10B397")
+```
+
+
+These models take a long time to run - it is recommended to run them on an HPC cluster.
+
+# Model with categorical effects and six dietary sources
+
+## Prepare source data
+
+```{r}
+# Load fast food data
+ff <- read.csv("Data/fastfood_si.csv")
+
+# Load prey data
+prey <- read.csv("Data/preydata_si.csv")
+
+# define outliers and sources to keep
+remove.sources <- c("Goph10") # sample removed because it was a strong outlier
+select.sources <- c("gopher", "fruit", "skunk", "raccoon", "cat", "rat", "wet.food")
+
+# Step 1: Compute mean and SD for each species
+species_stats <- prey %>%
+  
+  # remove outliers
+  filter(!SampleID %in% remove.sources) %>%
+  
+  # select target species
+  filter(species %in% select.sources) %>% 
+  
+  # adjust hair back to muscle
+  mutate(d13C = if_else(material %in% c("vertebrate hair"), d13C - 1.31, d13C)) %>% 
+  
+  # select cols
+  select(c(SampleID, species, d13C, d15N)) %>% 
+  
+  # rbind chicken data
+  rbind(ff %>% filter(species == "ff_chicken")) %>% 
+  
+  # summarize
+  group_by(species) %>%
+  summarise(
+    Meand13C = mean(d13C),
+    SDd13C = sd(d13C),
+    Meand15N = mean(d15N),
+    SDd15N = sd(d15N),
+    n = n())
+
+# Step 2: Compute grand mean and pooled SD for "medium.mammal"
+medium_mammal_stats <- species_stats %>%
+  filter(species %in% c("raccoon", "skunk", "cat")) %>%
+  summarise(
+    species = "medium.mammal",
+    Meand13C = mean(Meand13C),  
+    Meand15N = mean(Meand15N),
+
+    # Pooled standard deviation formula
+    SDd13C = sqrt(sum((SDd13C^2 * (n - 1))) / sum(n - 1)),
+    SDd15N = sqrt(sum((SDd15N^2 * (n - 1))) / sum(n - 1)),
+    n = sum(n))
+
+# Step 3: Filter only the desired species and add "medium.mammal"
+source_df <- species_stats %>%
+  filter(species %in% c("gopher", "fruit", "rat", "wet.food", "ff_chicken")) %>%
+  bind_rows(medium_mammal_stats)
+
+# Write to csv
+write.csv(source_df, "Cleaned_Data/coyote_source.csv", row.names = FALSE)
+```
+
+## Prepare TDF data frame
+
+I'm pulling values from Ryan Stephen's paper: https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecm.1525
+
+```{r}
+# Create TDF dataframe
+tdf_df <- data.frame(
+  species = source_df$species,
+  Meand13C = 3.97,
+  SDd13C = 1.85,
+  Meand15N = 2.76,
+  SDd15N = 1.41)
+
+write.csv(tdf_df, "Cleaned_Data/coyote_discrimination.csv", row.names = FALSE)
+```
+
+## Prepare consumer data
+
+```{r}
+# Load consumer data 
+data_averages <- read.csv("Cleaned_Data/averaged_whiskerdata.csv") %>% 
+  filter(urban == "urban") %>%  # keep only SF coyotes
+  mutate(group = ifelse(is.na(group), "Unknown", group)) #rename NA to Unknown for territories
+
+# Make consumer df
+consumer_df_avgs <- data.frame(
+  d13C = data_averages$C_avg,
+  d15N = data_averages$N_avg,
+  individual = data_averages$whisker,
+  group = data_averages$group) %>% 
+  mutate_if(is.character, as.factor) 
+
+# Write to file
+write.csv(consumer_df_avgs, "Cleaned_Data//coyote_consumer_avgs.csv", row.names = FALSE)
+```
+
+## Investigate mixing polygon
+
+```{r}
+# set TDFs
+TDF.C <- 3.97
+TDF.N <- 2.76
+
+# Make data frame for plotting with source values corrected by TDF factors
+source_df_plotting <- source_df %>% 
+  mutate(Meand13C = Meand13C + TDF.C,
+         Meand15N = Meand15N + TDF.N)
+
+# Data frame for my chicken/pork samples
+meat.names <- c("ChkC01", "Pork01")
+
+meat_samples <- prey %>% 
+  filter(SampleID %in% meat.names) %>% 
+  select(SampleID, d13C, d15N) %>% 
+  mutate(d13C = d13C + TDF.C,
+         d15N = d15N + TDF.N)
+
+# Plot prey sources
+fig.5a <- ggplot()+
+  geom_point(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N, color=species),
+             size=3)+
+  geom_errorbar(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N,
+                                                 ymax=Meand15N+SDd15N, ymin=Meand15N-SDd15N,
+                                                 width=0.3, color=species))+
+  geom_errorbar(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N,
+                                                 xmax=Meand13C+SDd13C, xmin=Meand13C-SDd13C,
+                                                 width=0.3, color=species))+
+  geom_point(data=consumer_df_avgs, mapping=aes(x=d13C, y=d15N), size=1, alpha=0.7)+
+  
+  # Meat samples
+  geom_point(data=meat_samples, mapping=aes(x=d13C, y=d15N), alpha=0.9, fill="#C0362D", shape=23, color="black")+
+  
+  theme_custom()+
+  scale_y_continuous(limits=c(4,13), breaks = seq(4, 15, by = 1))+
+  scale_x_continuous(limits=c(-25,-11.3), breaks = seq(-25, -10, by=1))+
+  xlab(expression(delta^{13}~C)) +
+  ylab(expression(delta^{15}~N))+
+  theme(legend.position = "none")+
+  scale_color_manual(values=cols)
+
+fig.5a
+
+# ggsave("Figures/Figure5a.png", dpi=600, height=3, width=4)
+```
+
+## Create MixSIAR model objects
+
+```{r}
+mix.coy.avgs <- load_mix_data(filename="Cleaned_Data/coyote_consumer_avgs.csv", 
+                     iso_names=c("d13C","d15N"), 
+                     factors=c("individual","group"), 
+                     fac_random=c(TRUE, TRUE), 
+                     fac_nested=c(TRUE, FALSE), 
+                     cont_effects=NULL)
+
+source.coy <- load_source_data(filename="Cleaned_Data/coyote_source.csv",
+                           source_factors=NULL, 
+                           conc_dep=FALSE, 
+                           data_type="means", 
+                           mix.coy.avgs)
+
+discr.coy <- load_discr_data(filename="Cleaned_Data/coyote_discrimination.csv", mix.coy.avgs)
+```
+
+## Set prior
+
+Run the model with an informative prior set based on percet of occurrence for each dietary source for DNA metabarcoding data (see Caspi et al. 2025).
+
+Chicken: 21.5%
+Fruit: 20.2%
+Gopher: 20.3%
+Medium Mammals: 8.5%
+Rats: 8.0%
+Wet food: 21.5%
+
+```{r}
+# Set prior (alphabetical order for sources)
+coy.alpha <- c(21.5, 20.2, 20.3, 8.5, 8.0, 21.5)
+coy.alpha <- coy.alpha*length(coy.alpha)/sum(coy.alpha)
+
+plot_prior(alpha.prior=coy.alpha,
+           source=source.coy,
+           plot_save_pdf=FALSE,
+           plot_save_png=FALSE,
+           filename="prior_plot_coy")
+```
+
+## Run model
+
+Write the JAGS model file and run it. This takes a very long time (~ 24 hours), so it is recommended to run this model on an HPC cluster.
+
+```{r}
+# Write the JAGS model file
+model_filename <- "MixSIAR_model_full.txt"
+resid_err <- TRUE
+process_err <- TRUE
+write_JAGS_model(model_filename, resid_err, process_err, mix.coy.avgs, source.coy)
+
+# Run full model
+jags.full <- run_model(run="very long", mix.coy.avgs, source.coy, discr.coy, model_filename, alpha.prior=coy.alpha)
+
+# Set model output options
+output_options <- list(summary_save = TRUE,                 
+                       summary_name = "summary_statistics", 
+                       sup_post = TRUE,                    
+                       plot_post_save_pdf = FALSE,           
+                       plot_post_name = "posterior_density",
+                       sup_pairs = FALSE,             
+                       plot_pairs_save_pdf = TRUE,    
+                       plot_pairs_name = "pairs_plot",
+                       sup_xy = FALSE,           
+                       plot_xy_save_pdf = TRUE,
+                       plot_xy_name = "xy_plot",
+                       gelman = TRUE,
+                       heidel = TRUE,  
+                       geweke = TRUE,   
+                       diag_save = TRUE,
+                       diag_name = "diagnostics",
+                       indiv_effect = FALSE,       
+                       plot_post_save_png = FALSE, 
+                       plot_pairs_save_png = TRUE,
+                       plot_xy_save_png = TRUE,
+                       diag_save_ggmcmc = TRUE,
+                       return_obj = TRUE)
+
+# Mean posterior estimates from model
+df.stats <- output_stats(jags.full, mix.coy.avgs, source.coy, output_options)
+
+# Extract posterior distributions for global proportions
+global.prop <- as.data.frame(jags.full$BUGSoutput$sims.list$p.global)
+names(global.prop) <- c("ff_chicken", "fruit", "gopher", "medium.mammal", "rat", "wet.food")
+
+posterior_global <- global.prop %>% 
+  pivot_longer(cols = everything(), names_to = "sources", values_to = "value") %>% 
+  mutate(sources = factor(sources, levels = c("ff_chicken", "wet.food", "rat", "medium.mammal", "fruit", "gopher")))
+
+# Load model output if not running the model
+# df.stats <- readRDS("Model_Output/df")
+# posterior_global <- readRDS("Model_Output/posterior_global")
+```
+
+## Make plots:
+
+Global diet source proportions:
+
+```{r}
+# Plot global proportions
+names <- c("Chicken", "Pet Food","Rats", "Medium-Sized \nMammals", "Fruit","Gophers")
+
+ggplot(posterior_global, aes(x = value, fill = sources, color = sources)) +
+  geom_density(aes(y = after_stat(scaled)), alpha = 0.3, linewidth=0.8) +
+  labs(x = "Proportion",
+       y = "Scaled Posterior Density") +
+  scale_x_continuous(limits=c(0,1), expand=c(0,0), labels = seq(0, 1, by = 0.25))+
+  scale_y_continuous(limits=c(0,1.01), expand=c(0,0), labels = seq(0, 1, by = 0.25))+
+  theme_custom() +
+  scale_fill_manual(values=cols, labels=names) +
+  scale_color_manual(values=cols, labels=names) +
+  theme(legend.title = element_blank(),
+        legend.key.size = unit(0.3, "cm"),
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.text = element_text(size=5))+
+  guides(fill = guide_legend(nrow = 1))
+
+# ggsave("Figures/FigureS4.png", dpi=600, height=3, width=4)
+```
+
+Individual diet source proportions:
+
+```{r}
+covs <- read.csv("Data/territory_covs.csv") # load covariate data
+
+# Extract individual proportions
+ind.props <- as.data.frame(df.stats) %>% 
+  rownames_to_column("sample") %>% 
+  mutate(rowID = seq(1:nrow(.)), .before=Mean) %>% 
+  slice(11:562) %>%  #  WILL NEED TO CHANGE WITH NEW MODEL
+  separate(sample, into = c("prefix", "whisker", "source"), sep = "\\.", extra = "merge") %>%
+  select(c(whisker, source, Mean, SD)) %>% 
+  pivot_wider(names_from = source, values_from = c(Mean, SD))
+
+# Prep data frame for plotting
+ind.props_plotting_all <- ind.props %>% 
+  select(1 | starts_with("Mean")) %>% 
+  pivot_longer(cols = starts_with("Mean"), 
+               names_to = "Source", 
+               values_to = "Proportion") %>% 
+  left_join(data_averages %>% select(c(whisker, group, individual, sfcoy)) , by="whisker") %>% 
+  group_by(whisker) %>% 
+  mutate(Proportion = Proportion / sum(Proportion)) %>% 
+  ungroup() %>% 
+  left_join(covs, by="group") %>% 
+  mutate(group = factor(group, levels = c("Coit", "Bernal", "St. Francis", "Glen", "GGP - East", "GGP - West", "McLaren", "Merced", "Presidio", NA))) %>% 
+  mutate(Source = factor(Source, levels = c("Mean_ff_chicken", "Mean_wet.food", "Mean_medium.mammal", "Mean_rat", "Mean_fruit", "Mean_gopher")))
+
+whisker_to_sfcoy <- ind.props_plotting_all %>%
+  select(whisker, sfcoy) %>%
+  distinct() %>%
+  deframe()
+
+
+# source labels
+mean.names <- c("Chicken", "Pet Food", "Medium-Sized \nMammals", "Rats", "Fruit", "Gophers")
+
+# plot
+fig.5b <- ind.props_plotting_all %>%
+  ggplot(aes(x=reorder(whisker, group), y=Proportion, fill=Source)) +
+  geom_col()+
+  scale_y_continuous(expand = c(0,0))+
+  facet_grid(~group, scales = "free", space = "free",
+             labeller = labeller(group = label_wrap_gen(width = 1)))+
+  ylab("Proportion") + xlab(NULL)+
+  theme_custom()+
+  scale_fill_manual(values=cols.paired, labels=mean.names)+
+  scale_x_discrete(labels = whisker_to_sfcoy)+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1.15, hjust=1, size=3),
+        axis.ticks.x = element_blank(),
+        strip.text.x = element_text(size = 3, angle = 0, hjust=0.5, vjust=.5),
+        strip.background.x = element_blank(),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 8),
+        legend.key.size = unit(0.5, "cm"),
+        legend.position = "bottom")+
+        guides(fill = guide_legend(nrow = 1))
+
+fig.5b
+
+# ggsave("Figures/Figure5b.png", dpi=600, height=4, width=8)
+```
+
+# Model with continuous effect and three dietary sources
+
+
+## Prepare source data
+
+```{r}
+# Compute grand mean and pooled SD for each source
+human_food_stats <- source_df %>% 
+  filter(species %in% c("ff_chicken", "wet.food")) %>% 
+  summarise(
+    species = "human",
+    Meand13C = mean(Meand13C),  
+    Meand15N = mean(Meand15N),
+
+    # Pooled standard deviation formula
+    SDd13C = sqrt(sum((SDd13C^2 * (n - 1))) / sum(n - 1)),
+    SDd15N = sqrt(sum((SDd15N^2 * (n - 1))) / sum(n - 1)),
+    n = sum(n))
+
+natural.low.N_stats <- source_df %>% 
+  filter(species %in% c("fruit", "gopher")) %>% 
+  summarise(
+    species = "natural.low.N",
+    Meand13C = mean(Meand13C),  
+    Meand15N = mean(Meand15N),
+
+    # Pooled standard deviation formula
+    SDd13C = sqrt(sum((SDd13C^2 * (n - 1))) / sum(n - 1)),
+    SDd15N = sqrt(sum((SDd15N^2 * (n - 1))) / sum(n - 1)),
+    n = sum(n))
+
+natural.high.N_stats <- source_df %>% 
+  filter(species %in% c("medium.mammal", "rat")) %>% 
+  summarise(
+    species = "natural.high.N",
+    Meand13C = mean(Meand13C),  
+    Meand15N = mean(Meand15N),
+
+    # Pooled standard deviation formula
+    SDd13C = sqrt(sum((SDd13C^2 * (n - 1))) / sum(n - 1)),
+    SDd15N = sqrt(sum((SDd15N^2 * (n - 1))) / sum(n - 1)),
+    n = sum(n))
+
+# Combine
+three_source_df <- bind_rows(human_food_stats, natural.high.N_stats, natural.low.N_stats)
+
+# Write to file
+write.csv(three_source_df, "Cleaned_Data/coyote_source_three.csv", row.names = FALSE)
+```
+
+## Prepare TDF data frame
+
+```{r}
+tdf_df_three <- data.frame(
+  species = three_source_df$species,
+  Meand13C = 3.97,
+  SDd13C = 1.85,
+  Meand15N = 2.76,
+  SDd15N = 1.41)
+
+# Write to csv
+write.csv(tdf_df_three, "Cleaned_Data/coyote_discrimination_three.csv", row.names = FALSE)
+```
+
+## Prepare consumer data
+
+```{r}
+# Load consumer data 
+data_averages_isa <- read.csv("Cleaned_Data/averaged_whiskerdata.csv") %>% 
+  filter(urban == "urban") %>%  # keep only SF coyotes
+  filter(!is.na(group)) # remove individuals without known territories
+
+# Make consumer df
+consumer_df_isa <- data.frame(
+  d13C = data_averages_isa$C_avg,
+  d15N = data_averages_isa$N_avg,
+  individual = data_averages_isa$whisker,
+  group = data_averages_isa$group) %>% 
+  mutate_if(is.character, as.factor) 
+
+# Write to file
+write.csv(consumer_df_isa, "Cleaned_Data/coyote_consumer_isa.csv", row.names = FALSE)
+```
+
+## Investigate mixing polygon
+
+```{r}
+# Make data frame for plotting with source values corrected by TDF factors
+three_source_df_plotting <- three_source_df %>% 
+  mutate(Meand13C = Meand13C + TDF.C,
+         Meand15N = Meand15N + TDF.N)
+  
+# Plot prey sources
+ggplot()+
+  geom_point(data=three_source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N, color=species), size=4)+
+  geom_errorbar(data=three_source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N,
+                                                 ymax=Meand15N+SDd15N, ymin=Meand15N-SDd15N,
+                                                 color=species, width=0.3))+
+  geom_errorbar(data=three_source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N,
+                                                 xmax=Meand13C+SDd13C, xmin=Meand13C-SDd13C,
+                                                 color=species, width=0.3))+
+  geom_text(data=three_source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N, label = species), vjust = -1)+
+  geom_point(data=consumer_df_avgs, mapping=aes(x=d13C, y=d15N))+
+  theme_custom()+
+  scale_y_continuous(limits=c(4,13), breaks = seq(4, 15, by = 1))+
+  scale_x_continuous(limits=c(-25,-12), breaks = seq(-25, -10, by=1))+
+  xlab(expression(delta^{13}~C)) +
+  ylab(expression(delta^{15}~N))+
+  theme(legend.position = "none")
+```
+
+## Create MixSIAR model objects
+
+```{r}
+mix.coy.isa # same as previous model with six diet sources
+
+source.coy.three <- load_source_data(filename="Data/Output/coyote_source_three.csv",
+                           source_factors=NULL, 
+                           conc_dep=FALSE, 
+                           data_type="means", 
+                           mix.coy.avgs)
+
+discr.coy.three <- load_discr_data(filename="Data/Output/coyote_discrimination_three.csv", mix.coy.avgs)
+```
+
+
+

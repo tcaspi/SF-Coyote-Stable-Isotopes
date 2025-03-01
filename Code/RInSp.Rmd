@@ -1,0 +1,68 @@
+---
+title: "RInSp"
+author: "Tali Caspi"
+date: "2025-03-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse); library(RInSp)
+```
+
+Use RInSp package to calculate niche components for both the SF coyote population and Marin coyote population. WIC/TNW represents the amount of the niche width explained by within-indiviudal differences. The closer to zero, the more specialized individuals in the population are. The closer to one, the more generalized individuals in the population are.
+
+```{r}
+# Load and format isotope data
+data_clean <- read.csv("Cleaned_Data/cleaned_whiskerdata.csv")
+
+data.rinsp <- data_clean %>% 
+  filter(count >=3) %>% # remove whiskers with less than three segments
+  mutate(C_adj = abs(C_raw)) # convert delta13C values to positive
+
+# Create metadata df
+metadata <- data.rinsp %>% 
+  select(c(whisker, individual, urban, sex)) %>% 
+  distinct() %>% 
+  replace(is.na(.), "unknown")
+
+table(metadata$urban) # check sample counts
+
+# Separate into C and N
+C_all <- as.data.frame(data.rinsp %>% 
+      select(whisker, seg_num, C_adj) %>% 
+      pivot_wider(names_from = seg_num, values_from = C_adj) %>% 
+      left_join(metadata) %>% 
+      relocate(individual, .after = whisker) %>% 
+      relocate(urban, .after = individual) %>% 
+      relocate(sex, .after = urban) %>% 
+      replace(is.na(.), 0) %>%
+      mutate(ID = seq(1:nrow(.))) %>% 
+      relocate(ID, .before=whisker)) %>% 
+      mutate(urban = as.factor(urban))
+
+N_all <- as.data.frame(data.rinsp %>% 
+      select(whisker, seg_num, N_raw) %>% 
+      pivot_wider(names_from = seg_num, values_from = N_raw) %>% 
+      left_join(metadata) %>% 
+      relocate(individual, .after = whisker) %>% 
+      relocate(urban, .after = individual) %>% 
+      relocate(sex, .after = urban) %>% 
+      replace(is.na(.), 0) %>%
+      mutate(ID = seq(1:nrow(.))) %>% 
+      relocate(ID, .before=whisker)) %>% 
+      mutate(urban = as.factor(urban))
+
+# Import RInSp objects
+ris_carbon_all = import.RInSp(C_all, col.header = T, row.names = 1, info.cols=2:5, data.type = "double")
+ris_nitrogen_all = import.RInSp(N_all, col.header = T, row.names = 1, info.cols=2:5, data.type = "double")
+
+# Calculate niche components by region
+decomp_C <- Hier2L(ris_carbon_all, factor=3, weight.type = "equal")
+decomp_N <- Hier2L(ris_nitrogen_all, factor=3, weight.type = "equal")
+
+# Extract niche components
+decomp_C
+decomp_N
+```
+

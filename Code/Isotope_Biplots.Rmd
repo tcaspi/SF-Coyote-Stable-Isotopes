@@ -1,0 +1,175 @@
+---
+title: "Isotope-Biplots"
+author: "Tali Caspi"
+date: "2025-03-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(plotrix)
+library(ggpubr)
+
+colors <- c("#C8BFE7", "#2E2585", "#7E2954", "#94CBEC", "#DCCD7D", "#C26A77", "#FDB462FF", "#5DA899", "#337538", "pink")
+
+family_colors <- c("Bernal" = colors[1],
+                   "Coit" = colors[2],
+                   "Corona Heights" = colors[3],
+                   "GGP - West" = colors[4],
+                   "GGP - East" = colors[5],
+                   "Glen" = colors[6],
+                   "McLaren" = colors[7],
+                   "Merced" = colors[8],
+                   "Presidio" = colors[9],
+                   "St. Francis" = colors[10],
+                   "NA" = colors[11])
+
+# Make custom theme
+theme_custom <- function() {
+  theme_classic()+
+  theme(panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.background = element_rect(fill = "white", color = NA),
+        plot.title = element_text(size = 7),
+        strip.background = element_blank(),
+        axis.text.y = element_text(size=6),
+        axis.text.x = element_text(size=6),
+        axis.title.y = element_text(size=10),
+        axis.title.x = element_text(size=10))}
+```
+
+
+Load data:
+```{r}
+data_clean <- read.csv("Cleaned_Data/cleaned_whiskerdata.csv")
+data_average <- read.csv("Cleaned_Data/averaged_whiskerdata.csv")
+```
+
+Create isotope biplots:
+
+```{r}
+# Plot - all data points
+fig.S1 <- data_clean %>% 
+  ggplot(aes(x=C_raw, y=N_raw, color=urban)) +
+  geom_point(size=1, alpha=0.4)+
+  stat_ellipse(level=0.95)+
+  scale_color_manual(values=c("#284A45", "#c0362d"))+
+  xlab(expression({delta}^13*C))+
+  ylab(expression({delta}^15*N))+
+  scale_x_continuous(limits=c(-25.2,-15), breaks=seq(-25,-15,by=1))+
+  scale_y_continuous(limits=c(4.8,15.5), breaks=seq(5,15,by=1))+
+  theme_custom()+
+  theme(legend.position = "none")
+
+fig.S1
+
+# ggsave("Figures/FigureS2.png",dpi=600, width=4, height=3)
+
+# All individuals with standard error bars
+fig2a <- data_average %>% 
+  ggplot(aes(x=C_avg, y=N_avg, color=urban))+
+  geom_errorbar(aes(ymin=N_avg-N_se, ymax=N_avg+N_se, color=urban), alpha=0.7)+
+  geom_errorbar(aes(xmin=C_avg-C_se, xmax=C_avg+C_se, color=urban), alpha=0.7)+
+  geom_point(size=1,alpha=0.7)+
+  scale_color_manual(values=c("#284A45", "#c0362d"))+
+  xlab(expression({delta}^13*C))+
+  ylab(expression({delta}^15*N))+
+  scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1))+
+  scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1))+
+  theme_custom()+
+  theme(legend.position = "none")
+
+fig2a
+
+# Create data frame with only SF coyotes
+data_average_sf <- data_average %>% 
+  filter(urban == "urban")
+
+# SF individuals colored by family group
+fig.2b <- data_average_sf %>% 
+  filter(group != "NA") %>% 
+  ggplot(aes(x=C_avg, y=N_avg, 
+             color=group, fill=group))+
+  geom_point(size=2,alpha=0.8)+
+  scale_color_manual(values=family_colors)+
+  scale_fill_manual(values=family_colors)+
+  xlab(expression(delta^{13}~C))+
+  ylab(expression(delta^{15}~N))+
+  scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1))+
+  scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1))+
+  theme_custom()+
+  theme(legend.position = "none",
+        legend.text = element_text(size=5),
+        legend.key.size = unit(0.5, 'cm'),
+        legend.title = element_blank())
+  
+fig.2b
+
+# Combine plots into Figure 2
+ggarrange(
+  fig2a, fig.2b,
+  ncol = 2, nrow = 1, 
+  labels = c("a", "b"),
+  common.legend=F,
+  align = "hv",
+  label.x = 0.125,
+  widths=c(1,1), heights=c(1,1))
+
+# ggsave("Figures/Figure2.png",dpi=600, width=8, height=3)
+
+# Plot all SF individuals, highlighting repeatedly sampled individuals
+fig.S1 <- data_average_sf %>% 
+  ggplot(aes(x = C_avg, y = N_avg)) +
+  
+  # Error bars
+  geom_errorbar(aes(ymin = N_avg - N_se, ymax = N_avg + N_se,
+                    color = case_when(
+    whisker %in% c("S19-8775", "S19-8775-2") ~ "highlight",
+    whisker %in% c( "S19-8786", "S19-8786-2") ~ "highlight2",
+    TRUE ~ "black")), alpha = 0.5) +
+  geom_errorbar(aes(xmin = C_avg - C_se, xmax = C_avg + C_se,
+                    color = case_when(
+    whisker %in% c("S19-8775", "S19-8775-2") ~ "highlight",
+    whisker %in% c( "S19-8786", "S19-8786-2") ~ "highlight2",
+    TRUE ~ "black")), alpha = 0.5) +
+  
+  # Points
+  geom_point(aes(color = case_when(
+    whisker %in% c("S19-8775", "S19-8775-2") ~ "highlight",
+    whisker %in% c( "S19-8786", "S19-8786-2") ~ "highlight2",
+    TRUE ~ "black")), size = 1, alpha = 0.8) +
+  scale_color_manual(values = c("black" = "black", "highlight" = "#c0362d", "highlight2" = "darkgreen")) +
+
+  # Graphics
+  xlab(expression(delta^{13}~C)) +
+  ylab(expression(delta^{15}~N)) +
+  scale_x_continuous(limits = c(-23, -15), breaks = seq(-23, -15, by = 1)) +
+  scale_y_continuous(limits = c(6.5, 10.2), breaks = seq(7, 10, by = 1)) +
+  theme_custom()+
+  theme(legend.position = "none")
+
+fig.S1
+
+# ggsave("Figures/FigureS1.png",dpi=600, width=4, height=3)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
