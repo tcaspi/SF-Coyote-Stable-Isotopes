@@ -114,17 +114,23 @@ In the `Cleaned_Data` folder, you will find a number of cleaned up files that ha
 
 Cleaned raw data:
 
-| `cleaned_whiskerdata.csv`
-| `averaged_whiskerdata.csv`
+> -   `cleaned_whiskerdata.csv`
+>
+> -   `averaged_whiskerdata.csv`
 
 For MixSIAR models:
 
-| `coyote_consumer_avgs.csv`
-| `coyote_source.csv`
-| `coyote_discrimination.csv`
-| `coyote_consumer_isa.csv`
-| `coyote_source_three.csv`
-| `coyote_discrimination_three.csv`
+> -   `coyote_consumer_avgs.csv`
+>
+> -   `coyote_source.csv`
+>
+> -   `coyote_discrimination.csv`
+
+> -   `coyote_consumer_isa.csv`
+>
+> -   `coyote_source_three.csv`
+>
+> -   `coyote_discrimination_three.csv`
 
 ## Model_Output
 
