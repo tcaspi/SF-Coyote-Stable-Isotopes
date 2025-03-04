@@ -1,6 +1,6 @@
 # SF-Coyote-Stable-Isotopes
 
-This repository contains all raw data, plots and scripts for the data analysis implemented in Caspi et al. (2025) (In Preparation) titled "Urbanization facilitates individual dietary specialization in a generalist carnivore" and published in \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+This repository contains all raw data, plots and scripts for the data analysis implemented in Caspi et al. (2025) (In Preparation) titled: *Urbanization facilitates individual dietary specialization in a generalist carnivore* and published in XXXXX.
 
 Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript.
 
