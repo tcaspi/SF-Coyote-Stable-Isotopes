@@ -26,20 +26,13 @@ theme_custom <- function() {
         axis.title.y = element_text(size=10),
         axis.title.x = element_text(size=10))}
 
-# Colors
+# Set colors
 cols <- c("ff_chicken" = "#C0362D",
           "wet.food"= "#F57E77",
           "medium.mammal"= "#687E90", 
           "rat"= "#B6CEE2",
           "gopher"= "#004D40",
           "fruit"= "#10B397")
-
-species.names <- c("ff_chicken" = "Chicken",
-          "wet.food"= "Pet Food",
-          "medium.mammal"= "Medium Mammals", 
-          "rat"= "Rats",
-          "gopher"= "Gophers",
-          "fruit"= "Fruit")
 
 cols.paired <- c("Mean_ff_chicken" = "#C0362D",
           "Mean_wet.food"= "#F57E77",
@@ -49,8 +42,7 @@ cols.paired <- c("Mean_ff_chicken" = "#C0362D",
           "Mean_fruit"= "#10B397")
 ```
 
-
-These models take a long time to run - it is recommended to run them on an HPC cluster.
+These MixSIAR models take a long time to run; it is recommended to run them on an HPC cluster.
 
 # Model with categorical effects and six dietary sources
 
@@ -292,7 +284,8 @@ posterior_global <- global.prop %>%
   pivot_longer(cols = everything(), names_to = "sources", values_to = "value") %>% 
   mutate(sources = factor(sources, levels = c("ff_chicken", "wet.food", "rat", "medium.mammal", "fruit", "gopher")))
 
-# Load model output if not running the model
+# Load model output from previously run model
+# jags.full <- readRDS("Model_Output/"jags.full.rds")
 # df.stats <- readRDS("Model_Output/df")
 # posterior_global <- readRDS("Model_Output/posterior_global")
 ```
@@ -327,7 +320,8 @@ ggplot(posterior_global, aes(x = value, fill = sources, color = sources)) +
 Individual diet source proportions:
 
 ```{r}
-covs <- read.csv("Data/territory_covs.csv") # load covariate data
+# Load covariate data
+covs <- read.csv("Data/territory_covs.csv")
 
 # Extract individual proportions
 ind.props <- as.data.frame(df.stats) %>% 
@@ -386,6 +380,7 @@ fig.5b
 
 # ggsave("Figures/Figure5b.png", dpi=600, height=4, width=8)
 ```
+
 
 # Model with continuous effect and three dietary sources
 
@@ -457,14 +452,14 @@ write.csv(tdf_df_three, "Cleaned_Data/coyote_discrimination_three.csv", row.name
 # Load consumer data 
 data_averages_isa <- read.csv("Cleaned_Data/averaged_whiskerdata.csv") %>% 
   filter(urban == "urban") %>%  # keep only SF coyotes
-  filter(!is.na(group)) # remove individuals without known territories
+  filter(!is.na(group)) %>%  # remove individuals without known territories
+  left_join(covs, by="group") # add covariate data
 
 # Make consumer df
 consumer_df_isa <- data.frame(
   d13C = data_averages_isa$C_avg,
-  d15N = data_averages_isa$N_avg,
-  individual = data_averages_isa$whisker,
-  group = data_averages_isa$group) %>% 
+  d15N = data_averages_isa$N_avg, 
+  ISA = data_averages_isa$ISA) %>% 
   mutate_if(is.character, as.factor) 
 
 # Write to file
@@ -489,7 +484,7 @@ ggplot()+
                                                  xmax=Meand13C+SDd13C, xmin=Meand13C-SDd13C,
                                                  color=species, width=0.3))+
   geom_text(data=three_source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N, label = species), vjust = -1)+
-  geom_point(data=consumer_df_avgs, mapping=aes(x=d13C, y=d15N))+
+  geom_point(data=consumer_df_isa, mapping=aes(x=d13C, y=d15N))+
   theme_custom()+
   scale_y_continuous(limits=c(4,13), breaks = seq(4, 15, by = 1))+
   scale_x_continuous(limits=c(-25,-12), breaks = seq(-25, -10, by=1))+
@@ -501,16 +496,79 @@ ggplot()+
 ## Create MixSIAR model objects
 
 ```{r}
-mix.coy.isa # same as previous model with six diet sources
+mix.coy.ISA <- load_mix_data(filename="Cleaned_Data/coyote_consumer_isa.csv", 
+                     iso_names=c("d13C","d15N"), 
+                     factors=NULL, 
+                     fac_random=NULL, 
+                     fac_nested=NULL, 
+                     cont_effects="ISA")
 
-source.coy.three <- load_source_data(filename="Data/Output/coyote_source_three.csv",
+source.coy.ISA <- load_source_data(filename="Cleaned_Data/coyote_source_three.csv",
                            source_factors=NULL, 
                            conc_dep=FALSE, 
                            data_type="means", 
                            mix.coy.avgs)
 
-discr.coy.three <- load_discr_data(filename="Data/Output/coyote_discrimination_three.csv", mix.coy.avgs)
+discr.coy.ISA <- load_discr_data(filename="Cleaned_Data/coyote_discrimination_three.csv", mix.coy.avgs)
 ```
 
+## Set prior:
+
+```{r}
+ISA.alpha <- c(43,17,40)
+ISA.alpha <- ISA.alpha*length(ISA.alpha)/sum(ISA.alpha)
+
+plot_prior(alpha.prior=ISA.alpha,
+           source=source.coy.three,
+           plot_save_pdf=FALSE,
+           plot_save_png=FALSE,
+           filename="prior_plot_ISA")
+```
+
+## Run model:
+
+Write the JAGS model file and run it. This takes a long time, so it is recommended to run this model on an HPC cluster.
+
+```{r}
+# Write the JAGS model file
+model_filename <- "MixSIAR_model_ISA.txt"
+resid_err <- TRUE
+process_err <- TRUE
+write_JAGS_model(model_filename, resid_err, process_err, mix.coy.ISA, source.coy.ISA)
+
+# Run full model
+jags.ISA <- run_model(run="long", mix.coy.ISA, source.coy.ISA, discr.coy.ISA, model_filename, alpha.prior=ISA.alpha)
+
+# Load model output if not running the model
+# jags.ISA <- readRDS("Model_Output/jags.ISA.rds")
+
+# Mean posterior estimates from model
+df.stats.ISA <- output_stats(jags.ISA, mix.coy.ISA, source.coy.ISA, output_options)
+
+# Extract posterior and turn into data frame
+g.post.ISA <- output_posteriors(jags.ISA, mix.coy.ISA, source.coy.ISA, output_options)
+posterior_cont <- as.data.frame((g.post.ISA[["cont"]][[1]][["data"]]))
+
+# Plot
+fig6c <- ggplot() +
+  geom_smooth(posterior_cont, mapping=aes(x=x, y=median, color=source))+
+  geom_ribbon(posterior_cont, mapping=aes(x=x, ymin=low, ymax=high, fill=source), alpha=0.3)+
+  labs(x="Impervious Surface Cover", y="Proportion")+
+  theme_custom()+
+  scale_y_continuous(limits=c(0,1), expand=c(0,0))+
+  scale_x_continuous(limits=c(18.5,81), expand=c(0,0))+
+  scale_color_manual(name=NULL,
+                     values=c("#c0362d", "#2D2926", "#284A45"),
+                     labels=c("Anthropogenic \nFood", "High Protein \nFood", "Low Protein \nFood"))+
+  scale_fill_manual(name=NULL,
+                    values=c("#db8c87", "#8C8076","#65948d" ),
+                    labels=c("Anthropogenic \nFood", "High Protein \nFood", "Low Protein \nFood"),
+                    guide = guide_legend(override.aes = list(alpha = 1)))+
+  theme(legend.position = "bottom")
+
+fig6c
+
+# ggsave("Figures/Figure6c.png", dpi=600, height=4, width=4)
+```
 
 

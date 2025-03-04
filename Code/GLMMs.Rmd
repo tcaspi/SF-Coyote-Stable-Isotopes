@@ -1,0 +1,230 @@
+---
+title: "GLMMs"
+author: "Tali Caspi"
+date: "2025-03-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggpubr);library(lme4);library(arm);library(MuMIn);library(tidyverse)
+library(broom);library(coda);library(grid);
+library(gridExtra);library(brms); library(broom.mixed); library(merTools);
+library(tidybayes);library(parallel); library(bayesplot); library(DHARMa.helpers); library(DHARMa); library(bayestestR); library(plotrix); library(marginaleffects)
+
+# Make custom theme
+theme_custom <- function() {
+  theme_classic()+
+  theme(panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.background = element_rect(fill = "white", color = NA),
+        plot.title = element_text(size = 7),
+        strip.background = element_blank(),
+        axis.text.y = element_text(size=5),
+        axis.text.x = element_text(size=10),
+        axis.title.y = element_text(size=12),
+        axis.title.x = element_text(size=12))}
+```
+
+
+The goal of this analysis is to model the relationship between isotope values and impervious surface cover for coyotes in San Francisco that are assigned to family groups.
+
+# Load data and prepare data frame
+
+```{r}
+# Load family group data
+ids <- read.csv("Data/individual_ids.csv") %>% select(individual, group)
+
+# Load covariate data
+covs <- read.csv("Data/territory_covs.csv") 
+
+# Prepare data frame
+glmm_df <- read.csv("Cleaned_Data/cleaned_whiskerdata.csv") %>% 
+  dplyr::select(SampleID, seg_num, C_raw, N_raw, individual, whisker, count, urban, sex) %>% 
+  left_join(ids, by="individual") %>% 
+  filter(!is.na(group)) %>% 
+  left_join(covs %>% select(group, ISA), by="group")
+
+glmm_df_averages <- glmm_df %>% 
+  group_by(whisker) %>% 
+  mutate(Mean_C = mean(C_raw),
+         Mean_N = mean(N_raw),
+         se_C = std.error(C_raw),
+         se_N = std.error(N_raw)) %>% 
+  distinct(whisker, ISA, Mean_C, Mean_N, se_C, se_N)
+
+# Sample counts
+nrow(glmm_df) # 883 whisker segments
+nrow(glmm_df_averages) # 67 individuals
+```
+
+# Construct models
+
+Use skew normal distribution in brms
+
+```{r}
+glmm_N <- bf(scale(N_raw) ~ ISA + sex + (1|whisker))
+
+glmm_N_skew <- brm(glmm_N,
+              data   = glmm_df, 
+              family = skew_normal(),
+              warmup = 1000,iter = 5000, thin=2,
+              chains = 4,
+              seed = 12345,
+              cores  = my.cores)
+
+glmm_C <- bf(scale(C_raw) ~ ISA + sex + (1|whisker))
+
+glmm_C_skew <- brm(glmm_C,
+              data   = glmm_df, 
+              family = skew_normal(),
+              warmup = 1000,iter = 5000, thin=2,
+              chains = 4,
+              seed = 12345,
+              cores  = my.cores)
+
+# Save models
+saveRDS(glmm_N_skew, "Model_Output/glmm_N_skew.rds")
+saveRDS(glmm_C_skew, "Model_Output/glmm_C_skew.rds")
+
+# Load models
+glmm_N_skew <- readRDS("Model_Output/glmm_N_skew.rds")
+glmm_C_skew <- readRDS("Model_Output/glmm_C_skew.rds")
+```
+
+# Model diagnostics
+
+```{r}
+# Check model fit
+pp_check(glmm_N_skew, ndraws=100)
+dh_check_brms(glmm_N_skew)
+
+pp_check(glmm_C_skew, ndraws=100)
+dh_check_brms(glmm_C_skew)
+
+# R2
+performance::r2_bayes(glmm_N_skew)
+performance::r2_bayes(glmm_C_skew)
+```
+
+# Extract model results
+
+```{r}
+# Extract model results
+models_glmm <- list(
+  glmm_N_skew = glmm_N_skew,
+  glmm_C_skew = glmm_C_skew)
+
+# Function to summarize posterior estimates and calculate 95% HPD using coda's HPDinterval
+summarize_posteriors_glmm <- function(model, model_name) {
+  posterior_estimates <- posterior_samples(model) 
+  posterior_estimates <- posterior_estimates[, 1:6] 
+  
+  do.call(rbind, lapply(names(posterior_estimates), function(param) {
+    values <- posterior_estimates[[param]]
+    
+    mcmc_values <- as.mcmc(values)
+    hpd_vals <- HPDinterval(mcmc_values, prob = 0.95)
+    
+    data.frame(
+      Model = model_name,
+      Effect = param,
+      Estimate = round(mean(values, na.rm = TRUE), 4),
+      lower = round(hpd_vals[1], 4),
+      upper = round(hpd_vals[2], 4)
+    )
+  }))
+}
+
+# Loop through all models and combine results
+glmm_results <- do.call(rbind, lapply(names(models_glmm), function(model_name) {
+  summarize_posteriors_glmm(models_glmm[[model_name]], model_name)
+}))
+
+glmm_results <- glmm_results %>% 
+  group_by(Effect) %>%
+  mutate(Result = paste(Estimate, " (", lower, ", ", upper, ")", sep = "")) %>%
+  select(-c(Estimate, lower, upper)) %>% 
+  pivot_wider(
+    names_from = Model,
+    values_from = Result
+  )
+
+glmm_results
+```
+
+# Conditional effects
+
+```{r}
+# Conditional effects
+conditional_effects(glmm_N_skew) # fixed effects not significant
+conditional_effects(glmm_C_skew) # ISA is significant
+
+# # Impervious surface cover: change in 1% or 100% increase in ISA
+avg_comparisons(glmm_N_skew, variables=list(ISA=c(0,100)), allow_new_levels=T)
+avg_comparisons(glmm_C_skew, variables=list(ISA=c(0,100)), allow_new_levels=T)
+```
+
+# Plot
+
+```{r}
+# Define a sequence of values for ISA from 0 to 100
+ISA_values <- seq(0, 100, by = 1)
+int_conditions <- list(ISA = ISA_values)
+
+s.N_raw <- scale(glmm_df$N_raw)
+s.C_raw <- scale(glmm_df$C_raw)
+
+# Compute conditional effects using the new data for ISA
+cond_ISA_N <- conditional_effects(glmm_N_skew, effects="ISA", int_conditions = int_conditions)
+cond_ISA_C <- conditional_effects(glmm_C_skew, effects="ISA", int_conditions = int_conditions)
+
+cond_ISA_N <- data.frame(cond_ISA_N$ISA) %>% 
+  mutate(N_tf = `estimate__`* attr(s.N_raw, 'scaled:scale')+ attr(s.N_raw, 'scaled:center'),
+         lower_tf = `lower__`* attr(s.N_raw, 'scaled:scale')+ attr(s.N_raw, 'scaled:center'),
+         upper_tf = `upper__`* attr(s.N_raw, 'scaled:scale')+ attr(s.N_raw, 'scaled:center'))
+
+cond_ISA_C <- data.frame(cond_ISA_C$ISA) %>% 
+  mutate(C_tf = `estimate__`* attr(s.C_raw, 'scaled:scale')+ attr(s.C_raw, 'scaled:center'),
+         lower_tf = `lower__`* attr(s.C_raw, 'scaled:scale')+ attr(s.C_raw, 'scaled:center'),
+         upper_tf = `upper__`* attr(s.C_raw, 'scaled:scale')+ attr(s.C_raw, 'scaled:center'))
+
+
+# Carbon
+fig.6a <- ggplot() +
+  geom_ribbon(data = cond_ISA_C, aes(x = ISA, ymin = lower_tf, ymax = upper_tf), 
+              alpha = 0.5, fill = "#8C8076") +
+  geom_line(data = cond_ISA_C, aes(x = ISA, y = (C_tf)), color = "#2D2926", size = 1)+
+  geom_jitter(data = glmm_df, aes(x = ISA, y = C_raw, fill = "#2D2926"),alpha=0.3, size=1) +
+  
+  # Graphics
+  labs(x = "", y = expression(~delta^{13}~C)) +
+  theme_custom() +
+  scale_x_continuous(limits=c(15,85), expand = c(0.002, 0)) +
+  scale_y_continuous(limits = c(-24, -15), breaks = seq(-24,-15,by=1))+
+  theme(legend.position = "none")
+
+fig.6a
+
+# ggsave("Figures/Figure6a.png", dpi=600, height=4, width=4)
+
+# Nitrogen
+fig.6b <- ggplot() +
+  geom_ribbon(data = cond_ISA_N, aes(x = ISA, ymin = lower_tf, ymax = upper_tf), 
+              alpha = 0.5, fill = "#8C8076") +
+  geom_line(data = cond_ISA_N, aes(x = ISA, y = (N_tf)), 
+            color = "#2D2926", size = 1, linetype="dashed")+
+  geom_jitter(data = glmm_df, aes(x = ISA, y = N_raw, fill = "#2D2926"), alpha=0.3, size=1) +
+  
+  # Graphics
+  labs(x = "", y = expression(~delta^{15}~N)) +
+  theme_custom() +
+  scale_x_continuous(limits=c(15,85), expand = c(0.002, 0)) +
+  scale_y_continuous(limits = c(6, 11), breaks = c(6,7,8,9,10,11))+
+  theme(legend.position = "none")
+
+fig.6b
+
+# ggsave("Figures/Figure6b.png", dpi=600, height=4, width=4)
+```
