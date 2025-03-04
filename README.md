@@ -4,11 +4,11 @@ This repository contains all raw data, plots and scripts for the inbreeding mode
 
 Please find below a description of all raw and clean data sets and the scripts used to clean up data, run models, and plot figures.
 
-## Raw data
+## Data files
 
 In the `Data` folder, you will find a number of files:
 
-| `20240102_data.csv`; `20240910_data.csv`; and `pilot_and_20231003.csv`: csv files containing the raw isotopic data.
+> `20240102_data.csv`; `20240910_data.csv`; and `pilot_and_20231003.csv`: csv files containing the raw isotopic data.
 
 | Column     | Description                                                |
 |------------|------------------------------------------------------------|
@@ -22,7 +22,7 @@ In the `Data` folder, you will find a number of files:
 | tray       | Tray number sample was processed on                        |
 | duplicate  | Indicates whether or not the whisker is a duplicate sample |
 
-| `prey_data_si.csv`: csv file containing the raw isotopic data for dietary sources.
+> `prey_data_si.csv`: csv file containing the raw isotopic data for dietary sources.
 
 | Column   | Description                         |
 |----------|-------------------------------------|
@@ -36,7 +36,7 @@ In the `Data` folder, you will find a number of files:
 | material | Tissue type (hair, feather, etc.)   |
 | species  | Species sample came from            |
 
-| `fastfood_si.csv`: csv file containing raw data for chicken and beef samples from San Francisco taken from A.H. Jahren & R.A. Kraft, Carbon and nitrogen stable isotopes in fast food: Signatures of corn and confinement, Proc. Natl. Acad. Sci. U.S.A. 105 (46) 17855-17860, <https://doi.org/10.1073/pnas.0809870105> (2008).
+> `fastfood_si.csv`: csv file containing raw data for chicken and beef samples from San Francisco taken from A.H. Jahren & R.A. Kraft, Carbon and nitrogen stable isotopes in fast food: Signatures of corn and confinement, Proc. Natl. Acad. Sci. U.S.A. 105 (46) 17855-17860, <https://doi.org/10.1073/pnas.0809870105> (2008).
 
 | Column   | Description                |
 |----------|----------------------------|
@@ -45,7 +45,7 @@ In the `Data` folder, you will find a number of files:
 | d13C     | Raw d13C value             |
 | d15N     | Raw d15N value             |
 
-| `whisker_metadata.csv`: csv file containing metadata for whisker samples.
+> `whisker_metadata.csv`: csv file containing metadata for whisker samples.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
 |-----------------|-------------------------------------------------------|
@@ -66,7 +66,7 @@ In the `Data` folder, you will find a number of files:
 | sex            | Sex of coyote                                                                                                                                                                                                                                                                                                          |
 | dead           | Sample collection type: roadkill = coyote killed by vehicle strike; sick.euth = coyote euthanized for medical reasons; live cap = live capture; euthanized = coyote lethally removed by wildlife officials for aggression; sick.release = sick coyote treated and released; unknown = no information on cause of death |
 
-| `individual_ids.csv`
+> `individual_ids.csv`
 
 | Column     | Description                                                               |
 |-----------------|-------------------------------------------------------|
@@ -75,7 +75,7 @@ In the `Data` folder, you will find a number of files:
 | sex        | Sex as identified by genotyping                                           |
 | group      | Family group assignment                                                   |
 
-| `territory_covs.csv`
+> `territory_covs.csv`
 
 | Column           | Description                                                 |
 |-----------------|-------------------------------------------------------|
@@ -92,21 +92,21 @@ In the `Data` folder, you will find a number of files:
 
 The scripts for the full workflow are available as R and Rmd files in the `Code` folder. All scripts are R scripts that have been run in R version 4.2.1. The output of the models are not stored on github due to the large file sizes, but can be generated on your own device, or are available on Dryad (doi: XXXX).
 
--   `Sample_Collection_Map.R`
+-   `Sample_Collection_Map.R`: this script generates the study site map indicating where samples were collected.
 
 -   `Clean_Data.Rmd`: this script takes the raw isotope data and creates cleaned data frames that can be used in data visualization and analysis. The script also calculates some basic summary statistics.
 
--   `Isotope_Biplots.Rmd`
+-   `Isotope_Biplots.Rmd`: this script generates isotope biplots presented in the manuscript.
 
--   `SIBER.Rmd`
+-   `SIBER.Rmd`: this script uses the SIBER package to calculate Bayesian-based standard ellipse areas.
 
--   `RInSp.Rmd`
+-   `RInSp.Rmd`: this script uses the RInSp package to calculate niche components and the WIC/TNW index of individual dietary specialization.
 
--   `DHGLMs.Rmd`
+-   `DHGLMs.Rmd`: this script uses the brms package to conduct double-hierarchical generalized linear model that assess the effect of sex and region on among-individual differences in isotopic means and variances.
 
--   `GLMMs.Rmd`
+-   `GLMMs.Rmd`: this script uses the brms package to conduced generalized linear models that assess the effect of impervious surface cover on d13C and d15N values.
 
--   `Mixing_Models.Rmd`: *add something about suggesting these models be run on an HPC cluster*
+-   `Mixing_Models.Rmd`: this script uses the MixSIAR package to run Bayesian-based stable isotope mixing models. These models are computationally intensive and take a long time to run. It is recommended to run them on an HPC cluster rather than on a personal laptop.
 
 ## Clean data
 
@@ -114,51 +114,51 @@ In the `Cleaned_Data` folder, you will find a number of cleaned up files that ha
 
 Cleaned raw data:
 
-> -   `cleaned_whiskerdata.csv`
+> -   `cleaned_whiskerdata.csv`: output of `Clean_Data.Rmd` script
 >
-> -   `averaged_whiskerdata.csv`
+> -   `averaged_whiskerdata.csv`: output of `Clean_Data.Rmd` script
 
 For MixSIAR models:
 
-> -   `coyote_consumer_avgs.csv`
+> -   `coyote_consumer_avgs.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model
 >
-> -   `coyote_source.csv`
+> -   `coyote_source.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model
 >
-> -   `coyote_discrimination.csv`
+> -   `coyote_discrimination.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model
 
-> -   `coyote_consumer_isa.csv`
+> -   `coyote_consumer_isa.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model
 >
-> -   `coyote_source_three.csv`
+> -   `coyote_source_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model
 >
-> -   `coyote_discrimination_three.csv`
+> -   `coyote_discrimination_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model
 
-## Model_Output
+## Model output
 
 In the `Model_Output` folder, you will find .rds files containing model output for the analyses conducted in the scripts above.
 
 -   <div>
 
-    > `jags.full.rds`
+    > `jags.full.rds`: model output for the six-source, categorical effect Bayesian-based stable isotope mixing model. This file is generated in the `Mixing_Models.Rmd` script.
     >
-    > `jags.ISA.rds`
+    > `jags.ISA.rds`: model output for the three-source, continuous effect Bayesian-based stable isotope mixing model. This file is generated in the `Mixing_Models.Rmd` script.
 
     </div>
 
 -   <div>
 
-    > `glmm_C_skew.rds`
+    > `glmm_C_skew.rds`: model output for the effect of impervious surface cover on d13C. This file is generated in the `GLMMs.Rmd` script.
     >
-    > `glmm_N_skew.rds`
+    > `glmm_N_skew.rds`: model output for the effect of impervious surface cover on d15CN This file is generated in the `GLMMs.Rmd` script.
 
     </div>
 
 -   <div>
 
-    > `dhglm_C_skew.rds`
+    > `dhglm_C_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
     >
-    > `dhglm_N_skew.rds`
+    > `dhglm_N_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
     >
-    > `bivariate_model.rds`
+    > `bivariate_model.rds`: model output for the bivariate DHGLM. This file is generated in the `DHGLMs.Rmd` script.
 
     </div>
 
