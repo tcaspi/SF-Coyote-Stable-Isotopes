@@ -1,8 +1,8 @@
 # SF-Coyote-Stable-Isotopes
 
-This repository contains all raw data, plots and scripts for the inbreeding models implemented in Caspi et al. (2025) (In Preparation) titled "Urbanization facilitates individual dietary specialization in a generalist carnivore" published in \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+This repository contains all raw data, plots and scripts for the data analysis implemented in Caspi et al. (2025) (In Preparation) titled "Urbanization facilitates individual dietary specialization in a generalist carnivore" and published in \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
 
-Please find below a description of all raw and clean data sets and the scripts used to clean up data, run models, and plot figures.
+Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript.
 
 ## Data files
 
@@ -90,27 +90,27 @@ In the `Data` folder, you will find a number of files:
 
 ## Scripts
 
-The scripts for the full workflow are available as R and Rmd files in the `Code` folder. All scripts are R scripts that have been run in R version 4.2.1. The output of the models are not stored on github due to the large file sizes, but can be generated on your own device, or are available on Dryad (doi: XXXX).
+The scripts for the full workflow are available as R and Rmd files in the `Code` folder. All files are R scripts that were run in R version 4.2.1. The output of the models are not stored on github due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (doi: XXXX).
 
--   `Sample_Collection_Map.R`: this script generates the study site map indicating where samples were collected.
+-   `Sample_Collection_Map.R`: this script generates a study site map indicating where samples were collected.
 
--   `Clean_Data.Rmd`: this script takes the raw isotope data and creates cleaned data frames that can be used in data visualization and analysis. The script also calculates some basic summary statistics.
+-   `Clean_Data.Rmd`: this script takes the raw isotope data and creates cleaned data frames that can be used in data visualization and analysis. The script also calculates some basic summary statistics presented in the manuscript.
 
--   `Isotope_Biplots.Rmd`: this script generates isotope biplots presented in the manuscript.
+-   `Isotope_Biplots.Rmd`: this script generates the isotope biplots presented in the manuscript.
 
 -   `SIBER.Rmd`: this script uses the SIBER package to calculate Bayesian-based standard ellipse areas.
 
 -   `RInSp.Rmd`: this script uses the RInSp package to calculate niche components and the WIC/TNW index of individual dietary specialization.
 
--   `DHGLMs.Rmd`: this script uses the brms package to conduct double-hierarchical generalized linear model that assess the effect of sex and region on among-individual differences in isotopic means and variances.
+-   `DHGLMs.Rmd`: this script uses the brms package to construct double-hierarchical generalized linear models that assess the effect of sex and region on among-individual differences in isotopic means and variances.
 
--   `GLMMs.Rmd`: this script uses the brms package to conduced generalized linear models that assess the effect of impervious surface cover on d13C and d15N values.
+-   `GLMMs.Rmd`: this script uses the brms package to construct generalized linear mixed-effect models that assess effect of impervious surface cover on d13C and d15N values.
 
--   `Mixing_Models.Rmd`: this script uses the MixSIAR package to run Bayesian-based stable isotope mixing models. These models are computationally intensive and take a long time to run. It is recommended to run them on an HPC cluster rather than on a personal laptop.
+-   `Mixing_Models.Rmd`: this script uses the MixSIAR package to construct Bayesian-based stable isotope mixing models to estimate mean proportions of different dietary sources. These models are computationally intensive and take a long time to run. Thus, it is recommended to run them on an HPC cluster rather than on a personal laptop.
 
 ## Clean data
 
-In the `Cleaned_Data` folder, you will find a number of cleaned up files that have been generated within the R scripts from the raw data described above.
+In the `Cleaned_Data` folder, you will find a number of cleaned up files that are generated w ithin the R scripts described above.
 
 Cleaned raw data:
 
@@ -120,23 +120,25 @@ Cleaned raw data:
 
 For MixSIAR models:
 
-> -   `coyote_consumer_avgs.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model
+> -   `coyote_consumer_avgs.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model.
 >
-> -   `coyote_source.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model
+> -   `coyote_source.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model.
 >
-> -   `coyote_discrimination.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model
+> -   `coyote_discrimination.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the six-source mixing model.
 
-> -   `coyote_consumer_isa.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model
+> -   `coyote_consumer_isa.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model.
 >
-> -   `coyote_source_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model
+> -   `coyote_source_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model.
 >
-> -   `coyote_discrimination_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model
+> -   `coyote_discrimination_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model.
 
 ## Model output
 
-In the `Model_Output` folder, you will find .rds files containing model output for the analyses conducted in the scripts above.
+In the `Model_Output` folder, you will find `.rds` files containing model output for some of the analyses performed in the scripts above.
 
 -   <div>
+
+    Stable isotope mixing models:
 
     > `jags.full.rds`: model output for the six-source, categorical effect Bayesian-based stable isotope mixing model. This file is generated in the `Mixing_Models.Rmd` script.
     >
@@ -146,6 +148,8 @@ In the `Model_Output` folder, you will find .rds files containing model output f
 
 -   <div>
 
+    Generalized linear mixed-effect models:
+
     > `glmm_C_skew.rds`: model output for the effect of impervious surface cover on d13C. This file is generated in the `GLMMs.Rmd` script.
     >
     > `glmm_N_skew.rds`: model output for the effect of impervious surface cover on d15CN This file is generated in the `GLMMs.Rmd` script.
@@ -153,6 +157,8 @@ In the `Model_Output` folder, you will find .rds files containing model output f
     </div>
 
 -   <div>
+
+    Double-hierarchical generalized linear models:
 
     > `dhglm_C_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
     >

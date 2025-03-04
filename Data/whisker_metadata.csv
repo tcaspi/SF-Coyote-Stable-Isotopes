@@ -1,121 +1,121 @@
-whisker,date_clean,date_chopped,initials,tray,storage,urban,FieldID,site,lat,long,year,date.collected,collector,age,sex,dead
-S19-8741,1/18/2023,1/20/2023,ES,SFCoyTray1_ES,envelope,urban,01CALA17SF,Brotherhood Way @ Arch st,37.712434,-122.467075,2017,8/27/2017,Jon Young,unknown,female,roadkill
-S19-8742,1/18/2023,1/20/2023,ES,SFCoyTray1_ES,envelope,urban,02CALA17PRES,Presidio. Merchant rd @ Cranston rd,37.80631,-122.475502,2017,6/7/2017,Jon Young,> 1 year,female,roadkill
-S19-8743,1/18/2023,1/20/2023,ES,SFCoyTray1_ES,envelope,urban,03CALA17SF,Hahn st @ visitation ave,37.713531,-122.415451,2017,11/14/2017,Jon Young,unknown,female,roadkill
-S19-8744,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,04CALA17SF,chestnut st @ hyde st,37.802932,-122.419817,2017,8/26/2017,Jon Young,< 1 year,female,sick.euth
-S19-8745,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,05CALA17SF,lake merced blvd,37.711637,-122.485415,2017,1/13/2017,Jon Young,> 1 year,female,roadkill
-S19-8746,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,06CALA17SF,john f shelley dr @Mansell st,37.718179,-122.41426,2017,4/1/2017,Jon Young,> 1 year,female,roadkill
-S19-8747,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,07CALA17SF,beach st @ powell,37.807704,-122.412359,2017,9/10/2017,Jon Young,< 1 year,male,sick.euth
-S19-8748,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,08CALA17PRES,Presidio. lincoln st in front of cemetery,37.801722,-122.463818,2017,6/22/2017,Jon Young,< 1 year,male,roadkill
-S19-8749,2/23/2023,3/10/2023 and 4/17/2023,ES,SFCoyTray4_ES and SFCoyTray5_ES,envelope,urban,09CALA17SF,garces dr @ gonzales dr,37.715894,-122.478459,2017,9/27/2017,Jon Young,< 1 year,female,roadkill
-S19-8750,2/23/2023,4/17/2023,ES,SFCoyTray5_ES,envelope,urban,10CALA17SF,john muir dr @ skyline blvd,37.71898,-122.500253,2017,9/17/2017,Jon Young,unknown,male,roadkill
-S19-8751,2/23/2023,4/17/2023,ES,SFCoyTray5_ES,envelope,urban,11CALA17SF,"guadalupe canyon pkwy, daly city",37.700848,-122.449727,2017,7/31/2017,Jon Young,< 1 year,male,roadkill
-S19-8752,5/1/2023,5/3/2023,ES,SFCoyTray6_ES and SFCoyTray8_ES,tube,urban,12CALA17SF,stow lake @ MLK Dr,37.767097,-122.473275,2017,12/26/2017,Jon Young,unknown,male,roadkill
-S19-8753,5/1/2023,8/10/2023,ES,SFCoyTray10_ES,tube,urban,13CALA17SF,geneva ave onramp 280HWY,37.7202,-122.448562,2017,12/19/2017,Jon Young,unknown,female,roadkill
-S19-8754,5/1/2023,8/10/2023,ES,SFCoyTray10_ES,tube,urban,14CALA17SF,california st @ kerny st,37.792725,-122.404452,2017,12/21/2017,Jon Young,unknown,female,live cap
-S19-8755,5/1/2023,8/10/2023,ES,SFCoyTray11_ES,envelope,urban,15CALA16SF,"park presidio bypass, northern end (GGP)",37.772526,-122.475507,2016,1/10/2016,Jon Young,> 1 year,male,roadkill
-S19-8756,5/1/2023,8/10/2023,ES,SFCoyTray11_ES,envelope,urban,16CALA16SF,skyline blvd @ fort funston rd,37.713704,-122.498253,2016,1/29/2016,Jon Young,unknown,male,roadkill
-S19-8757,5/1/2023,5/15/2023,ES,SFCoyTray8_ES,envelope,urban,17CALA18SF,skyline blvd @ john muir dr,37.718976,-122.500257,2018,1/31/2018,Jon Young,unknown,male,roadkill
-S19-8758,5/1/2023,5/15/2023,ES,SFCoyTray8_ES,envelope,urban,18CALA18SF,"generic ""lake merced""",37.729544,-122.493625,2018,11/30/2018,Jon Young,unknown,female,roadkill
-S19-8759,5/1/2023,5/17/2023,ES,SFCoyTray8_ES,envelope,urban,19CALA18SF,HWY 35 @ SF zoo,37.730544,-122.5,2018,9/7/2018,Jon Young,2-5 years,female,roadkill
-S19-8760,5/1/2023,5/17/2023,ES,SFCoyTray8_ES,envelope,urban,20CALA18SF,19th ave@ winston dr,37.726904,-122.474754,2018,11/9/2018,Jon Young,unknown,male,roadkill
-S19-8761,5/1/2023,5/31/2023,ES,SFCoyTray9_ES,envelope,urban,21CALA18SF,skyline @ john muir dr,37.719054,-122.500256,2018,5/23/2018,Jon Young,unknown,female,roadkill
-S19-8762,5/1/2023,5/31/2023,ES,SFCoyTray9_ES,envelope,urban,22CALA18SF,brotherhood way @ summit way,37.713696,-122.474506,2018,3/30/2018,Jon Young,unknown,male,roadkill
-S19-8763,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,23CALA18SF,pup from botanical garden litter,37.766391,-122.466403,2018,5/27/2018,Jon Young,< 1 year,male,sick.euth
-S19-8764,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,24CALA18SF,maclaren park,37.718231,-122.416093,2018,5/24/2018,Jon Young,unknown,male,unknown
-S19-8765,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,25CALA19SF,"alive, in drycleaners at paris st and geneva ave",37.715652,-122.439485,2019,4/24/2019,Jon Young,unknown,female,live cap
-S19-8767,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,27CALA19SF,hunter's point shipyard,37.719506,-122.37205,2019,1/17/2019,Jon Young,> 3 years,female,sick.euth
-S19-8768,1/18/2023,2/2/2023,ES,SFCoyTray1_ES + SFCoyTray2_ES,envelope,urban,28CALA19SF,23rd ave 2 ocean ave,37.732564,-122.479244,2019,10/5/2019,Jon Young,unknown,female,roadkill
-S19-8769,1/18/2023,2/2/2023,ES,SFCoyTray2_ES,envelope,urban,29CALA19SF,11th st @ bryant st,37.76949,-122.410823,2019,8/20/2019,Jon Young,< 1 year,male,live cap
-S19-8771,1/18/2023,2/2/2023,ES,SFCoyTray2_ES,envelope,urban,31CALA19SF,sunndale ave @ Mansell AKA persia ave,37.718299,-122.425895,2019,4/13/2019,Jon Young,2 years,male,roadkill
-S19-8772,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,32CALA16PRES01F,Presidio,37.793436,-122.466057,2016,5/5/2016,Jon Young,>3,female,live cap
-S19-8773,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,33CALA16PRES02M,Presidio,37.793436,-122.466057,2016,5/21/2016,Jon Young,> 1 year,male,live cap
-S19-8774-W2,11/7/2022,11/14/2022,ES,SFCoyTray2,envelope,urban,34CALA16PRES03M,"96 Zita Manor, Daly City",37.68636367,-122.479743,2017,2/23/2017,Jon Young,,male,roadkill
-S19-8775,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,35CALA16PRES04M,Presidio,37.793436,-122.466057,2016,9/30/2016,Jon Young,< 1 year,male,live cap
-S19-8775-2,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,35CALA16PRES04M,Daly City,37.694306,-122.455222,2018,6/20/2018,Jon Young,,male,roadkill
-S19-8776,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,36CALA16PRES05M,Presidio,37.793436,-122.466057,2016,9/30/2016,Jon Young,< 1 year,male,live cap
-S19-8777,5/1/2023,,ES,,envelope,urban,37CALA16PRES06F,Presidio,37.793436,-122.466057,2016,10/8/2016,Jon Young,< 1 year,female,live cap
-S19-8777-2,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,37CALA16PRES06F,Presidio,37.793436,-122.466057,2017,10/18/2017,Jon Young,,female,live cap
-S19-8778,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,38CALA16PRES07M,Presidio,37.793436,-122.466057,2016,10/20/2016,Jon Young,< 1 year,male,live cap
-S19-8779,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,39CALA17PRES08M,Presidio,37.793436,-122.466057,2017,10/4/2017,Jon Young,< 1 year,male,live cap
-S19-8780,1/18/2023,2/22/2023,ES,SFCoyTray2_ES and SFCoyTray3_ES,envelope,urban,40CALA17PRES09M,Presidio,37.793436,-122.466057,2017,10/16/2017,Jon Young,< 1 year,male,live cap
-S19-8781,2/23/2023,4/19/2023,ES,SFCoyTray5_ES,envelope,urban,41CALA17PRES10F,Presidio,37.793436,-122.466057,2017,10/25/2017,Jon Young,< 1 year,female,live cap
-S19-8782,2/23/2023,4/19/2023,ES,SFCoyTray5_ES,envelope,urban,42CALA18PRES11F,Presidio,37.793436,-122.466057,2018,9/28/2018,Jon Young,< 1 year,female,live cap
-S19-8783,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,43CALA18PRES12F,Presidio,37.793436,-122.466057,2018,10/4/2018,Jon Young,< 1 year,female,live cap
-S19-8784,2/23/2023,4/29/2023,ES,SFCoyTray5_ES,envelope,urban,44CALA18PRES13M,Presidio,37.793436,-122.466057,2018,10/13/2018,Jon Young,< 1 year,male,live cap
-S19-8785,2/23/2023,4/24/2023,ES,SFCoyTray5_ES,envelope,urban,45CALA18PRES14F,Presidio,37.793436,-122.466057,2018,10/15/2018,Jon Young,< 1 year,female,live cap
-S19-8786,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,46CALA19PRES15F,Presidio,37.793436,-122.466057,2019,1/10/2019,Jon Young,> 3 years,female,live cap
-S19-8786-2,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,46CALA19PRES15F,Presidio,37.79093888,-122.4735132,2020,1/7/2020,,,female,live cap
-S19-8787,2/23/2023,4/24/2023,ES,SFCoyTray5_ES,envelope,urban,47CALA19PRES16F,Presidio,37.793436,-122.466057,2019,1/10/2019,Jon Young,< 1 year,female,live cap
-S21-1079,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A448247,101SB @ Candlestick Point,37.7100729,-122.3953715,2020,10/7/2020,SFACC,2-Jan,female,roadkill
-S21-1080,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A444830,3rd and 101S,37.71595752,-122.3987151,2020,7/13/2020,SFACC,1,male,roadkill
-S21-1081,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A449880,Hunter's point shipyard,37.72830511,-122.3764225,2020,12/4/2020,SFACC,1,female,sick.euth
-S21-1082,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A449485,Junipero Serra and Winston Drive,37.72696,-122.47237,2020,11/17/2020,SFACC,1.5,female,roadkill
-S21-1083,1/18/2023,3/3/2023,ES,SFCoyTray3_ES,envelope,urban,A450028,101SB @ Candlestick exit,37.71053,-122.39534,2020,12/8/2020,SFACC,2,male,roadkill
-S21-1084,2/23/2023,4/24/2023 and 4/26/2023,ES,SFCoyTray5_ES and SFCoyTray6_ES,envelope,urban,A446958,Portola Drive and Twin Peaks Blvd,37.74581,-122.45071,2020,9/6/2020,SFACC,2,NA,roadkill
-S21-1085,2/23/2023,4/26/2023,ES,SFCoyTray6_ES,envelope,urban,A452551,Urbano Drive and Legion Court,37.72504,-122.46331,2020,2/13/2020,SFACC,3,male,roadkill
-S21-1086,2/23/2023,4/26/2023,ES,SFCoyTray6_ES,envelope,urban,A443347,Portola Drive and Glenview Drive,37.74656,-122.44802,2020,5/25/2020,SFACC,1,female,roadkill
-S21-1087,2/23/2023,5/1/2023,ES,SFCoyTray6_ES,envelope,urban,A447852,Lincoln Way and 15th Avenue,37.76576,-122.47294,2020,9/27/2020,SFACC,2,male,roadkill
-S21-1088,2/23/2023,5/1/2023,ES,SFCoyTray6_ES,envelope,urban,A447214,Lincoln Way and 10th Avenue,37.76594,-122.46751,2020,9/11/2020,SFACC,0.5,female,roadkill
-S21-1089,2/23/2023,5/1/2023,ES,SFCoyTray6_ES,envelope,urban,A447246,855 Brotherhood Way,37.71422,-122.47915,2020,9/11/2020,SFACC,1,female,roadkill
-S21-1201,2/23/2023,5/3/2023,ES,SFCoyTray6_ES,envelope,urban,A452954,"NB 101, Visitacion Valley",37.71661864,-122.3988142,2021,2/24/2021,SFACC,1,female,roadkill
-S21-1202,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,A452936,Chain of Lakes; 41st and MLK Drive,37.76524,-122.50064,2021,2/23/2021,SFACC,2,female,unknown
-S21-1203,5/1/2023,7/17/2023,ES,SFCoyTray9_ES,envelope,urban,A453036,"SB101, just before Candlestick exit",37.71053,-122.39534,2021,2/27/2021,SFACC,1,NA,roadkill
-S21-1204,5/1/2023,7/24/2023,ES,SFCoyTray9_ES and SFCoyTray10_ES,envelope,urban,20200711-DH-01,"Infantry Terrace, Presidio",37.79970469,-122.4615094,2020,7/11/2020,David Harelson,NA,male,roadkill
-S21-1205,5/1/2023,7/24/2023,ES,SFCoyTray10_ES,envelope,urban,20200711-DH-02,3rd st @ 101SB,37.71595752,-122.3987151,2020,7/11/2020,David Harelson,NA,male,roadkill
-S21-1206,5/1/2023,7/31/2023,ES,SFCoyTray10_ES,envelope,urban,20200815-DH-01,Richardson and 101NB near the Palace of Fine Arts,37.80113,-122.44817,2020,8/15/2020,David Harelson,NA,male,roadkill
-S21-1207,5/1/2023,8/7/2023,ES,SFCoyTray10_ES,envelope,urban,20201116-DH-01,"101NB @ Mountain Lake Park, Presidio",37.788,-122.472,2020,11/16/2020,David Harelson,NA,male,roadkill
-S21-3427,1/25/2023,6/13/2023,TC,SFCoyTray4_TC,envelope,urban,A458822,Conservatory of Flowers; GGPE,37.77280507,-122.4602772,2021,8/6/2021,SFACC,6 months,NA,sick.release
-S21-3428,1/25/2023,6/13/2023,TC,SFCoyTray4_TC,envelope,urban,A457920,9th st and MLK,37.76637009,-122.4663163,2021,7/13/2021,SFACC,13 weeks,NA,roadkill
-S21-3429,1/25/2023,6/2/2023,TC,SFCoyTray4_TC,envelope,urban,A458007,JFK and Stow Lake Drive,37.77118025,-122.4740837,2021,7/16/2021,SFACC,6 years,male,euthanized
-S21-3430,1/25/2023,6/13/2023,TC,SFCoyTray4_TC,envelope,urban,A457416,Urbano and Victoria,37.72334353,-122.4646011,2021,7/1/2021,SFACC,4 years,male,roadkill
-S21-3431,1/25/2023,6/13/2023 & 6/21/2023,TC,SFCoyTray4_TC & SFCoyTray5_TC,envelope,urban,A458911,3850 19th avebue and Junipero Serra Blvd,37.71762166,-122.4726848,2021,8/9/2021,SFACC,1 year,male,roadkill
-S21-3433,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,PORE,Point Reyes National Sea Shore,38.089942,-122.948569,2021,4/13/2021,D. Horowski (GGNRA),adult,male,roadkill
-S21-3434,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,TEVA,Tennessee Valley Beach,37.84193152,-122.5517587,2020,9/23/2020,Bill Merkle (GGNRA),,male,euthanized
-S21-3435,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,M04-MH20,Marin Headlands,37.83253217,-122.5287104,2020,9/14/2020,Bill Merkle (GGNRA),,male,live cap
-S21-3437,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M01-MH20,Marin Headlands,37.83992137,-122.5150139,2020,9/9/2020,Bill Merkle (GGNRA),,male,live cap
-S21-3438,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M07-MH20,Marin Headlands,37.83211526,-122.4913258,2020,10/4/2020,Bill Merkle (GGNRA),,male,live cap
-S21-3439,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M05-MH20,Marin Headlands,37.83253217,-122.5287104,2020,9/15/2020,Bill Merkle (GGNRA),,male,live cap
-S21-3440,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M06-MH20,Marin Headlands,37.83253217,-122.5287104,2020,9/28/2020,Bill Merkle (GGNRA),,male,live cap
-S21-3441,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,F08-TV20,Tennessee Valley Beach,37.84193152,-122.5517587,2020,10/2/2020,Bill Merkle (GGNRA),,female,live cap
-S21-3442,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,F02-MH20,Marin Headlands,37.83140633,-122.5244221,2020,9/12/2020,Bill Merkle (GGNRA),,female,live cap
-S21-3443,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,F03-MH20,Marin Headlands,37.83992137,-122.5150139,2020,9/13/2020,Bill Merkle (GGNRA),,female,live cap
-S22-0870,1/18/2023,3/3/2023,ES,SFCoyTray3_ES & SFCoyTray4_ES,envelope,urban,A462584,Fort Funston,,,2021,11/2/2021,SFACC,,NA,unknown
-S22-0871,1/18/2023,3/3/2023,ES,SFCoyTray4_ES,envelope,urban,A461396,19th and Vicente,37.73939172,-122.4755451,2021,9/30/2021,SFACC,,female,roadkill
-S22-0873,1/18/2023,3/3/2023,ES,SFCoyTray4_ES,envelope,urban,A463500,O'Shaughnessy Boulevard & Del Vale Avenue,37.74136802,-122.4460034,2021,12/1/2021,SFACC,1 year,male,roadkill
-S22-0874,1/18/2023,3/3/2023,ES,SFCoyTray3_ES,envelope,urban,A463997,Highway 35 and John Muir Drive,37.71927099,-122.5002004,2021,12/20/2021,SFACC,,male,roadkill
-S22-0875,1/18/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,A461801,Geary and Scott,37.78378847,-122.4379217,2021,10/12/2021,SFACC,6 months,female,roadkill
-S22-0876,1/25/2023,6/2/2023,TC,SFCoyTray4_TC,envelope,urban,A465567,280N and Geneva exit,37.7201301,-122.4479994,2021,2/9/2021,SFACC,1 year,male,roadkill
-S22-0877,1/25/2023,6/2/2023,TC,SFCoyTray4_TC,envelope,urban,A465739,280S @ Geneva/Mission exit,37.72067306,-122.4484092,2022,2/14/2022,SFACC,1 year,male,roadkill
-S22-0881,1/25/2023,1/30/2023,TC,SFCoyTray3_TC,envelope,urban,A438211,Lincoln x 36th,37.76475505,-122.4953593,2020,1/8/2020,SFACC,,male,roadkill
-S22-0882,1/25/2023,1/30/2023,TC,SFCoyTray3_TC & SFCoyTray4_TC,envelope,urban,A436840,Junipero Serra Blvd & Palmetto Ave,37.71082275,-122.4710157,2019,11/26/2019,SFACC,1 year,male,roadkill
-S22-0883,11/7/2022,11/14/2022,ES,SFCoyTray2,envelope,urban,A438133,Cesar Chavez ramp,37.74952265,-122.4032778,2020,1/5/2020,SFACC,,female,roadkill
-S22-0884,11/7/2022,11/14/2022,ES,SFCoyTray2,envelope,urban,20191204-SFACC-01,Skyline Blvd & John Muir,37.71912715,-122.5001926,2019,12/4/2019,SFACC,,female,roadkill
-S22-0885,11/7/2022,12/16/2022,TC,SFCoyTray2 & SFCoyTray3_TC,envelope,urban,20210927-JY-01,Hwy 101 @ Cesar Chavez,37.749823,-122.403687,2021,9/27/2021,Jon Young,,male,roadkill
-S22-0886,9/12/2022; 11/9/2022,9/14/2022,TC,SFCoyTray1,envelope,urban,20210929-JY-01,SB101 @ Bayshore,37.716786,-122.399191,2021,9/29/2021,Jon Young,,female,roadkill
-S22-0887,11/7/2022,12/16/2022,TC,SFCoyTray3_TC,tube,urban,20210904-JK-540,Fort Funston,37.71960274,-122.5029906,2021,9/4/2021,Janet Kessler,,NA,unknown
-S22-0888,11/7/2022,1/24/2023,TC,SFCoyTray3_TC,tube,urban,20211030-JK-676,STMA,37.73334667,-122.4200364,2021,10/30/2021,Janet Kessler,,male,unknown
-S22-0889-A,9/12/2022,9/14/2022,TC,SFCoyTray1,tube,urban,20220106-JK-735,Brotherhood Way & Chester,37.71231462,-122.4702685,2022,1/6/2022,Janet Kessler,,male,roadkill
-S22-0889-B,9/12/2022,9/14/2022,TC,SFCoyTray1,tube,urban,20220106-JK-735,Brotherhood Way & Chester,37.71231462,-122.4702685,2022,1/6/2022,Janet Kessler,,male,roadkill
-S22-1017,11/7/2022,1/24/2023,TC,SFCoyTray3_TC,envelope,urban,20220331-JY-01,Presidio,37.802366,-122.468222,2022,3/31/2022,Jon Young,young,female,roadkill
-S22-3045,9/12/2022; 11/9/2022,9/14/2022,TC,SFCoyTray1,envelope,urban,A471130,227 Farallones St.,37.71419461,-122.4604378,2022,7/6/2022,SFACC,1 year,male,roadkill
-S22-3046,11/7/2022,1/30/2023,TC,SFCoyTray3_TC,envelope,urban,A470302,Park Presidio Bypass x Fulton,37.77332077,-122.4716667,2022,6/20/2022,SFACC,1 year,male,roadkill
-S22-3047,11/7/2022,1/24/2023,TC,SFCoyTray3_TC,envelope,urban,A470795,25th x Rivera,37.74663765,-122.4824494,2022,6/30/2022,SFACC,3 months,male,roadkill
-S23-0157,6/20/2023,7/27/2023,TC,SFCoyTray5_TC & SFCoyTray6_TC,envelope,urban,20220728-JY-01,PRES,37.80901212,-122.4757922,2022,7/28/2022,Jon Young,,male,euthanized
-S23-0158,6/20/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A476541,Junipero Serra Blvd x Ocean Ave,37.73137381,-122.4721246,2022,10/26/2022,SFACC,1 yr 9 months,NA,roadkill
-S23-0159,6/20/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A475997,Alemany x Silver,37.72988838,-122.4332223,2022,10/13/2022,SFACC,1 yr,NA,roadkill
-S23-0160,6/20/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A477073,Brotherhood Way x Arch St,37.71251448,-122.4671137,2022,11/7/2022,SFACC,1 yr,female,roadkill
-S23-0161,6/20/2023,8/10/2023,TC,SFCoyTray6_TC,envelope,urban,A476706,Mansell (McLaren Park),37.71881778,-122.4187079,2022,10/28/2022,SFACC,1 yr,female,roadkill
-S23-0162,6/20/2023,8/10/2023,TC,SFCoyTray6_TC,envelope,urban,A475855,Embarcadero x Bay,37.80670455,-122.4059705,2022,10/10/2022,SFACC,2 yrs,male,roadkill
-S23-0163,6/20/2023,8/10/2023,TC,SFCoyTray6_TC & SFCoyTray11_ES,envelope,urban,A472561,101 SB at Hospital Curve,37.75906189,-122.4058279,2022,8/2/2022,SFACC,,NA,roadkill
-S23-0164,6/20/2023,8/10/2023,TC,SFCoyTray11_ES,envelope,urban,A474652,Fort Funston Parking Lot,37.71470098,-122.5023678,2022,9/13/2022,SFACC,2 yrs,male,roadkill
-S23-0165,6/20/2023,8/10/2023,TC,SFCoyTray11_ES,envelope,urban,A473821,Stevenson x Duboce at the SOMA West Dog Area,37.77119185,-122.4219406,2022,8/25/2022,SFACC,2 yrs,male,roadkill
-S23-2156,7/27/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A476024,Roosevelt x Museum Way,37.76541727,-122.441227,2022,10/13/2022,SFACC,9 months,female,roadkill
-S23-4125,6/10/2024,6/17/2024,TC,MarinCoyTray1,envelope,nonurban,20230301-KS-01,"Mt. Tamalpais, Marin",37.90594,-122.615363,2023,3/1/2023,Katie Smith,,NA,roadkill
-S23-4125-2,7/19/2024,7/25/2024,TC,MarinCoyTray1,envelope,nonurban,20230301-KS-01,"Mt. Tamalpais, Marin",37.90594,-122.615363,2023,3/1/2023,Katie Smith,,NA,roadkill
-S24-1424,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,A517225,GGPE Botanical Gardens,37.76687441,-122.4714521,2024,6/30/2024,SFACC,1 year,male,euthanized
-S24-1425,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,A517226,GGPE Botanical Gardens,37.76687441,-122.4714521,2024,6/30/2024,SFACC,4 months,female,sick.euth
-S24-1426,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,coyote_01,Presidio,,,NA,NA,Presidio,,NA,roadkill
-S24-1427,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,coyote_02,Presidio,,,NA,NA,Presidio,,NA,roadkill
-S24-1428,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,coyote_03,Presidio,,,2020,1/7/2020,Presidio,,NA,roadkill
-S21-3433-2,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,nonurban,PORE,Point Reyes National Sea Shore,38.089942,-122.948569,2021,4/13/2021,D. Horowski (GGNRA),adult,male,roadkill
+whisker,date_clean,date_chopped,initials,tray,storage,urban,FieldID,site,lat,long,year,date.collected,age,sex,dead
+S19-8741,1/18/2023,1/20/2023,ES,SFCoyTray1_ES,envelope,urban,01CALA17SF,Brotherhood Way @ Arch st,37.712434,-122.467075,2017,8/27/2017,unknown,female,roadkill
+S19-8742,1/18/2023,1/20/2023,ES,SFCoyTray1_ES,envelope,urban,02CALA17PRES,Presidio. Merchant rd @ Cranston rd,37.80631,-122.475502,2017,6/7/2017,> 1 year,female,roadkill
+S19-8743,1/18/2023,1/20/2023,ES,SFCoyTray1_ES,envelope,urban,03CALA17SF,Hahn st @ visitation ave,37.713531,-122.415451,2017,11/14/2017,unknown,female,roadkill
+S19-8744,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,04CALA17SF,chestnut st @ hyde st,37.802932,-122.419817,2017,8/26/2017,< 1 year,female,sick.euth
+S19-8745,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,05CALA17SF,lake merced blvd,37.711637,-122.485415,2017,1/13/2017,> 1 year,female,roadkill
+S19-8746,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,06CALA17SF,john f shelley dr @Mansell st,37.718179,-122.41426,2017,4/1/2017,> 1 year,female,roadkill
+S19-8747,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,07CALA17SF,beach st @ powell,37.807704,-122.412359,2017,9/10/2017,< 1 year,male,sick.euth
+S19-8748,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,08CALA17PRES,Presidio. lincoln st in front of cemetery,37.801722,-122.463818,2017,6/22/2017,< 1 year,male,roadkill
+S19-8749,2/23/2023,3/10/2023 and 4/17/2023,ES,SFCoyTray4_ES and SFCoyTray5_ES,envelope,urban,09CALA17SF,garces dr @ gonzales dr,37.715894,-122.478459,2017,9/27/2017,< 1 year,female,roadkill
+S19-8750,2/23/2023,4/17/2023,ES,SFCoyTray5_ES,envelope,urban,10CALA17SF,john muir dr @ skyline blvd,37.71898,-122.500253,2017,9/17/2017,unknown,male,roadkill
+S19-8751,2/23/2023,4/17/2023,ES,SFCoyTray5_ES,envelope,urban,11CALA17SF,"guadalupe canyon pkwy, daly city",37.700848,-122.449727,2017,7/31/2017,< 1 year,male,roadkill
+S19-8752,5/1/2023,5/3/2023,ES,SFCoyTray6_ES and SFCoyTray8_ES,tube,urban,12CALA17SF,stow lake @ MLK Dr,37.767097,-122.473275,2017,12/26/2017,unknown,male,roadkill
+S19-8753,5/1/2023,8/10/2023,ES,SFCoyTray10_ES,tube,urban,13CALA17SF,geneva ave onramp 280HWY,37.7202,-122.448562,2017,12/19/2017,unknown,female,roadkill
+S19-8754,5/1/2023,8/10/2023,ES,SFCoyTray10_ES,tube,urban,14CALA17SF,california st @ kerny st,37.792725,-122.404452,2017,12/21/2017,unknown,female,live cap
+S19-8755,5/1/2023,8/10/2023,ES,SFCoyTray11_ES,envelope,urban,15CALA16SF,"park presidio bypass, northern end (GGP)",37.772526,-122.475507,2016,1/10/2016,> 1 year,male,roadkill
+S19-8756,5/1/2023,8/10/2023,ES,SFCoyTray11_ES,envelope,urban,16CALA16SF,skyline blvd @ fort funston rd,37.713704,-122.498253,2016,1/29/2016,unknown,male,roadkill
+S19-8757,5/1/2023,5/15/2023,ES,SFCoyTray8_ES,envelope,urban,17CALA18SF,skyline blvd @ john muir dr,37.718976,-122.500257,2018,1/31/2018,unknown,male,roadkill
+S19-8758,5/1/2023,5/15/2023,ES,SFCoyTray8_ES,envelope,urban,18CALA18SF,"generic ""lake merced""",37.729544,-122.493625,2018,11/30/2018,unknown,female,roadkill
+S19-8759,5/1/2023,5/17/2023,ES,SFCoyTray8_ES,envelope,urban,19CALA18SF,HWY 35 @ SF zoo,37.730544,-122.5,2018,9/7/2018,2-5 years,female,roadkill
+S19-8760,5/1/2023,5/17/2023,ES,SFCoyTray8_ES,envelope,urban,20CALA18SF,19th ave@ winston dr,37.726904,-122.474754,2018,11/9/2018,unknown,male,roadkill
+S19-8761,5/1/2023,5/31/2023,ES,SFCoyTray9_ES,envelope,urban,21CALA18SF,skyline @ john muir dr,37.719054,-122.500256,2018,5/23/2018,unknown,female,roadkill
+S19-8762,5/1/2023,5/31/2023,ES,SFCoyTray9_ES,envelope,urban,22CALA18SF,brotherhood way @ summit way,37.713696,-122.474506,2018,3/30/2018,unknown,male,roadkill
+S19-8763,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,23CALA18SF,pup from botanical garden litter,37.766391,-122.466403,2018,5/27/2018,< 1 year,male,sick.euth
+S19-8764,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,24CALA18SF,maclaren park,37.718231,-122.416093,2018,5/24/2018,unknown,male,unknown
+S19-8765,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,25CALA19SF,"alive, in drycleaners at paris st and geneva ave",37.715652,-122.439485,2019,4/24/2019,unknown,female,live cap
+S19-8767,1/18/2023,1/27/2023,ES,SFCoyTray1_ES,envelope,urban,27CALA19SF,hunter's point shipyard,37.719506,-122.37205,2019,1/17/2019,> 3 years,female,sick.euth
+S19-8768,1/18/2023,2/2/2023,ES,SFCoyTray1_ES + SFCoyTray2_ES,envelope,urban,28CALA19SF,23rd ave 2 ocean ave,37.732564,-122.479244,2019,10/5/2019,unknown,female,roadkill
+S19-8769,1/18/2023,2/2/2023,ES,SFCoyTray2_ES,envelope,urban,29CALA19SF,11th st @ bryant st,37.76949,-122.410823,2019,8/20/2019,< 1 year,male,live cap
+S19-8771,1/18/2023,2/2/2023,ES,SFCoyTray2_ES,envelope,urban,31CALA19SF,sunndale ave @ Mansell AKA persia ave,37.718299,-122.425895,2019,4/13/2019,2 years,male,roadkill
+S19-8772,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,32CALA16PRES01F,Presidio,37.793436,-122.466057,2016,5/5/2016,>3,female,live cap
+S19-8773,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,33CALA16PRES02M,Presidio,37.793436,-122.466057,2016,5/21/2016,> 1 year,male,live cap
+S19-8774-W2,11/7/2022,11/14/2022,ES,SFCoyTray2,envelope,urban,34CALA16PRES03M,"96 Zita Manor, Daly City",37.68636367,-122.479743,2017,2/23/2017,,male,roadkill
+S19-8775,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,35CALA16PRES04M,Presidio,37.793436,-122.466057,2016,9/30/2016,< 1 year,male,live cap
+S19-8775-2,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,35CALA16PRES04M,Daly City,37.694306,-122.455222,2018,6/20/2018,,male,roadkill
+S19-8776,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,36CALA16PRES05M,Presidio,37.793436,-122.466057,2016,9/30/2016,< 1 year,male,live cap
+S19-8777,5/1/2023,,ES,,envelope,urban,37CALA16PRES06F,Presidio,37.793436,-122.466057,2016,10/8/2016,< 1 year,female,live cap
+S19-8777-2,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,37CALA16PRES06F,Presidio,37.793436,-122.466057,2017,10/18/2017,,female,live cap
+S19-8778,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,38CALA16PRES07M,Presidio,37.793436,-122.466057,2016,10/20/2016,< 1 year,male,live cap
+S19-8779,1/18/2023,2/8/2023,ES,SFCoyTray2_ES,envelope,urban,39CALA17PRES08M,Presidio,37.793436,-122.466057,2017,10/4/2017,< 1 year,male,live cap
+S19-8780,1/18/2023,2/22/2023,ES,SFCoyTray2_ES and SFCoyTray3_ES,envelope,urban,40CALA17PRES09M,Presidio,37.793436,-122.466057,2017,10/16/2017,< 1 year,male,live cap
+S19-8781,2/23/2023,4/19/2023,ES,SFCoyTray5_ES,envelope,urban,41CALA17PRES10F,Presidio,37.793436,-122.466057,2017,10/25/2017,< 1 year,female,live cap
+S19-8782,2/23/2023,4/19/2023,ES,SFCoyTray5_ES,envelope,urban,42CALA18PRES11F,Presidio,37.793436,-122.466057,2018,9/28/2018,< 1 year,female,live cap
+S19-8783,2/23/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,43CALA18PRES12F,Presidio,37.793436,-122.466057,2018,10/4/2018,< 1 year,female,live cap
+S19-8784,2/23/2023,4/29/2023,ES,SFCoyTray5_ES,envelope,urban,44CALA18PRES13M,Presidio,37.793436,-122.466057,2018,10/13/2018,< 1 year,male,live cap
+S19-8785,2/23/2023,4/24/2023,ES,SFCoyTray5_ES,envelope,urban,45CALA18PRES14F,Presidio,37.793436,-122.466057,2018,10/15/2018,< 1 year,female,live cap
+S19-8786,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,46CALA19PRES15F,Presidio,37.793436,-122.466057,2019,1/10/2019,> 3 years,female,live cap
+S19-8786-2,6/20/2023,7/27/2023,TC,SFCoyTray5_TC,envelope,urban,46CALA19PRES15F,Presidio,37.79093888,-122.4735132,2020,1/7/2020,,female,live cap
+S19-8787,2/23/2023,4/24/2023,ES,SFCoyTray5_ES,envelope,urban,47CALA19PRES16F,Presidio,37.793436,-122.466057,2019,1/10/2019,< 1 year,female,live cap
+S21-1079,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A448247,101SB @ Candlestick Point,37.7100729,-122.3953715,2020,10/7/2020,2-Jan,female,roadkill
+S21-1080,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A444830,3rd and 101S,37.71595752,-122.3987151,2020,7/13/2020,1,male,roadkill
+S21-1081,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A449880,Hunter's point shipyard,37.72830511,-122.3764225,2020,12/4/2020,1,female,sick.euth
+S21-1082,1/18/2023,2/22/2023,ES,SFCoyTray3_ES,envelope,urban,A449485,Junipero Serra and Winston Drive,37.72696,-122.47237,2020,11/17/2020,1.5,female,roadkill
+S21-1083,1/18/2023,3/3/2023,ES,SFCoyTray3_ES,envelope,urban,A450028,101SB @ Candlestick exit,37.71053,-122.39534,2020,12/8/2020,2,male,roadkill
+S21-1084,2/23/2023,4/24/2023 and 4/26/2023,ES,SFCoyTray5_ES and SFCoyTray6_ES,envelope,urban,A446958,Portola Drive and Twin Peaks Blvd,37.74581,-122.45071,2020,9/6/2020,2,NA,roadkill
+S21-1085,2/23/2023,4/26/2023,ES,SFCoyTray6_ES,envelope,urban,A452551,Urbano Drive and Legion Court,37.72504,-122.46331,2020,2/13/2020,3,male,roadkill
+S21-1086,2/23/2023,4/26/2023,ES,SFCoyTray6_ES,envelope,urban,A443347,Portola Drive and Glenview Drive,37.74656,-122.44802,2020,5/25/2020,1,female,roadkill
+S21-1087,2/23/2023,5/1/2023,ES,SFCoyTray6_ES,envelope,urban,A447852,Lincoln Way and 15th Avenue,37.76576,-122.47294,2020,9/27/2020,2,male,roadkill
+S21-1088,2/23/2023,5/1/2023,ES,SFCoyTray6_ES,envelope,urban,A447214,Lincoln Way and 10th Avenue,37.76594,-122.46751,2020,9/11/2020,0.5,female,roadkill
+S21-1089,2/23/2023,5/1/2023,ES,SFCoyTray6_ES,envelope,urban,A447246,855 Brotherhood Way,37.71422,-122.47915,2020,9/11/2020,1,female,roadkill
+S21-1201,2/23/2023,5/3/2023,ES,SFCoyTray6_ES,envelope,urban,A452954,"NB 101, Visitacion Valley",37.71661864,-122.3988142,2021,2/24/2021,1,female,roadkill
+S21-1202,5/1/2023,7/10/2023,ES,SFCoyTray9_ES,envelope,urban,A452936,Chain of Lakes; 41st and MLK Drive,37.76524,-122.50064,2021,2/23/2021,2,female,unknown
+S21-1203,5/1/2023,7/17/2023,ES,SFCoyTray9_ES,envelope,urban,A453036,"SB101, just before Candlestick exit",37.71053,-122.39534,2021,2/27/2021,1,NA,roadkill
+S21-1204,5/1/2023,7/24/2023,ES,SFCoyTray9_ES and SFCoyTray10_ES,envelope,urban,20200711-DH-01,"Infantry Terrace, Presidio",37.79970469,-122.4615094,2020,7/11/2020,NA,male,roadkill
+S21-1205,5/1/2023,7/24/2023,ES,SFCoyTray10_ES,envelope,urban,20200711-DH-02,3rd st @ 101SB,37.71595752,-122.3987151,2020,7/11/2020,NA,male,roadkill
+S21-1206,5/1/2023,7/31/2023,ES,SFCoyTray10_ES,envelope,urban,20200815-DH-01,Richardson and 101NB near the Palace of Fine Arts,37.80113,-122.44817,2020,8/15/2020,NA,male,roadkill
+S21-1207,5/1/2023,8/7/2023,ES,SFCoyTray10_ES,envelope,urban,20201116-DH-01,"101NB @ Mountain Lake Park, Presidio",37.788,-122.472,2020,11/16/2020,NA,male,roadkill
+S21-3427,1/25/2023,6/13/2023,TC,SFCoyTray4_TC,envelope,urban,A458822,Conservatory of Flowers; GGPE,37.77280507,-122.4602772,2021,8/6/2021,6 months,NA,sick.release
+S21-3428,1/25/2023,6/13/2023,TC,SFCoyTray4_TC,envelope,urban,A457920,9th st and MLK,37.76637009,-122.4663163,2021,7/13/2021,13 weeks,NA,roadkill
+S21-3429,1/25/2023,6/2/2023,TC,SFCoyTray4_TC,envelope,urban,A458007,JFK and Stow Lake Drive,37.77118025,-122.4740837,2021,7/16/2021,6 years,male,euthanized
+S21-3430,1/25/2023,6/13/2023,TC,SFCoyTray4_TC,envelope,urban,A457416,Urbano and Victoria,37.72334353,-122.4646011,2021,7/1/2021,4 years,male,roadkill
+S21-3431,1/25/2023,6/13/2023 & 6/21/2023,TC,SFCoyTray4_TC & SFCoyTray5_TC,envelope,urban,A458911,3850 19th avebue and Junipero Serra Blvd,37.71762166,-122.4726848,2021,8/9/2021,1 year,male,roadkill
+S21-3433,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,PORE,Point Reyes National Sea Shore,38.089942,-122.948569,2021,4/13/2021,adult,male,roadkill
+S21-3434,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,TEVA,Tennessee Valley Beach,37.84193152,-122.5517587,2020,9/23/2020,,male,euthanized
+S21-3435,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,M04-MH20,Marin Headlands,37.83253217,-122.5287104,2020,9/14/2020,,male,live cap
+S21-3437,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M01-MH20,Marin Headlands,37.83992137,-122.5150139,2020,9/9/2020,,male,live cap
+S21-3438,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M07-MH20,Marin Headlands,37.83211526,-122.4913258,2020,10/4/2020,,male,live cap
+S21-3439,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M05-MH20,Marin Headlands,37.83253217,-122.5287104,2020,9/15/2020,,male,live cap
+S21-3440,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,M06-MH20,Marin Headlands,37.83253217,-122.5287104,2020,9/28/2020,,male,live cap
+S21-3441,11/7/2022,11/10/2022,TC,SFCoyTray2,envelope,nonurban,F08-TV20,Tennessee Valley Beach,37.84193152,-122.5517587,2020,10/2/2020,,female,live cap
+S21-3442,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,F02-MH20,Marin Headlands,37.83140633,-122.5244221,2020,9/12/2020,,female,live cap
+S21-3443,6/20/2023,6/21/2023,TC,SFCoyTray5_TC,envelope,nonurban,F03-MH20,Marin Headlands,37.83992137,-122.5150139,2020,9/13/2020,,female,live cap
+S22-0870,1/18/2023,3/3/2023,ES,SFCoyTray3_ES & SFCoyTray4_ES,envelope,urban,A462584,Fort Funston,,,2021,11/2/2021,,NA,unknown
+S22-0871,1/18/2023,3/3/2023,ES,SFCoyTray4_ES,envelope,urban,A461396,19th and Vicente,37.73939172,-122.4755451,2021,9/30/2021,,female,roadkill
+S22-0873,1/18/2023,3/3/2023,ES,SFCoyTray4_ES,envelope,urban,A463500,O'Shaughnessy Boulevard & Del Vale Avenue,37.74136802,-122.4460034,2021,12/1/2021,1 year,male,roadkill
+S22-0874,1/18/2023,3/3/2023,ES,SFCoyTray3_ES,envelope,urban,A463997,Highway 35 and John Muir Drive,37.71927099,-122.5002004,2021,12/20/2021,,male,roadkill
+S22-0875,1/18/2023,3/10/2023,ES,SFCoyTray4_ES,envelope,urban,A461801,Geary and Scott,37.78378847,-122.4379217,2021,10/12/2021,6 months,female,roadkill
+S22-0876,1/25/2023,6/2/2023,TC,SFCoyTray4_TC,envelope,urban,A465567,280N and Geneva exit,37.7201301,-122.4479994,2021,2/9/2021,1 year,male,roadkill
+S22-0877,1/25/2023,6/2/2023,TC,SFCoyTray4_TC,envelope,urban,A465739,280S @ Geneva/Mission exit,37.72067306,-122.4484092,2022,2/14/2022,1 year,male,roadkill
+S22-0881,1/25/2023,1/30/2023,TC,SFCoyTray3_TC,envelope,urban,A438211,Lincoln x 36th,37.76475505,-122.4953593,2020,1/8/2020,,male,roadkill
+S22-0882,1/25/2023,1/30/2023,TC,SFCoyTray3_TC & SFCoyTray4_TC,envelope,urban,A436840,Junipero Serra Blvd & Palmetto Ave,37.71082275,-122.4710157,2019,11/26/2019,1 year,male,roadkill
+S22-0883,11/7/2022,11/14/2022,ES,SFCoyTray2,envelope,urban,A438133,Cesar Chavez ramp,37.74952265,-122.4032778,2020,1/5/2020,,female,roadkill
+S22-0884,11/7/2022,11/14/2022,ES,SFCoyTray2,envelope,urban,20191204-SFACC-01,Skyline Blvd & John Muir,37.71912715,-122.5001926,2019,12/4/2019,,female,roadkill
+S22-0885,11/7/2022,12/16/2022,TC,SFCoyTray2 & SFCoyTray3_TC,envelope,urban,20210927-JY-01,Hwy 101 @ Cesar Chavez,37.749823,-122.403687,2021,9/27/2021,,male,roadkill
+S22-0886,9/12/2022; 11/9/2022,9/14/2022,TC,SFCoyTray1,envelope,urban,20210929-JY-01,SB101 @ Bayshore,37.716786,-122.399191,2021,9/29/2021,,female,roadkill
+S22-0887,11/7/2022,12/16/2022,TC,SFCoyTray3_TC,tube,urban,20210904-JK-540,Fort Funston,37.71960274,-122.5029906,2021,9/4/2021,,NA,unknown
+S22-0888,11/7/2022,1/24/2023,TC,SFCoyTray3_TC,tube,urban,20211030-JK-676,STMA,37.73334667,-122.4200364,2021,10/30/2021,,male,unknown
+S22-0889-A,9/12/2022,9/14/2022,TC,SFCoyTray1,tube,urban,20220106-JK-735,Brotherhood Way & Chester,37.71231462,-122.4702685,2022,1/6/2022,,male,roadkill
+S22-0889-B,9/12/2022,9/14/2022,TC,SFCoyTray1,tube,urban,20220106-JK-735,Brotherhood Way & Chester,37.71231462,-122.4702685,2022,1/6/2022,,male,roadkill
+S22-1017,11/7/2022,1/24/2023,TC,SFCoyTray3_TC,envelope,urban,20220331-JY-01,Presidio,37.802366,-122.468222,2022,3/31/2022,young,female,roadkill
+S22-3045,9/12/2022; 11/9/2022,9/14/2022,TC,SFCoyTray1,envelope,urban,A471130,227 Farallones St.,37.71419461,-122.4604378,2022,7/6/2022,1 year,male,roadkill
+S22-3046,11/7/2022,1/30/2023,TC,SFCoyTray3_TC,envelope,urban,A470302,Park Presidio Bypass x Fulton,37.77332077,-122.4716667,2022,6/20/2022,1 year,male,roadkill
+S22-3047,11/7/2022,1/24/2023,TC,SFCoyTray3_TC,envelope,urban,A470795,25th x Rivera,37.74663765,-122.4824494,2022,6/30/2022,3 months,male,roadkill
+S23-0157,6/20/2023,7/27/2023,TC,SFCoyTray5_TC & SFCoyTray6_TC,envelope,urban,20220728-JY-01,PRES,37.80901212,-122.4757922,2022,7/28/2022,,male,euthanized
+S23-0158,6/20/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A476541,Junipero Serra Blvd x Ocean Ave,37.73137381,-122.4721246,2022,10/26/2022,1 yr 9 months,NA,roadkill
+S23-0159,6/20/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A475997,Alemany x Silver,37.72988838,-122.4332223,2022,10/13/2022,1 yr,NA,roadkill
+S23-0160,6/20/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A477073,Brotherhood Way x Arch St,37.71251448,-122.4671137,2022,11/7/2022,1 yr,female,roadkill
+S23-0161,6/20/2023,8/10/2023,TC,SFCoyTray6_TC,envelope,urban,A476706,Mansell (McLaren Park),37.71881778,-122.4187079,2022,10/28/2022,1 yr,female,roadkill
+S23-0162,6/20/2023,8/10/2023,TC,SFCoyTray6_TC,envelope,urban,A475855,Embarcadero x Bay,37.80670455,-122.4059705,2022,10/10/2022,2 yrs,male,roadkill
+S23-0163,6/20/2023,8/10/2023,TC,SFCoyTray6_TC & SFCoyTray11_ES,envelope,urban,A472561,101 SB at Hospital Curve,37.75906189,-122.4058279,2022,8/2/2022,,NA,roadkill
+S23-0164,6/20/2023,8/10/2023,TC,SFCoyTray11_ES,envelope,urban,A474652,Fort Funston Parking Lot,37.71470098,-122.5023678,2022,9/13/2022,2 yrs,male,roadkill
+S23-0165,6/20/2023,8/10/2023,TC,SFCoyTray11_ES,envelope,urban,A473821,Stevenson x Duboce at the SOMA West Dog Area,37.77119185,-122.4219406,2022,8/25/2022,2 yrs,male,roadkill
+S23-2156,7/27/2023,8/8/2023,TC,SFCoyTray6_TC,envelope,urban,A476024,Roosevelt x Museum Way,37.76541727,-122.441227,2022,10/13/2022,9 months,female,roadkill
+S23-4125,6/10/2024,6/17/2024,TC,MarinCoyTray1,envelope,nonurban,20230301-KS-01,"Mt. Tamalpais, Marin",37.90594,-122.615363,2023,3/1/2023,,NA,roadkill
+S23-4125-2,7/19/2024,7/25/2024,TC,MarinCoyTray1,envelope,nonurban,20230301-KS-01,"Mt. Tamalpais, Marin",37.90594,-122.615363,2023,3/1/2023,,NA,roadkill
+S24-1424,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,A517225,GGPE Botanical Gardens,37.76687441,-122.4714521,2024,6/30/2024,1 year,male,euthanized
+S24-1425,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,A517226,GGPE Botanical Gardens,37.76687441,-122.4714521,2024,6/30/2024,4 months,female,sick.euth
+S24-1426,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,coyote_01,Presidio,,,NA,NA,,NA,roadkill
+S24-1427,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,coyote_02,Presidio,,,NA,NA,,NA,roadkill
+S24-1428,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,urban,coyote_03,Presidio,,,2020,1/7/2020,,NA,roadkill
+S21-3433-2,7/25/2024,7/25/2024,TC,SFPreyTray2,envelope,nonurban,PORE,Point Reyes National Sea Shore,38.089942,-122.948569,2021,4/13/2021,adult,male,roadkill

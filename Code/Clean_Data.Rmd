@@ -12,7 +12,6 @@ library(tidyverse)
 library(plotrix)
 ```
 
-
 Combine data sets from different runs with metadata. 
 
 ```{r}
@@ -108,7 +107,6 @@ Summary statistics:
 
 ```{r}
 # Calculate mean, sd, and ranges across all whisker segments in each population
-
 summary_stats <- data_clean %>%
   dplyr::group_by(urban) %>%
   dplyr::summarise(
@@ -125,7 +123,7 @@ summary_stats <- data_clean %>%
 
 summary_stats
 
-# Calculate average mean and sd d13C and d15N per individual in each population
+# Calculate mean and sd d13C and d15N per individual in each population
 ind_summary_stats <- data_average %>%
   dplyr::group_by(urban) %>%
   dplyr::summarise(
