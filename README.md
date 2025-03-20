@@ -48,7 +48,7 @@ In the `Data` folder, you will find a number of files:
 > `whisker_metadata.csv`: csv file containing metadata for whisker samples.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
-|-----------------|-------------------------------------------------------|
+|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | whisker        | Label for sample                                                                                                                                                                                                                                                                                                       |
 | date_clean     | Date sample was rinsed                                                                                                                                                                                                                                                                                                 |
 | date_chopped   | Date sample was chopped                                                                                                                                                                                                                                                                                                |
@@ -69,7 +69,7 @@ In the `Data` folder, you will find a number of files:
 > `individual_ids.csv`
 
 | Column     | Description                                                               |
-|-----------------|-------------------------------------------------------|
+|------------|---------------------------------------------------------------------------|
 | individual | Individual coyote labels that match up with whisker data                  |
 | sfcoy      | Unique name for each individual identified by genotyping in San Francisco |
 | sex        | Sex as identified by genotyping                                           |
@@ -78,7 +78,7 @@ In the `Data` folder, you will find a number of files:
 > `territory_covs.csv`
 
 | Column           | Description                                                 |
-|-----------------|-------------------------------------------------------|
+|------------------|-------------------------------------------------------------|
 | group            | Coyote family group/territory                               |
 | lat              | Location of territory center point - latitude               |
 | long             | Location of territory center point - longitude              |

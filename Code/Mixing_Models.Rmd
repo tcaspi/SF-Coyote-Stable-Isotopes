@@ -8,8 +8,12 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(tidyverse)
-library(MixSIAR)
+# install MixSIAR if needed
+# remotes::install_github("brianstock/MixSIAR", dependencies=T, version="3.1.12")
+
+# load packages
+library(tidyverse) # version 2.0.0
+library(MixSIAR) # version 3.1.12
 library(plotrix)
 library(parallel)
 
@@ -72,7 +76,7 @@ species_stats <- prey %>%
   mutate(d13C = if_else(material %in% c("vertebrate hair"), d13C - 1.31, d13C)) %>% 
   
   # select cols
-  select(c(SampleID, species, d13C, d15N)) %>% 
+  dplyr::select(c(SampleID, species, d13C, d15N)) %>% 
   
   # rbind chicken data
   rbind(ff %>% filter(species == "ff_chicken")) %>% 
@@ -105,7 +109,7 @@ source_df <- species_stats %>%
   bind_rows(medium_mammal_stats)
 
 # Write to csv
-write.csv(source_df, "Cleaned_Data/coyote_source.csv", row.names = FALSE)
+# write.csv(source_df, "Cleaned_Data/coyote_source.csv", row.names = FALSE)
 ```
 
 ## Prepare TDF data frame
@@ -121,7 +125,7 @@ tdf_df <- data.frame(
   Meand15N = 2.76,
   SDd15N = 1.41)
 
-write.csv(tdf_df, "Cleaned_Data/coyote_discrimination.csv", row.names = FALSE)
+# write.csv(tdf_df, "Cleaned_Data/coyote_discrimination.csv", row.names = FALSE)
 ```
 
 ## Prepare consumer data
@@ -141,7 +145,7 @@ consumer_df_avgs <- data.frame(
   mutate_if(is.character, as.factor) 
 
 # Write to file
-write.csv(consumer_df_avgs, "Cleaned_Data//coyote_consumer_avgs.csv", row.names = FALSE)
+# write.csv(consumer_df_avgs, "Cleaned_Data//coyote_consumer_avgs.csv", row.names = FALSE)
 ```
 
 ## Investigate mixing polygon
@@ -161,12 +165,12 @@ meat.names <- c("ChkC01", "Pork01")
 
 meat_samples <- prey %>% 
   filter(SampleID %in% meat.names) %>% 
-  select(SampleID, d13C, d15N) %>% 
+  dplyr::select(SampleID, d13C, d15N) %>% 
   mutate(d13C = d13C + TDF.C,
          d15N = d15N + TDF.N)
 
 # Plot prey sources
-fig.5a <- ggplot()+
+fig.4a <- ggplot()+
   geom_point(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N, color=species),
              size=3)+
   geom_errorbar(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N,
@@ -188,9 +192,7 @@ fig.5a <- ggplot()+
   theme(legend.position = "none")+
   scale_color_manual(values=cols)
 
-fig.5a
-
-# ggsave("Figures/Figure5a.png", dpi=600, height=3, width=4)
+fig.4a
 ```
 
 ## Create MixSIAR model objects
@@ -245,7 +247,7 @@ model_filename <- "MixSIAR_model_full.txt"
 resid_err <- TRUE
 process_err <- TRUE
 write_JAGS_model(model_filename, resid_err, process_err, mix.coy.avgs, source.coy)
-
+ 
 # Run full model
 jags.full <- run_model(run="very long", mix.coy.avgs, source.coy, discr.coy, model_filename, alpha.prior=coy.alpha)
 
@@ -329,16 +331,16 @@ ind.props <- as.data.frame(df.stats) %>%
   mutate(rowID = seq(1:nrow(.)), .before=Mean) %>% 
   slice(11:562) %>%  #  WILL NEED TO CHANGE WITH NEW MODEL
   separate(sample, into = c("prefix", "whisker", "source"), sep = "\\.", extra = "merge") %>%
-  select(c(whisker, source, Mean, SD)) %>% 
+  dplyr::select(c(whisker, source, Mean, SD)) %>% 
   pivot_wider(names_from = source, values_from = c(Mean, SD))
 
 # Prep data frame for plotting
 ind.props_plotting_all <- ind.props %>% 
-  select(1 | starts_with("Mean")) %>% 
+  dplyr::select(1 | starts_with("Mean")) %>% 
   pivot_longer(cols = starts_with("Mean"), 
                names_to = "Source", 
                values_to = "Proportion") %>% 
-  left_join(data_averages %>% select(c(whisker, group, individual, sfcoy)) , by="whisker") %>% 
+  left_join(data_averages %>% dplyr::select(c(whisker, group, individual, sfcoy)) , by="whisker") %>% 
   group_by(whisker) %>% 
   mutate(Proportion = Proportion / sum(Proportion)) %>% 
   ungroup() %>% 
@@ -347,7 +349,7 @@ ind.props_plotting_all <- ind.props %>%
   mutate(Source = factor(Source, levels = c("Mean_ff_chicken", "Mean_wet.food", "Mean_medium.mammal", "Mean_rat", "Mean_fruit", "Mean_gopher")))
 
 whisker_to_sfcoy <- ind.props_plotting_all %>%
-  select(whisker, sfcoy) %>%
+  dplyr::select(whisker, sfcoy) %>%
   distinct() %>%
   deframe()
 
@@ -356,7 +358,7 @@ whisker_to_sfcoy <- ind.props_plotting_all %>%
 mean.names <- c("Chicken", "Pet Food", "Medium-Sized \nMammals", "Rats", "Fruit", "Gophers")
 
 # plot
-fig.5b <- ind.props_plotting_all %>%
+fig.4b <- ind.props_plotting_all %>%
   ggplot(aes(x=reorder(whisker, group), y=Proportion, fill=Source)) +
   geom_col()+
   scale_y_continuous(expand = c(0,0))+
@@ -376,9 +378,7 @@ fig.5b <- ind.props_plotting_all %>%
         legend.position = "bottom")+
         guides(fill = guide_legend(nrow = 1))
 
-fig.5b
-
-# ggsave("Figures/Figure5b.png", dpi=600, height=4, width=8)
+fig.4b
 ```
 
 
@@ -507,9 +507,9 @@ source.coy.ISA <- load_source_data(filename="Cleaned_Data/coyote_source_three.cs
                            source_factors=NULL, 
                            conc_dep=FALSE, 
                            data_type="means", 
-                           mix.coy.avgs)
+                           mix.coy.ISA)
 
-discr.coy.ISA <- load_discr_data(filename="Cleaned_Data/coyote_discrimination_three.csv", mix.coy.avgs)
+discr.coy.ISA <- load_discr_data(filename="Cleaned_Data/coyote_discrimination_three.csv", mix.coy.ISA)
 ```
 
 ## Set prior:
@@ -550,7 +550,7 @@ g.post.ISA <- output_posteriors(jags.ISA, mix.coy.ISA, source.coy.ISA, output_op
 posterior_cont <- as.data.frame((g.post.ISA[["cont"]][[1]][["data"]]))
 
 # Plot
-fig6c <- ggplot() +
+fig.4c <- ggplot() +
   geom_smooth(posterior_cont, mapping=aes(x=x, y=median, color=source))+
   geom_ribbon(posterior_cont, mapping=aes(x=x, ymin=low, ymax=high, fill=source), alpha=0.3)+
   labs(x="Impervious Surface Cover", y="Proportion")+
@@ -564,11 +564,33 @@ fig6c <- ggplot() +
                     values=c("#db8c87", "#8C8076","#65948d" ),
                     labels=c("Anthropogenic \nFood", "High Protein \nFood", "Low Protein \nFood"),
                     guide = guide_legend(override.aes = list(alpha = 1)))+
-  theme(legend.position = "bottom")
+  theme(legend.position = "none")
 
-fig6c
+fig.4c
 
 # ggsave("Figures/Figure6c.png", dpi=600, height=4, width=4)
+```
+
+# Arrange figure:
+
+```{r}
+library(cowplot)
+
+# Create top row with proper alignment
+top_row <- plot_grid(fig.4a, fig.4c, 
+                     ncol = 2, labels = c("a", "b"), 
+                     label_x = 0.135, align = "hv", axis = "tblr")
+
+# Create bottom row (full width)
+bottom_row <- plot_grid(fig.4b, ncol = 1, label_x = 0.135)
+
+# Stack top and bottom row
+Fig.4 <- plot_grid(top_row, bottom_row, 
+                        ncol = 1, rel_heights = c(1, 1.5))
+
+Fig.4
+
+# ggsave("Figures/Figure4.png", dpi=600, height=6, width=8)
 ```
 
 

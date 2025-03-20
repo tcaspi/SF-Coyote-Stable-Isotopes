@@ -63,10 +63,10 @@ locs <- data_inds %>%
   mutate(dead.cat = case_when(
     dead == "euthanized" ~ "Euthanized: Aggression",
     dead == "live cap" ~ "Live Capture",
-    dead == "roadkill" ~ "Dead",
+    dead == "roadkill" ~ "Deceased",
     dead == "sick.euth" ~ "Euthanized: Other",
     dead == "sick.release" ~ "Live Capture",
-    dead == "unknown" ~ "Dead",
+    dead == "unknown" ~ "Deceased",
     TRUE ~ "Other" 
   ))
 
@@ -81,8 +81,8 @@ bbox <- c(left = -122.6, right = -122.35, bottom = 37.68, top = 37.88)
 get_stadiamap(bbox, zoom = 14, maptype = "stamen_terrain", scale=2) %>% ggmap()+
   geom_point(data = locs, aes(x = long, y = lat, color = dead.cat), 
              size = 2, alpha=0.7, position=position_jitter(width=.002, height = .002)) +
-  scale_color_manual(values=c( "black", "#C0362D", "#F57E77", "#004D40"),
-                     labels=c("Dead", "Euthanized: Aggression", "Euthanized: Other", "Live Capture"))+
+  scale_color_manual(values=c( "black", "#f54242", "#1f50cc", "#004D40"),
+                     labels=c("Deceased", "Euthanized: Aggression", "Euthanized: Other", "Live Capture"))+
   guides(shape = "none") +
   theme_minimal()+
   theme(axis.text.x = element_blank(),

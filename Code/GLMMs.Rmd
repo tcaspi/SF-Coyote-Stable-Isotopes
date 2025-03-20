@@ -192,25 +192,23 @@ cond_ISA_C <- data.frame(cond_ISA_C$ISA) %>%
 
 
 # Carbon
-fig.6a <- ggplot() +
+fig.s5a <- ggplot() +
   geom_ribbon(data = cond_ISA_C, aes(x = ISA, ymin = lower_tf, ymax = upper_tf), 
               alpha = 0.5, fill = "#8C8076") +
   geom_line(data = cond_ISA_C, aes(x = ISA, y = (C_tf)), color = "#2D2926", size = 1)+
   geom_jitter(data = glmm_df, aes(x = ISA, y = C_raw, fill = "#2D2926"),alpha=0.3, size=1) +
   
   # Graphics
-  labs(x = "", y = expression(~delta^{13}~C)) +
+  labs(x = "Percent Impervious Surface Cover", y = expression(~delta^{13}~C)) +
   theme_custom() +
   scale_x_continuous(limits=c(15,85), expand = c(0.002, 0)) +
   scale_y_continuous(limits = c(-24, -15), breaks = seq(-24,-15,by=1))+
   theme(legend.position = "none")
 
-fig.6a
-
-# ggsave("Figures/Figure6a.png", dpi=600, height=4, width=4)
+fig.s5a
 
 # Nitrogen
-fig.6b <- ggplot() +
+fig.s5b <- ggplot() +
   geom_ribbon(data = cond_ISA_N, aes(x = ISA, ymin = lower_tf, ymax = upper_tf), 
               alpha = 0.5, fill = "#8C8076") +
   geom_line(data = cond_ISA_N, aes(x = ISA, y = (N_tf)), 
@@ -218,13 +216,27 @@ fig.6b <- ggplot() +
   geom_jitter(data = glmm_df, aes(x = ISA, y = N_raw, fill = "#2D2926"), alpha=0.3, size=1) +
   
   # Graphics
-  labs(x = "", y = expression(~delta^{15}~N)) +
+  labs(x = "Percent Impervious Surface Cover", y = expression(~delta^{15}~N)) +
   theme_custom() +
   scale_x_continuous(limits=c(15,85), expand = c(0.002, 0)) +
   scale_y_continuous(limits = c(6, 11), breaks = c(6,7,8,9,10,11))+
   theme(legend.position = "none")
 
-fig.6b
-
-# ggsave("Figures/Figure6b.png", dpi=600, height=4, width=4)
+fig.s5b
 ```
+
+# Arrange figure
+
+```{r}
+ggarrange(
+  fig.s5a, fig.s5b,
+  ncol = 2, nrow = 1, 
+  labels = c("a", "b"),
+  common.legend=F,
+  align = "hv",
+  label.x = 0.125,
+  widths=c(1,1), heights=c(1,1))
+
+# ggsave("Figures/FigureS5.tiff",dpi=600, width=8, height=3)
+```
+

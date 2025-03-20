@@ -12,7 +12,9 @@ library(tidyverse)
 library(plotrix)
 library(ggpubr)
 
-colors <- c("#C8BFE7", "#2E2585", "#7E2954", "#94CBEC", "#DCCD7D", "#C26A77", "#FDB462FF", "#5DA899", "#337538", "pink")
+colors <- c("#C8BFE7", "#2E2585", "#7E2954", "blue", "#DCCD7D", "#C26A77", "#FDB462FF", "#5DA899", "#337538", "pink")
+
+colors <- c("#000000", "#E69F00", "#56B4E9", "#2D51E8", "#F0E442", "#009E73", "#D55E00", "#7D2355", "#1A4A08","#4A107F")
 
 family_colors <- c("Bernal" = colors[1],
                    "Coit" = colors[2],
@@ -23,8 +25,7 @@ family_colors <- c("Bernal" = colors[1],
                    "McLaren" = colors[7],
                    "Merced" = colors[8],
                    "Presidio" = colors[9],
-                   "St. Francis" = colors[10],
-                   "NA" = colors[11])
+                   "St. Francis" = colors[10])
 
 # Make custom theme
 theme_custom <- function() {
@@ -51,7 +52,7 @@ Create isotope biplots:
 
 ```{r}
 # Plot - all data points
-fig.S1 <- data_clean %>% 
+fig.S2 <- data_clean %>% 
   ggplot(aes(x=C_raw, y=N_raw, color=urban)) +
   geom_point(size=1, alpha=0.4)+
   stat_ellipse(level=0.95)+
@@ -63,7 +64,7 @@ fig.S1 <- data_clean %>%
   theme_custom()+
   theme(legend.position = "none")
 
-fig.S1
+fig.S2
 
 # ggsave("Figures/FigureS2.png",dpi=600, width=4, height=3)
 
@@ -87,12 +88,25 @@ fig2a
 data_average_sf <- data_average %>% 
   filter(urban == "urban")
 
+# Compute center points
+center_points <- data_average_sf %>%
+  filter(group != "NA") %>%
+  group_by(group) %>%
+  summarize(C_center = mean(C_avg, na.rm = TRUE),
+            N_center = mean(N_avg, na.rm = TRUE))
+
+# Join center points back to the original data
+data_with_centers <- data_average_sf %>%
+  filter(group != "NA") %>%
+  left_join(center_points, by = "group")
+
 # SF individuals colored by family group
 fig.2b <- data_average_sf %>% 
   filter(group != "NA") %>% 
   ggplot(aes(x=C_avg, y=N_avg, 
              color=group, fill=group))+
-  geom_point(size=2,alpha=0.8)+
+  stat_ellipse(level=0.4)+
+  geom_point(size=3,alpha=0.8)+
   scale_color_manual(values=family_colors)+
   scale_fill_manual(values=family_colors)+
   xlab(expression(delta^{13}~C))+
@@ -105,7 +119,26 @@ fig.2b <- data_average_sf %>%
         legend.key.size = unit(0.5, 'cm'),
         legend.title = element_blank())
   
-fig.2b
+fig.2b <- data_with_centers %>% 
+  ggplot(aes(x=C_avg, y=N_avg, 
+             color=group, fill=group)) +
+  geom_segment(aes(x = C_center, y = N_center, 
+                   xend = C_avg, yend = N_avg, 
+                   color = group),  linewidth=0.5, alpha=0.7) + 
+  geom_point(size=0.5) +  
+  geom_point(data=center_points, aes(x=C_center, y=N_center, fill=group), 
+             color="black", size=3, shape=22, stroke=0.5)+  
+  scale_color_manual(values=family_colors) +
+  scale_fill_manual(values=family_colors) +
+  xlab(expression(delta^{13}~C)) +
+  ylab(expression(delta^{15}~N)) +
+  scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1)) +
+  scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1)) +
+  theme_custom() +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size=5),
+        legend.key.size = unit(0.5, 'cm'),
+        legend.title = element_blank())
 
 # Combine plots into Figure 2
 ggarrange(

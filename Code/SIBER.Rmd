@@ -123,7 +123,7 @@ SEA.B.pops <- as.data.frame(SEA.B) %>%
 
 
 # Plot SEAb posteriors for each population
-fig.4a <- ggplot()+
+fig.3e <- ggplot()+
   stat_density_ridges(data = SEA.B.pops, 
                       aes(x=Value, y="Urban/Nonurban", fill=Site, 
                           height = ..density.., scale = 1.5), alpha=0.6,
@@ -137,7 +137,7 @@ fig.4a <- ggplot()+
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
 
-fig.4a
+fig.3e
 ```
 
 # Comparing SF and Marin (individual-level)
@@ -172,8 +172,8 @@ names <- names_df$individual
 
 colnames(SEA.B.all.inds) <- names
 
-#saveRDS(SEA.B.all.inds, "Code/Model_Output/SEA.B.inds.rds")
-SEA.B.all.inds <- readRDS("Code/Model_Output/SEA.B.inds.rds")
+# saveRDS(SEA.B.all.inds, "Model_Output/SEA.B.inds.rds")
+SEA.B.all.inds <- readRDS("Model_Output/SEA.B.inds.rds")
 
 # Calculate means and 95% HPD intervals for each individual
 extract_vals <- SEA.B.all.inds %>%
@@ -199,7 +199,7 @@ results_df %>%
             seSEAb = std.error(SEAb))
 
 # Plot
-fig.4b <- ggplot(data=results_df) +
+fig.3f <- ggplot(data=results_df) +
   geom_errorbar(aes(y = SEAb, ymin = lower, ymax = upper, 
                     x= reorder(as.factor(individual), SEAb), color=urban),
                 width = 0, linewidth=0.5) +
@@ -213,21 +213,20 @@ fig.4b <- ggplot(data=results_df) +
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
 
-fig.4b
+fig.3f
 ```
 
-Arrange plots for Figure 3:
+Arrange plots for Figure 3. Note - to complete figure 3, fig 3a, 3b, 3c, and 3d must be generated in the DHGLMs.Rmd file.
 
 ```{r}
 ggarrange(
-  fig.4a, fig.4b,
-  ncol = 2, nrow = 1, 
-  labels = c("a", "b"),
-  align = "hv",
-  label.x = c(0.1,0.1),
-  widths=c(1,1), heights=c(1,1))
+  fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
+  ncol = 2, nrow = 3, 
+  labels = c("a", "b", "c", "d", "e", "f"),
+  label.x = 0.135,
+  align = "hv")
 
-ggsave("Figures/Figure4.png",dpi=600, width=8, height=4)
+# ggsave("Figures/Figure3.png",dpi=600, height=7, width=8)
 ```
 
 

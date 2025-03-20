@@ -8,7 +8,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-knitr::opts_chunk$set(echo = TRUE)
 library(ggpubr);library(lme4);library(arm);library(MuMIn);library(tidyverse)
 library(broom);library(coda);library(grid);
 library(gridExtra);library(brms); library(broom.mixed); library(merTools);
@@ -482,15 +481,17 @@ fig.3d
 
 ## Arrange plots
 
+To complete figure 3, fig 3e and 3f must be generated in the SIBER.Rmd file.
+
 ```{r}
 ggarrange(
-  fig.3a, fig.3b, fig.3c, fig.3d,
-  ncol = 2, nrow = 2, 
-  labels = c("a", "b", "c", "d"),
+  fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
+  ncol = 2, nrow = 3, 
+  labels = c("a", "b", "c", "d", "e", "f"),
   label.x = 0.135,
   align = "hv")
 
-ggsave("Figures/Figure3.png", dpi=600, height=6, width=8)
+ggsave("Figures/Figure3.png",dpi=600, height=7, width=8)
 ```
 
 # Extract model correlation estimates
