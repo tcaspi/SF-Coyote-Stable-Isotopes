@@ -20,7 +20,7 @@ theme_custom <- function() {
         plot.background = element_rect(fill = "white", color = NA),
         plot.title = element_text(size = 7),
         strip.background = element_blank(),
-        axis.text.y = element_text(size=5),
+        axis.text.y = element_text(size=7),
         axis.text.x = element_text(size=10),
         axis.title.y = element_text(size=10),
         axis.title.x = element_text(size=10))}
@@ -115,27 +115,22 @@ SEA.B <- siberEllipses(ellipses.posterior)
 mean(SEA.B[,1]) %>% round(2); HPDinterval(as.mcmc(SEA.B[,1])) %>% round(2) # nonurban
 mean(SEA.B[,2]) %>% round(2); HPDinterval(as.mcmc(SEA.B[,2])) %>% round(2) # urban
 
-# Fromat data frame for plotting
+# Plot distribution of population-level ellipses
+
 SEA.B.pops <- as.data.frame(SEA.B) %>% 
-  dplyr::rename(Nonurban = V1,
-         Urban = V2) %>% 
+  dplyr::rename("Marin County" = V1,
+         "San Francisco" = V2) %>% 
   pivot_longer(cols = everything(), names_to = "Site", values_to = "Value")
-
-
-# Plot SEAb posteriors for each population
-fig.3e <- ggplot()+
-  stat_density_ridges(data = SEA.B.pops, 
-                      aes(x=Value, y="Urban/Nonurban", fill=Site, 
-                          height = ..density.., scale = 1.5), alpha=0.6,
-                      quantile_lines = T, quantiles=2)+
-  labs(y="Density", x="Bayesian Standard Ellipse Area")+
-  scale_fill_manual(values = c("Urban" = "#C0362D", "Nonurban" = "#284A45"))+
-  scale_x_continuous(limits=c(0,19), breaks=c(0,5,10,15))+
-  scale_y_discrete(expand=c(0,0))+
-  theme_custom()+
-  theme(legend.position = "none",
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())
+  
+fig.3e <- ggplot(SEA.B.pops, aes(x = Site, y = Value, fill = Site, color=Site)) +
+    geom_boxplot(alpha = 0.6, linewidth=0.2, outlier.shape=1) +
+    labs(y = "Bayesian Standard Ellipse Area", x = "Site") +
+    scale_fill_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#284A45")) +
+    scale_color_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#284A45")) +
+    scale_y_continuous(limits=c(0,20), breaks=c(0,5,10,15,20), expand = c(0, 0)) +
+    #scale_y_continuous(limits=c(0,15), breaks=c(0,5,10,15), expand = c(0, 0)) +
+    theme_custom() +
+    theme(legend.position = "none")
 
 fig.3e
 ```
@@ -223,7 +218,7 @@ ggarrange(
   fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
   ncol = 2, nrow = 3, 
   labels = c("a", "b", "c", "d", "e", "f"),
-  label.x = 0.135,
+  label.x = 0.145,
   align = "hv")
 
 # ggsave("Figures/Figure3.png",dpi=600, height=7, width=8)

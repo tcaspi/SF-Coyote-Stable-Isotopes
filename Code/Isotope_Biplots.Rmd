@@ -12,8 +12,6 @@ library(tidyverse)
 library(plotrix)
 library(ggpubr)
 
-colors <- c("#C8BFE7", "#2E2585", "#7E2954", "blue", "#DCCD7D", "#C26A77", "#FDB462FF", "#5DA899", "#337538", "pink")
-
 colors <- c("#000000", "#E69F00", "#56B4E9", "#2D51E8", "#F0E442", "#009E73", "#D55E00", "#7D2355", "#1A4A08","#4A107F")
 
 family_colors <- c("Bernal" = colors[1],
@@ -101,24 +99,6 @@ data_with_centers <- data_average_sf %>%
   left_join(center_points, by = "group")
 
 # SF individuals colored by family group
-fig.2b <- data_average_sf %>% 
-  filter(group != "NA") %>% 
-  ggplot(aes(x=C_avg, y=N_avg, 
-             color=group, fill=group))+
-  stat_ellipse(level=0.4)+
-  geom_point(size=3,alpha=0.8)+
-  scale_color_manual(values=family_colors)+
-  scale_fill_manual(values=family_colors)+
-  xlab(expression(delta^{13}~C))+
-  ylab(expression(delta^{15}~N))+
-  scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1))+
-  scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1))+
-  theme_custom()+
-  theme(legend.position = "none",
-        legend.text = element_text(size=5),
-        legend.key.size = unit(0.5, 'cm'),
-        legend.title = element_blank())
-  
 fig.2b <- data_with_centers %>% 
   ggplot(aes(x=C_avg, y=N_avg, 
              color=group, fill=group)) +
@@ -133,24 +113,30 @@ fig.2b <- data_with_centers %>%
   xlab(expression(delta^{13}~C)) +
   ylab(expression(delta^{15}~N)) +
   scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1)) +
-  scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1)) +
+  scale_y_continuous(limits=c(6.5,10), breaks=seq(7,10,by=1)) +
   theme_custom() +
   theme(legend.position = "bottom",
-        legend.text = element_text(size=5),
-        legend.key.size = unit(0.5, 'cm'),
+        legend.text = element_text(size=6),
+        legend.key.size = unit(0.1, 'cm'),
         legend.title = element_blank())
+
+fig.2b
+
+leg <- get_legend(fig.2b)
 
 # Combine plots into Figure 2
 ggarrange(
   fig2a, fig.2b,
-  ncol = 2, nrow = 1, 
+  ncol = 1, nrow = 2, 
   labels = c("a", "b"),
   common.legend=F,
   align = "hv",
-  label.x = 0.125,
-  widths=c(1,1), heights=c(1,1))
+  label.x = 0.15,
+  widths=c(1,1), heights=c(1,1),
+  legend="bottom",
+  legend.grob = leg)
 
-# ggsave("Figures/Figure2.png",dpi=600, width=8, height=3)
+# ggsave("Figures/Figure2.png",dpi=600, width=3.4, height=6)
 
 # Plot all SF individuals, highlighting repeatedly sampled individuals
 fig.S1 <- data_average_sf %>% 

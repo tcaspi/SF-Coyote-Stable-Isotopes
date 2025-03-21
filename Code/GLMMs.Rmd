@@ -192,7 +192,7 @@ cond_ISA_C <- data.frame(cond_ISA_C$ISA) %>%
 
 
 # Carbon
-fig.s5a <- ggplot() +
+fig.s4a <- ggplot() +
   geom_ribbon(data = cond_ISA_C, aes(x = ISA, ymin = lower_tf, ymax = upper_tf), 
               alpha = 0.5, fill = "#8C8076") +
   geom_line(data = cond_ISA_C, aes(x = ISA, y = (C_tf)), color = "#2D2926", size = 1)+
@@ -205,10 +205,10 @@ fig.s5a <- ggplot() +
   scale_y_continuous(limits = c(-24, -15), breaks = seq(-24,-15,by=1))+
   theme(legend.position = "none")
 
-fig.s5a
+fig.s4a
 
 # Nitrogen
-fig.s5b <- ggplot() +
+fig.s4b <- ggplot() +
   geom_ribbon(data = cond_ISA_N, aes(x = ISA, ymin = lower_tf, ymax = upper_tf), 
               alpha = 0.5, fill = "#8C8076") +
   geom_line(data = cond_ISA_N, aes(x = ISA, y = (N_tf)), 
@@ -222,7 +222,7 @@ fig.s5b <- ggplot() +
   scale_y_continuous(limits = c(6, 11), breaks = c(6,7,8,9,10,11))+
   theme(legend.position = "none")
 
-fig.s5b
+fig.s4b
 ```
 
 # Arrange figure
@@ -237,6 +237,6 @@ ggarrange(
   label.x = 0.125,
   widths=c(1,1), heights=c(1,1))
 
-# ggsave("Figures/FigureS5.tiff",dpi=600, width=8, height=3)
+# ggsave("Figures/FigureS4.png",dpi=600, width=8, height=3)
 ```
 

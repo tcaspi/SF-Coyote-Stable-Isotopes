@@ -21,7 +21,7 @@ theme_custom <- function() {
         plot.background = element_rect(fill = "white", color = NA),
         plot.title = element_text(size = 7),
         strip.background = element_blank(),
-        axis.text.y = element_text(size=5),
+        axis.text.y = element_text(size=7),
         axis.text.x = element_text(size=10),
         axis.title.y = element_text(size=12),
         axis.title.x = element_text(size=12))}
@@ -84,43 +84,13 @@ dhglm_C_skew <- brm(dhglm_C,
               cores  = my.cores,
               control = list(adapt_delta = 0.95))
 
-# Set prior for bivariate model
-priors <- c(
-  # Priors for fixed effects
-  set_prior("normal(0, 4)", class = "b"),                       
-  set_prior("student_t(3, -0.1, 2.5)", class = "Intercept", resp = "scaleNraw"),
-  set_prior("student_t(3, 0, 2.5)", class = "Intercept", resp = "scaleCraw"), 
-  
-  # Priors for random effects
-  set_prior("student_t(3, 0, 2.5)", class = "sd", group = "whisker", resp = "scaleNraw"),
-  set_prior("student_t(3, 0, 2.5)", class = "sd", group = "whisker", resp = "scaleCraw"),
-  
-  # Priors for residual standard deviation
-  set_prior("student_t(3, 0, 2.5)", class = "sigma", resp = "scaleNraw"),
-  set_prior("student_t(3, 0, 2.5)", class = "sigma", resp = "scaleCraw"),
-  
-  # Prior for correlations
-  set_prior("lkj(2)", class = "cor")
-)
-
-bivariate_model <- brm(dhglm_N + dhglm_C + set_rescor(FALSE),
-                 data = dhglm_df,
-                  family = skew_normal(),
-                    #prior=priors,
-                    warmup = 1000, iter = 5000, thin=2,
-                    chains = 4,
-                    seed = 12345,
-                    cores  = my.cores,
-                    control = list(adapt_delta = 0.95))
 # Save models
 # saveRDS(dhglm_N_skew, "Model_Output/dhglm_N_skew.rds")
 # saveRDS(dhglm_C_skew, "Model_Output/dhglm_C_skew.rds")
-# saveRDS(bivariate_model, "Model_Output/bivariate_model.rds")
 
 # Load models
 dhglm_N_skew <- readRDS("Model_Output/dhglm_N_skew.rds")
 dhglm_C_skew <- readRDS("Model_Output/dhglm_C_skew.rds")
-bivariate_model <- readRDS("Model_Output/bivariate_model.rds")
 ```
 
 # Assess model fit and covariate effects
@@ -493,77 +463,5 @@ ggarrange(
 
 ggsave("Figures/Figure3.png",dpi=600, height=7, width=8)
 ```
-
-# Extract model correlation estimates
-
-```{r}
-colnames(posterior_samples(dhglm_N_skew))[1:11]
-colnames(posterior_samples(dhglm_C_skew))[1:11]
-colnames(posterior_samples(bivariate_model))[1:25]
-
-corr_var_type_N <- posterior_samples(bivariate_model) %>% select("corr_N" = cor_whisker__scaleNraw_Intercept__sigma_scaleNraw_Intercept)
-
-corr_var_type_C <- posterior_samples(bivariate_model) %>% select("corr_C" = cor_whisker__scaleCraw_Intercept__sigma_scaleCraw_Intercept)
-
-corr_C_N_type <- posterior_samples(bivariate_model) %>% select("corr_C_N" = cor_whisker__scaleNraw_Intercept__scaleCraw_Intercept)
-
-corr_C_N_var <- posterior_samples(bivariate_model) %>% select("corr_C_N_var" = cor_whisker__sigma_scaleNraw_Intercept__sigma_scaleCraw_Intercept)
-
-corrs_df <- data_frame(Correlation = c("mean_N_rIIV_N",
-                                      "mean_C_rIIV_C",
-                                      "mean_N_mean_C",
-                                      "rIIV_N_rIIV_C"),
-                  Estimate = c(mean(corr_var_type_N$corr_N),
-                               mean(corr_var_type_C$corr_C),
-                               mean(corr_C_N_type$corr_C_N),
-                               mean(corr_C_N_var$corr_C_N_var)),
-                  Lower = c(HPDinterval(as.mcmc(corr_var_type_N$corr_N))[,"lower"],
-                            HPDinterval(as.mcmc(corr_var_type_C$corr_C))[,"lower"],
-                            HPDinterval(as.mcmc(corr_C_N_type$corr_C_N))[,"lower"],
-                            HPDinterval(as.mcmc(corr_C_N_var$corr_C_N_var))[,"lower"]),
-                  Upper = c(HPDinterval(as.mcmc(corr_var_type_N$corr_N))[,"upper"],
-                            HPDinterval(as.mcmc(corr_var_type_C$corr_C))[,"upper"],
-                            HPDinterval(as.mcmc(corr_C_N_type$corr_C_N))[,"upper"],
-                            HPDinterval(as.mcmc(corr_C_N_var$corr_C_N_var))[,"upper"]))
-
-# Results
-corrs_df
-
-# Plot correlation values with HPD intervals
-ggplot(corrs_df, aes(x = Correlation, y = Estimate)) +
-  geom_pointrange(aes(ymin = Lower,
-                      ymax = Upper)) +
-  geom_hline(yintercept = 0,
-             linetype = "dotted",
-             alpha = 0.3) +
-  scale_x_discrete(limits = c("mean_N_rIIV_N",
-                              "mean_C_rIIV_C",
-                              "mean_N_mean_C",
-                              "rIIV_N_rIIV_C"),
-                   labels = c("δ15N:rIIVδ15N", "δ13C:rIIVδ13C", "δ15N:δ13C", "rIIVδ15N:rIIVδ13C")) +
-  labs(x=NULL,
-       y = "DHGLM Correlation (Estimate +/- 95% HPD)") +
-  ylim(-1,1) +
-  coord_flip() +
-  theme_custom()
-
-# ggsave("Figures/FigureS3.png", dpi=600, height=3, width=5)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

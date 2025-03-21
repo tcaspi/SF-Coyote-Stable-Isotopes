@@ -248,8 +248,11 @@ resid_err <- TRUE
 process_err <- TRUE
 write_JAGS_model(model_filename, resid_err, process_err, mix.coy.avgs, source.coy)
  
-# Run full model
+# Run full model - best run on HPC, takes a long time to run
 jags.full <- run_model(run="very long", mix.coy.avgs, source.coy, discr.coy, model_filename, alpha.prior=coy.alpha)
+
+# Load model output
+# jags.full <- readRDS("Model_Output/jags.full.rds")
 
 # Set model output options
 output_options <- list(summary_save = TRUE,                 
@@ -257,26 +260,32 @@ output_options <- list(summary_save = TRUE,
                        sup_post = TRUE,                    
                        plot_post_save_pdf = FALSE,           
                        plot_post_name = "posterior_density",
-                       sup_pairs = FALSE,             
-                       plot_pairs_save_pdf = TRUE,    
+                       sup_pairs = TRUE,             
+                       plot_pairs_save_pdf = FALSE,    
                        plot_pairs_name = "pairs_plot",
-                       sup_xy = FALSE,           
-                       plot_xy_save_pdf = TRUE,
+                       sup_xy = TRUE,           
+                       plot_xy_save_pdf = FALSE,
                        plot_xy_name = "xy_plot",
                        gelman = TRUE,
-                       heidel = TRUE,  
+                       heidel = FALSE,  
                        geweke = TRUE,   
-                       diag_save = TRUE,
+                       diag_save = FALSE,
                        diag_name = "diagnostics",
                        indiv_effect = FALSE,       
                        plot_post_save_png = FALSE, 
-                       plot_pairs_save_png = TRUE,
-                       plot_xy_save_png = TRUE,
+                       plot_pairs_save_png = FALSE,
+                       plot_xy_save_png = FALSE,
                        diag_save_ggmcmc = TRUE,
                        return_obj = TRUE)
 
+# Assess convergence with Gelman-Rubin and Geweke dignostics
+output_diagnostics(jags.full, mix.coy.avgs, source.coy, output_options)
+
 # Mean posterior estimates from model
 df.stats <- output_stats(jags.full, mix.coy.avgs, source.coy, output_options)
+
+# Global proportion df
+df.stats[grep("^p\\.global", rownames(df.stats)), ] %>% round(3) * 100
 
 # Extract posterior distributions for global proportions
 global.prop <- as.data.frame(jags.full$BUGSoutput$sims.list$p.global)
@@ -285,11 +294,6 @@ names(global.prop) <- c("ff_chicken", "fruit", "gopher", "medium.mammal", "rat",
 posterior_global <- global.prop %>% 
   pivot_longer(cols = everything(), names_to = "sources", values_to = "value") %>% 
   mutate(sources = factor(sources, levels = c("ff_chicken", "wet.food", "rat", "medium.mammal", "fruit", "gopher")))
-
-# Load model output from previously run model
-# jags.full <- readRDS("Model_Output/"jags.full.rds")
-# df.stats <- readRDS("Model_Output/df")
-# posterior_global <- readRDS("Model_Output/posterior_global")
 ```
 
 ## Make plots:
@@ -316,7 +320,7 @@ ggplot(posterior_global, aes(x = value, fill = sources, color = sources)) +
         legend.text = element_text(size=5))+
   guides(fill = guide_legend(nrow = 1))
 
-# ggsave("Figures/FigureS4.png", dpi=600, height=3, width=4)
+# ggsave("Figures/FigureS3.png", dpi=600, height=3, width=4)
 ```
 
 Individual diet source proportions:
@@ -329,7 +333,7 @@ covs <- read.csv("Data/territory_covs.csv")
 ind.props <- as.data.frame(df.stats) %>% 
   rownames_to_column("sample") %>% 
   mutate(rowID = seq(1:nrow(.)), .before=Mean) %>% 
-  slice(11:562) %>%  #  WILL NEED TO CHANGE WITH NEW MODEL
+  slice(11:592) %>% 
   separate(sample, into = c("prefix", "whisker", "source"), sep = "\\.", extra = "merge") %>%
   dplyr::select(c(whisker, source, Mean, SD)) %>% 
   pivot_wider(names_from = source, values_from = c(Mean, SD))
@@ -345,7 +349,7 @@ ind.props_plotting_all <- ind.props %>%
   mutate(Proportion = Proportion / sum(Proportion)) %>% 
   ungroup() %>% 
   left_join(covs, by="group") %>% 
-  mutate(group = factor(group, levels = c("Coit", "Bernal", "St. Francis", "Glen", "GGP - East", "GGP - West", "McLaren", "Merced", "Presidio", NA))) %>% 
+  mutate(group = factor(group, levels = c("Coit", "Bernal", "Corona Heights", "St. Francis", "Glen", "GGP - East", "GGP - West", "McLaren", "Merced", "Presidio", "Unknown"))) %>% 
   mutate(Source = factor(Source, levels = c("Mean_ff_chicken", "Mean_wet.food", "Mean_medium.mammal", "Mean_rat", "Mean_fruit", "Mean_gopher")))
 
 whisker_to_sfcoy <- ind.props_plotting_all %>%
@@ -429,7 +433,7 @@ natural.high.N_stats <- source_df %>%
 three_source_df <- bind_rows(human_food_stats, natural.high.N_stats, natural.low.N_stats)
 
 # Write to file
-write.csv(three_source_df, "Cleaned_Data/coyote_source_three.csv", row.names = FALSE)
+# write.csv(three_source_df, "Cleaned_Data/coyote_source_three.csv", row.names = FALSE)
 ```
 
 ## Prepare TDF data frame
@@ -443,7 +447,7 @@ tdf_df_three <- data.frame(
   SDd15N = 1.41)
 
 # Write to csv
-write.csv(tdf_df_three, "Cleaned_Data/coyote_discrimination_three.csv", row.names = FALSE)
+# write.csv(tdf_df_three, "Cleaned_Data/coyote_discrimination_three.csv", row.names = FALSE)
 ```
 
 ## Prepare consumer data
@@ -463,7 +467,7 @@ consumer_df_isa <- data.frame(
   mutate_if(is.character, as.factor) 
 
 # Write to file
-write.csv(consumer_df_isa, "Cleaned_Data/coyote_consumer_isa.csv", row.names = FALSE)
+# write.csv(consumer_df_isa, "Cleaned_Data/coyote_consumer_isa.csv", row.names = FALSE)
 ```
 
 ## Investigate mixing polygon
@@ -542,6 +546,9 @@ jags.ISA <- run_model(run="long", mix.coy.ISA, source.coy.ISA, discr.coy.ISA, mo
 # Load model output if not running the model
 # jags.ISA <- readRDS("Model_Output/jags.ISA.rds")
 
+# Assess convergence with Gelman-Rubin and Geweke dignostics
+output_diagnostics(jags.ISA, mix.coy.avgs, source.coy, output_options)
+
 # Mean posterior estimates from model
 df.stats.ISA <- output_stats(jags.ISA, mix.coy.ISA, source.coy.ISA, output_options)
 
@@ -567,8 +574,6 @@ fig.4c <- ggplot() +
   theme(legend.position = "none")
 
 fig.4c
-
-# ggsave("Figures/Figure6c.png", dpi=600, height=4, width=4)
 ```
 
 # Arrange figure:

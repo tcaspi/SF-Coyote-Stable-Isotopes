@@ -163,8 +163,6 @@ In the `Model_Output` folder, you will find `.rds` files containing model output
     > `dhglm_C_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
     >
     > `dhglm_N_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
-    >
-    > `bivariate_model.rds`: model output for the bivariate DHGLM. This file is generated in the `DHGLMs.Rmd` script.
 
     </div>
 
