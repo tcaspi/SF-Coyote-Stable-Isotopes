@@ -3,7 +3,6 @@ library(tidyverse)
 library(ggmap)
 library(ggspatial)
 
-
 ## Prep Location Data
 
 # Load SI data from all runs
@@ -68,7 +67,8 @@ locs <- data_inds %>%
     dead == "sick.release" ~ "Live Capture",
     dead == "unknown" ~ "Deceased",
     TRUE ~ "Other" 
-  ))
+  )) %>% 
+  filter(whisker != "S21-3433")
 
 table(locs$dead.cat) # check that names are correct
 
@@ -78,15 +78,17 @@ register_stadiamaps("YOUR KEY HERE", write = TRUE)
 
 bbox <- c(left = -122.6, right = -122.35, bottom = 37.68, top = 37.88)
 
-get_stadiamap(bbox, zoom = 14, maptype = "stamen_terrain", scale=2) %>% ggmap()+
+study_map <- get_stadiamap(bbox, zoom = 14, maptype = "stamen_terrain", scale=2)
+
+ggmap(study_map)+
   geom_point(data = locs, aes(x = long, y = lat, color = dead.cat), 
              size = 2, alpha=0.7, position=position_jitter(width=.002, height = .002)) +
   scale_color_manual(values=c( "black", "#f54242", "#1f50cc", "#004D40"),
                      labels=c("Deceased", "Euthanized: Aggression", "Euthanized: Other", "Live Capture"))+
   guides(shape = "none") +
   theme_minimal()+
-  theme(axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
+  theme(axis.text.x = element_text(6),
+        axis.text.y = element_text(6),
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.title = element_blank(),
@@ -98,10 +100,11 @@ get_stadiamap(bbox, zoom = 14, maptype = "stamen_terrain", scale=2) %>% ggmap()+
         legend.spacing.y = unit(0.05, "cm"),
         legend.key.height = unit(0.25, "cm"))+
   
-  annotation_scale(location = "bl", width_hint = 0.2) + 
+  annotation_scale(location = "bl", width_hint = 0.2) +
   coord_sf(crs = 4326)
 
-# ggsave("Figures/Figure1.png", dpi=600, height=5, width=5)
+ ggsave("Figures/Figure1.png", dpi=600, height=5, width=5)
+
 
 ##########################################################################
 
@@ -117,9 +120,18 @@ county_data <- us_map(regions = "counties") %>%
   filter(full == "California") %>%
   mutate(fill_color = ifelse(county %in% highlight_counties, "#F57E77", "#595959"))
 
+# Define western states
+western_states <- c("California", "Oregon", "Washington", "Nevada", "Arizona", "Idaho", "Utah")
+
+# Get state-level data
+state_data <- us_map(regions = "states") %>%
+  mutate(fill_color = ifelse(full == "California", "#F57E77", "#B0B0B0")) %>%
+  filter(full %in% western_states)  
+
 # Plot
 ggplot() +
-  geom_sf(data = county_data, aes(fill = fill_color), color = NA) +  # Remove county borders
+  geom_sf(data = state_data, aes(fill=fill_color))+
+  geom_sf(data = county_data, aes(fill = fill_color), color = NA) +
   scale_fill_identity() + 
   theme_void() +
   theme(panel.background = element_rect(fill = "#CCD9E6", color = NA))

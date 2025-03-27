@@ -67,7 +67,7 @@ fig.S3
 # ggsave("Figures/FigureS3.png",dpi=600, width=4, height=3)
 
 # All individuals with standard error bars
-fig2a <- data_average %>% 
+fig2 <- data_average %>% 
   ggplot(aes(x=C_avg, y=N_avg, color=urban))+
   geom_errorbar(aes(ymin=N_avg-N_se, ymax=N_avg+N_se, color=urban), alpha=0.7)+
   geom_errorbar(aes(xmin=C_avg-C_se, xmax=C_avg+C_se, color=urban), alpha=0.7)+
@@ -80,7 +80,9 @@ fig2a <- data_average %>%
   theme_custom()+
   theme(legend.position = "none")
 
-fig2a
+fig2
+
+# ggsave("Figures/Figure2.png",dpi=600, width=3.4, height=2.8)
 
 # Create data frame with only SF coyotes
 data_average_sf <- data_average %>% 
@@ -99,7 +101,7 @@ data_with_centers <- data_average_sf %>%
   left_join(center_points, by = "group")
 
 # SF individuals colored by family group
-fig.2b <- data_with_centers %>% 
+fig.4 <- data_with_centers %>% 
   ggplot(aes(x=C_avg, y=N_avg, 
              color=group, fill=group)) +
   geom_segment(aes(x = C_center, y = N_center, 
@@ -116,15 +118,18 @@ fig.2b <- data_with_centers %>%
   scale_y_continuous(limits=c(6.5,10), breaks=seq(7,10,by=1)) +
   theme_custom() +
   theme(legend.position = "bottom",
-        legend.text = element_text(size=6),
+        legend.text = element_text(size=5),
         legend.key.size = unit(0.1, 'cm'),
         legend.title = element_blank())
 
-fig.2b
+fig.4
 
-leg <- get_legend(fig.2b)
+# ggsave("Figures/Figure4.png",dpi=600, width=3.4, height=2.8)
 
-# Combine plots into Figure 2
+
+leg <- get_legend(fig.4)
+
+# Combine plots
 ggarrange(
   fig2a, fig.2b,
   ncol = 1, nrow = 2, 
@@ -136,8 +141,8 @@ ggarrange(
   legend="bottom",
   legend.grob = leg)
 
- ggsave("Figures/Figure2.png",dpi=600, width=3.4, height=6)
-
+# ggsave("Figures/Figure4.png",dpi=600, width=3.4, height=6)
+ 
 # Plot all SF individuals, highlighting repeatedly sampled individuals
 fig.S2 <- data_average_sf %>% 
   ggplot(aes(x = C_avg, y = N_avg)) +
