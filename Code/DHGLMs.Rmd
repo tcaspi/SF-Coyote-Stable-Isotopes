@@ -276,12 +276,12 @@ fig.3a <- ggplot() +
                     x= reorder(as.factor(whisker), mean_C), color=urban),
                 width = 0, linewidth=0.5) +
   geom_point(data = posterior_type_C[!duplicated(posterior_type_C$whisker),],
-             aes(y = mean_C,  x= reorder(as.factor(whisker), mean_C), shape = sex),
-             size = 0.7, color = "black") +
+             aes(y = mean_C,  x= reorder(as.factor(whisker), mean_C)),
+             size = 0.5, color = "black") +
   labs(x = "Individual", y = expression("Mean"~delta^{13}~C)) +
   scale_y_continuous(limits=c(-24.3,-15), breaks=seq(-24,-15,by=1)) +
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#284A45")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -327,12 +327,12 @@ fig.3c <- ggplot() +
                     x= reorder(as.factor(whisker), mean_rIIV_tf), color=urban),
                 width = 0, linewidth=0.5) +
   geom_point(data = posterior_var_C[!duplicated(posterior_var_C$whisker),],
-             aes(y = mean_rIIV_tf,  x= reorder(as.factor(whisker), mean_rIIV_tf), shape = sex),
-             size = 0.7, color = "black") +
+             aes(y = mean_rIIV_tf,  x= reorder(as.factor(whisker), mean_rIIV_tf)),
+             size = 0.5, color = "black") +
   labs(x = "Individual", y = expression("rIIV"~delta^{13}~C)) +
   scale_y_continuous(limits=c(0,3), breaks=c(0,1,2,3))+
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#284A45")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -385,12 +385,12 @@ fig.3b <- ggplot() +
                     x= reorder(as.factor(whisker), mean_N), color=urban),
                 width = 0, linewidth=0.5) +
   geom_point(data = posterior_type_N[!duplicated(posterior_type_N$whisker),],
-             aes(y = mean_N,  x= reorder(as.factor(whisker), mean_N), shape = sex),
-             size = 0.7, color = "black") +
+             aes(y = mean_N,  x= reorder(as.factor(whisker), mean_N)),
+             size = 0.5, color = "black") +
   labs(x = "Individual", y = expression("Mean"~delta^{15}~N)) +
   scale_y_continuous(limits=c(6,12.1), breaks=c(6,7,8,9,10,11,12)) +
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#284A45")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -436,12 +436,12 @@ fig.3d <- ggplot() +
                     x= reorder(as.factor(whisker), mean_rIIV_tf), color=urban),
                 width = 0, linewidth=0.5) +
   geom_point(data = posterior_var_N[!duplicated(posterior_var_N$whisker),],
-             aes(y = mean_rIIV_tf,  x= reorder(as.factor(whisker), mean_rIIV_tf), shape = sex),
-             size = 0.7, color = "black") +
+             aes(y = mean_rIIV_tf,  x= reorder(as.factor(whisker), mean_rIIV_tf)),
+             size = 0.5, color = "black") +
   labs(x = "Individual", y = expression("rIIV"~delta^{15}~N)) +
   scale_y_continuous(limits=c(0,3), breaks=c(0,1,2,3))+
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#284A45")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())

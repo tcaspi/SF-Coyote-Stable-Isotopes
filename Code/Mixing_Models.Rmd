@@ -320,7 +320,7 @@ ggplot(posterior_global, aes(x = value, fill = sources, color = sources)) +
         legend.text = element_text(size=5))+
   guides(fill = guide_legend(nrow = 1))
 
-# ggsave("Figures/FigureS3.png", dpi=600, height=3, width=4)
+# ggsave("Figures/FigureS4.png", dpi=600, height=3, width=4)
 ```
 
 Individual diet source proportions:

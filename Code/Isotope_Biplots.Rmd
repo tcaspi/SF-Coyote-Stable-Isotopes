@@ -50,11 +50,11 @@ Create isotope biplots:
 
 ```{r}
 # Plot - all data points
-fig.S2 <- data_clean %>% 
+fig.S3 <- data_clean %>% 
   ggplot(aes(x=C_raw, y=N_raw, color=urban)) +
   geom_point(size=1, alpha=0.4)+
   stat_ellipse(level=0.95)+
-  scale_color_manual(values=c("#284A45", "#c0362d"))+
+  scale_color_manual(values=c("#9292B1", "#c0362d"))+
   xlab(expression({delta}^13*C))+
   ylab(expression({delta}^15*N))+
   scale_x_continuous(limits=c(-25.2,-15), breaks=seq(-25,-15,by=1))+
@@ -62,17 +62,17 @@ fig.S2 <- data_clean %>%
   theme_custom()+
   theme(legend.position = "none")
 
-fig.S2
+fig.S3
 
-# ggsave("Figures/FigureS2.png",dpi=600, width=4, height=3)
+# ggsave("Figures/FigureS3.png",dpi=600, width=4, height=3)
 
 # All individuals with standard error bars
 fig2a <- data_average %>% 
   ggplot(aes(x=C_avg, y=N_avg, color=urban))+
   geom_errorbar(aes(ymin=N_avg-N_se, ymax=N_avg+N_se, color=urban), alpha=0.7)+
   geom_errorbar(aes(xmin=C_avg-C_se, xmax=C_avg+C_se, color=urban), alpha=0.7)+
-  geom_point(size=1,alpha=0.7)+
-  scale_color_manual(values=c("#284A45", "#c0362d"))+
+  geom_point(size=0.4,alpha=0.7)+
+  scale_color_manual(values=c("#9292B1", "#c0362d"))+
   xlab(expression({delta}^13*C))+
   ylab(expression({delta}^15*N))+
   scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1))+
@@ -136,10 +136,10 @@ ggarrange(
   legend="bottom",
   legend.grob = leg)
 
-# ggsave("Figures/Figure2.png",dpi=600, width=3.4, height=6)
+ ggsave("Figures/Figure2.png",dpi=600, width=3.4, height=6)
 
 # Plot all SF individuals, highlighting repeatedly sampled individuals
-fig.S1 <- data_average_sf %>% 
+fig.S2 <- data_average_sf %>% 
   ggplot(aes(x = C_avg, y = N_avg)) +
   
   # Error bars
@@ -169,7 +169,7 @@ fig.S1 <- data_average_sf %>%
   theme_custom()+
   theme(legend.position = "none")
 
-fig.S1
+fig.S2
 
-# ggsave("Figures/FigureS1.png",dpi=600, width=4, height=3)
+# ggsave("Figures/FigureS2.png",dpi=600, width=4, height=3)
 ```
