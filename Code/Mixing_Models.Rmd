@@ -500,12 +500,21 @@ ggplot()+
 ## Create MixSIAR model objects
 
 ```{r}
+# model with impervious surface cover
 mix.coy.ISA <- load_mix_data(filename="Cleaned_Data/coyote_consumer_isa.csv", 
                      iso_names=c("d13C","d15N"), 
                      factors=NULL, 
                      fac_random=NULL, 
                      fac_nested=NULL, 
                      cont_effects="ISA")
+
+# null model for comparison
+mix.coy.ISA.null <- load_mix_data(filename="Cleaned_Data/coyote_consumer_isa.csv", 
+                     iso_names=c("d13C","d15N"), 
+                     factors=NULL, 
+                     fac_random=NULL, 
+                     fac_nested=NULL, 
+                     cont_effects=NULL)
 
 source.coy.ISA <- load_source_data(filename="Cleaned_Data/coyote_source_three.csv",
                            source_factors=NULL, 
@@ -543,11 +552,25 @@ write_JAGS_model(model_filename, resid_err, process_err, mix.coy.ISA, source.coy
 # Run full model
 jags.ISA <- run_model(run="long", mix.coy.ISA, source.coy.ISA, discr.coy.ISA, model_filename, alpha.prior=ISA.alpha)
 
+# Write the JAGS model file for the null model
+model_filename <- "MixSIAR_model_ISA_null.txt"
+resid_err <- TRUE
+process_err <- TRUE
+write_JAGS_model(model_filename, resid_err, process_err, mix.coy.ISA.null, source.coy.ISA)
+
+# Run null model
+jags.ISA.null <- run_model(run="long", mix.coy.ISA.null, source.coy.ISA, discr.coy.ISA, model_filename, alpha.prior=ISA.alpha)
+
 # Load model output if not running the model
- jags.ISA <- readRDS("Model_Output/jags.ISA.rds")
+jags.ISA <- readRDS("Model_Output/jags.ISA.rds")
+jags.ISA.null <- readRDS("Model_Output/jags.ISA.null.rds")
+ 
+# Compare models
+comparison.table <- compare_models(list(jags.ISA, jags.ISA.null))
+comparison.table # model with impervious cover is much better fit
 
 # Assess convergence with Gelman-Rubin and Geweke dignostics
-output_diagnostics(jags.ISA, mix.coy.avgs, source.coy, output_options)
+output_diagnostics(jags.ISA, mix.coy.ISA, source.coy.ISA, output_options)
 
 # Mean posterior estimates from model
 df.stats.ISA <- output_stats(jags.ISA, mix.coy.ISA, source.coy.ISA, output_options)
