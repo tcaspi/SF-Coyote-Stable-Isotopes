@@ -170,7 +170,7 @@ meat_samples <- prey %>%
          d15N = d15N + TDF.N)
 
 # Plot prey sources
-fig.5a <- ggplot()+
+fig.4a <- ggplot()+
   geom_point(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N, color=species),
              size=3)+
   geom_errorbar(data=source_df_plotting, mapping=aes(x=Meand13C, y=Meand15N,
@@ -192,7 +192,7 @@ fig.5a <- ggplot()+
   theme(legend.position = "none")+
   scale_color_manual(values=cols)
 
-fig.5a
+fig.4a
 ```
 
 ## Create MixSIAR model objects
@@ -362,7 +362,7 @@ whisker_to_sfcoy <- ind.props_plotting_all %>%
 mean.names <- c("Chicken", "Cat Food", "Medium-Sized \nMammals", "Rats", "Fruit", "Gophers")
 
 # plot
-fig.5b <- ind.props_plotting_all %>%
+fig.4b <- ind.props_plotting_all %>%
   ggplot(aes(x=reorder(whisker, group), y=Proportion, fill=Source)) +
   geom_col()+
   scale_y_continuous(expand = c(0,0))+
@@ -382,7 +382,7 @@ fig.5b <- ind.props_plotting_all %>%
         legend.position = "bottom")+
         guides(fill = guide_legend(nrow = 1))
 
-fig.5b
+fig.4b
 ```
 
 
@@ -580,7 +580,7 @@ g.post.ISA <- output_posteriors(jags.ISA, mix.coy.ISA, source.coy.ISA, output_op
 posterior_cont <- as.data.frame((g.post.ISA[["cont"]][[1]][["data"]]))
 
 # Plot
-fig.5c <- ggplot() +
+fig.4c <- ggplot() +
   geom_smooth(posterior_cont, mapping=aes(x=x, y=median, color=source))+
   geom_ribbon(posterior_cont, mapping=aes(x=x, ymin=low, ymax=high, fill=source), alpha=0.3)+
   labs(x="Impervious Surface Cover", y="Proportion")+
@@ -605,20 +605,20 @@ fig.5c
 library(cowplot)
 
 # Create top row with proper alignment
-top_row <- plot_grid(fig.5a, fig.5c, 
+top_row <- plot_grid(fig.4a, fig.4c, 
                      ncol = 2, labels = c("a", "c"), 
                      label_x = 0.135, align = "hv", axis = "tblr")
 
 # Create bottom row (full width)
-bottom_row <- plot_grid(fig.5b, ncol = 1, label_x = 0.135)
+bottom_row <- plot_grid(fig.4b, ncol = 1, label_x = 0.135)
 
 # Stack top and bottom row
-Fig.5 <- plot_grid(top_row, bottom_row, 
+Fig.4 <- plot_grid(top_row, bottom_row, 
                         ncol = 1, rel_heights = c(1, 1.5))
 
-Fig.5
+Fig.4
 
-# ggsave("Figures/Figure5.png", dpi=600, height=6, width=8)
+# ggsave("Figures/Figure4.png", dpi=600, height=6, width=8)
 ```
 
 
