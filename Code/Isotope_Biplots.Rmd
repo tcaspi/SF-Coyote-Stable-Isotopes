@@ -164,7 +164,7 @@ fig.S2 <- data_average_sf %>%
     whisker %in% c("S19-8775", "S19-8775-2") ~ "highlight",
     whisker %in% c( "S19-8786", "S19-8786-2") ~ "highlight2",
     TRUE ~ "black")), size = 1, alpha = 0.8) +
-  scale_color_manual(values = c("black" = "black", "highlight" = "#c0362d", "highlight2" = "darkgreen")) +
+  scale_color_manual(values = c("black" = "black", "highlight" = "#c0362d", "highlight2" = "#4E95D9")) +
 
   # Graphics
   xlab(expression(delta^{13}~C)) +

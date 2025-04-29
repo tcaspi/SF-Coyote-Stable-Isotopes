@@ -36,14 +36,14 @@ cols <- c("ff_chicken" = "#C0362D",
           "medium.mammal"= "#687E90", 
           "rat"= "#B6CEE2",
           "gopher"= "#004D40",
-          "fruit"= "#10B397")
+          "fruit"= "#59BBAA")
 
 cols.paired <- c("Mean_ff_chicken" = "#C0362D",
           "Mean_wet.food"= "#F57E77",
           "Mean_medium.mammal"= "#687E90", 
           "Mean_rat"= "#B6CEE2",
           "Mean_gopher"= "#004D40",
-          "Mean_fruit"= "#10B397")
+          "Mean_fruit"= "#59BBAA")
 ```
 
 These MixSIAR models take a long time to run; it is recommended to run them on an HPC cluster.
@@ -596,7 +596,7 @@ fig.4c <- ggplot() +
                     guide = guide_legend(override.aes = list(alpha = 1)))+
   theme(legend.position = "none")
 
-fig.5c
+fig.4c
 ```
 
 # Arrange figure:
