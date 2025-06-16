@@ -1,0 +1,278 @@
+---
+title: "Sample_Collection_Maps"
+author: "Tali Caspi"
+date: "2025-06-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ggmap)
+library(ggspatial)
+library(sf)
+library(ggpubr)
+library(usmap)
+
+# Set colors for each territory
+colors <- c("#C8BFE7", "#2E2585", "#7E2954", "#94CBEC", "#DCCD7D", "#FDB462FF", "#C26A77",  "blue", "lightgreen", "pink")
+
+family_colors <- c("Bernal" = colors[1],
+                   "Coit" = colors[2],
+                   "Corona" = colors[3],
+                   "GGP - West" = colors[4],
+                   "GGP - East" = colors[5],
+                   "Glen" = colors[6],
+                   "McLaren" = colors[7],
+                   "Merced" = colors[8],
+                   "Presidio" = colors[9],
+                   "St. Francis" = colors[10])
+```
+
+# Register Keys
+
+```{r}
+register_google(key = "YOUR KEY HERE")
+register_stadiamaps("YOUR KEY HERE", write = TRUE)
+```
+
+# Whisker Samples
+
+## Prepare whisker location data
+
+```{r}
+# Load SI data from all runs
+data1 <- read.csv("Data/pilot_and_20231003.csv")
+data2 <- read.csv("Data/20240102_data.csv")
+data3 <- read.csv("Data/20240910_data.csv")
+
+# Bind data frames
+all.data <- rbind(data1, data2, data3) %>% 
+  arrange(SampleID)
+
+# Load metadata and select relevant columns
+metadata <- read.csv("Data/whisker_metadata.csv") %>% 
+  select(c(whisker, urban, site, dead, lat, long))
+
+# Join SI data to metadata
+joined <- left_join(all.data, metadata, by="whisker")
+
+# Load genotype and individual ID data
+ids <- read.csv("Data/individual_ids.csv")
+
+# Define duplicates to remove
+dups.to.remove <- c("S22-0889-A", "S21-3433-2", "S22-0870", "S21-1080")
+
+# Clean data
+data_clean <- joined %>% 
+  
+  # Remove samples with no returned isotope data (n=2)
+  filter(!is.na(C_raw)) %>% 
+  
+  # Remove samples with incomplete lipid extraction
+  mutate(C.N_ratio = C_total/N_total, .after=N_total) %>% 
+  filter(C.N_ratio < 3.2) %>% 
+  
+  # Add whisker segment count
+  group_by(whisker) %>% 
+  add_count(name="count") %>% 
+  relocate(count, .after=whisker) %>%
+  
+  # Remove unnecessary duplicates
+  filter(!whisker %in% dups.to.remove) %>% 
+  
+  # Add column of segment numbers
+  mutate(seg_num = row_number(), .after="SampleID") %>% 
+  
+  # Add genotype data
+  left_join(ids, by = "individual")
+
+# Create data frame for plotting
+data_inds <- data_clean %>% 
+  distinct(whisker, sex, dead, urban, site, lat, long) 
+
+table(data_inds$dead) # investigate sample counts per category
+
+# Rename categories for map
+locs <- data_inds %>% 
+  mutate(dead.cat = case_when(
+    dead == "euthanized" ~ "Lethal Removal",
+    dead == "live cap" ~ "Live Capture",
+    dead == "roadkill" ~ "Deceased",
+    dead == "sick.euth" ~ "Euthanized: Medical",
+    dead == "sick.release" ~ "Live Capture",
+    dead == "unknown" ~ "Deceased",
+    TRUE ~ "Other" 
+  )) %>% 
+  filter(whisker != "S21-3433")
+
+table(locs$dead.cat) # check that names are correct
+```
+
+# Make whisker map
+
+```{r}
+bbox <- c(left = -122.6, right = -122.35, bottom = 37.68, top = 37.88) # bounding box
+
+study_map <- get_stadiamap(bbox, zoom = 14, maptype = "stamen_terrain", scale=2) # study site map
+
+# Plot sample locations
+p.map <- ggplot() +
+  annotation_raster(study_map, xmin = bbox["left"], xmax = bbox["right"],
+                    ymin = bbox["bottom"], ymax = bbox["top"])+
+  
+  geom_point(data = locs, aes(x = long, y = lat, color = dead.cat), size = 2, alpha=0.7, 
+             position=position_jitter(width=.002, height = .002)) +
+  scale_color_manual(values=c( "black","#1f50cc", "#f54242",  "#004D40"),
+                     labels=c("Deceased", "Euthanized: Medical", "Lethal Removal", "Live Capture"))+
+  guides(shape = "none") +
+  theme_minimal()+
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0.13, 0.12),
+        legend.background = element_rect(fill = "white", color = "black", linewidth = 0.5), 
+        legend.box.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 6),  # Make legend text smaller
+        legend.key.size = unit(0.2, "cm"),  # Reduce legend key (color box) size
+        legend.spacing.y = unit(0.05, "cm"),
+        legend.key.height = unit(0.25, "cm"))+
+  
+  annotation_scale(location = "bl", width_hint = 0.2) +
+  coord_sf(
+    crs = 4326,
+    xlim = c(bbox["left"], bbox["right"]),
+    ylim = c(bbox["bottom"], bbox["top"]),
+    expand = FALSE)
+```
+
+# Scat and Territory Map
+
+## Prepare scat/territory location data
+
+```{r}
+# Load scat data
+scat_data <- read.csv("Data/scat_metadata.csv")
+
+# Clean data (remove non-coyote samples), add territory information, and remove scats collected outside territories included in this study
+clean_scat_data <- scat_data %>% 
+  filter(Replicate != "Yes redo") %>% # remove lab replicates
+  filter((Geno.Sp != "dog") %>% replace_na(TRUE)) %>% 
+  filter((Cytb_Sp != "dog" & Cytb_Sp != "raccoon" & Cytb_Sp != "human") %>% replace_na(TRUE)) %>% 
+  mutate(Territory = case_when(
+    Site == "BERN" | Site == "STMA" ~ "Bernal",
+    Site == "GLEN" | Site == "LAGU" | Site == "TWIN" | Site == "MTDA" | Site == "GGHP" ~ "Glen",
+    Site == "SFGC" | Site == "OLYM" | Site == "LAKE" | Site == "FTFU" ~ "Merced",
+    Site == "BVP" | Site == "CHP" ~ "Corona",
+    Site == "TGPH" | Site == "HYDE" | Site == "FORT" ~ "Coit",
+    Site == "GGPE" ~ "GGP - East",
+    Site == "GGPW" | Site == "GGP" ~ "GGP - West",
+    Site == "LEND" | Site == "LAFY" ~ "Land's End",
+    Site == "MCLA" ~ "McLaren",
+    Site == "PRES" ~ "Presidio",
+    Site == "STFA" ~ "St. Francis",
+    Site == "SUNS" ~ "Sunset Res",
+    Site == "STGV" ~ "Stern Grove")) %>% 
+  filter(Territory != "Stern Grove" & Territory != "Sunset Res" & Territory != "Land's End")
+
+# Load territory centroid locations
+locs <- read.csv("Data/territory_covs.csv") %>% 
+  filter(group != "Land's End") # remove territory with no whisker samples
+
+# Convert to sf object
+locs_sf <- st_as_sf(locs, coords = c("long", "lat"), crs = 4326)
+
+# Transform to UTM for distance-based operations
+locs_sf_utm <- st_transform(locs_sf, crs = 32610)  # UTM zone for SF
+
+# Create 1 km buffer for each point
+buffers_1km <- st_buffer(locs_sf_utm, dist = 1000)
+
+# Transform back to WGS 84 (latitude/longitude) for mapping
+buffers_1km_wgs <- st_transform(buffers_1km, crs = 4326)
+```
+
+## Make scat/territory map
+
+```{r}
+p.scat <- ggplot() +
+  
+  # Add the base map
+  annotation_raster(study_map, xmin = bbox["left"], xmax = bbox["right"],
+                    ymin = bbox["bottom"], ymax = bbox["top"])+
+  
+  # Add scats
+  geom_point(data = clean_scat_data, aes(x = Long, y = Lat, fill = Territory), 
+             shape = 21, size = 1, stroke = 0.2, alpha=0.7, color="black",
+             position=position_jitter(width=.002, height = .002)) +
+  scale_fill_manual(values=family_colors)+
+  
+  # Add 1 km buffers
+  geom_sf(data = buffers_1km_wgs, fill = "black", color = "black", alpha = 0.1, linewidth=0.5) +
+  
+  # Add buffer centroids
+  geom_sf(data = locs_sf, color="black", size = 3, shape = 18)+
+  
+  theme_minimal()+
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0.1, 0.18),
+        legend.background = element_rect(fill = "white", color = "black", linewidth = 0.5), 
+        legend.box.background = element_rect(fill = "white", color = "black"),
+        legend.text = element_text(size = 6),  # Make legend text smaller
+        legend.key.size = unit(0.2, "cm"),  # Reduce legend key (color box) size
+        legend.spacing.y = unit(0.05, "cm"),
+        legend.key.height = unit(0.25, "cm"))+
+  
+  annotation_scale(location = "bl", width_hint = 0.2) + 
+  coord_sf(
+    crs = 4326,
+    xlim = c(bbox["left"], bbox["right"]),
+    ylim = c(bbox["bottom"], bbox["top"]),
+    expand = FALSE)
+```
+
+# Combine maps into one figure
+
+```{r}
+ggarrange(p.map, p.scat, nrow = 1, align = "hv", labels = c("a", "b"),
+          label.x = 0.03,
+          label.y = 0.98)
+
+ggsave("Figures/Figure1.png", dpi=600, height=5, width=10)
+```
+
+# Create Inset for California
+
+```{r}
+# Define counties to highlight
+highlight_counties <- c("San Francisco County", "Marin County")
+
+# Get county-level data for California
+county_data <- us_map(regions = "counties") %>%
+  filter(full == "California") %>%
+  mutate(fill_color = ifelse(county %in% highlight_counties, "#F57E77", "#595959"))
+
+# Define western states
+western_states <- c("California", "Oregon", "Washington", "Nevada", "Arizona", "Idaho", "Utah")
+
+# Get state-level data
+state_data <- us_map(regions = "states") %>%
+  mutate(fill_color = ifelse(full == "California", "#F57E77", "#B0B0B0")) %>%
+  filter(full %in% western_states)  
+
+# Plot
+ggplot() +
+  geom_sf(data = state_data, aes(fill=fill_color))+
+  geom_sf(data = county_data, aes(fill = fill_color), color = NA) +
+  scale_fill_identity() + 
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#CCD9E6", color = NA))
+```
+
