@@ -12,7 +12,7 @@ library(tidyverse)
 library(plotrix)
 library(ggpubr)
 
-colors <- c("#000000", "#E69F00", "#56B4E9", "#2D51E8", "#F0E442", "#009E73", "#D55E00", "#7D2355", "#1A4A08","#4A107F")
+colors <- c("#C8BFE7",  "#94CBEC", "#000000","#2E2585", "#F0E442", "#FDB462FF", "blue", "#C26A77", "lightgreen", "pink")
 
 family_colors <- c("Bernal" = colors[1],
                    "Coit" = colors[2],
@@ -33,10 +33,10 @@ theme_custom <- function() {
         plot.background = element_rect(fill = "white", color = NA),
         plot.title = element_text(size = 7),
         strip.background = element_blank(),
-        axis.text.y = element_text(size=6),
-        axis.text.x = element_text(size=6),
-        axis.title.y = element_text(size=10),
-        axis.title.x = element_text(size=10))}
+        axis.text.y = element_text(size=10, color="black"),
+        axis.text.x = element_text(size=10, color="black"),
+        axis.title.y = element_text(size=10, color="black"),
+        axis.title.x = element_text(size=10, color="black"))}
 ```
 
 
@@ -124,7 +124,7 @@ fig.2b <- data_with_centers %>%
 
 fig.2b
 
-# ggsave("Figures/Figure4.png",dpi=600, width=3.4, height=2.8)
+# ggsave("Figures/Figure2b.png",dpi=600, width=3.4, height=2.8)
 
 
 leg <- get_legend(fig.2b)

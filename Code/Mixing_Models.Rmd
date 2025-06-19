@@ -25,10 +25,10 @@ theme_custom <- function() {
         plot.background = element_rect(fill = "white", color = NA),
         plot.title = element_text(size = 7),
         strip.background = element_blank(),
-        axis.text.y = element_text(size=6),
-        axis.text.x = element_text(size=6),
-        axis.title.y = element_text(size=10),
-        axis.title.x = element_text(size=10))}
+        axis.text.y = element_text(size=10, color="black"),
+        axis.text.x = element_text(size=10, color="black"),
+        axis.title.y = element_text(size=10, color="black"),
+        axis.title.x = element_text(size=10, color="black"))}
 
 # Set colors
 cols <- c("ff_chicken" = "#C0362D",
@@ -252,7 +252,7 @@ write_JAGS_model(model_filename, resid_err, process_err, mix.coy.avgs, source.co
 jags.full <- run_model(run="very long", mix.coy.avgs, source.coy, discr.coy, model_filename, alpha.prior=coy.alpha)
 
 # Load model output
- jags.full <- readRDS("Model_Output/jags.full.rds")
+jags.full <- readRDS("Model_Output/jags.full.rds")
 
 # Set model output options
 output_options <- list(summary_save = TRUE,                 
@@ -372,7 +372,7 @@ fig.4b <- ind.props_plotting_all %>%
   theme_custom()+
   scale_fill_manual(values=cols.paired, labels=mean.names)+
   scale_x_discrete(labels = whisker_to_sfcoy)+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1.15, hjust=1, size=3),
+  theme(axis.text.x = element_text(angle = 45, vjust = 1.15, hjust=1, size=4.5),
         axis.ticks.x = element_blank(),
         strip.text.x = element_text(size = 3, angle = 0, hjust=0.5, vjust=.5),
         strip.background.x = element_blank(),
@@ -618,7 +618,7 @@ Fig.4 <- plot_grid(top_row, bottom_row,
 
 Fig.4
 
-# ggsave("Figures/Figure4.png", dpi=600, height=6, width=8)
+# ggsave("Figures/Figure4.png", dpi=600, height=6, width=8.5)
 ```
 
 

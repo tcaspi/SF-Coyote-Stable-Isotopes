@@ -1,0 +1,639 @@
+---
+title: "DHGLMs_subset"
+author: "Tali Caspi"
+date: "2025-06-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggpubr);library(lme4);library(arm);library(MuMIn);library(tidyverse)
+library(broom);library(coda);library(grid);
+library(gridExtra);library(brms); library(broom.mixed); library(merTools);
+library(tidybayes);library(parallel); library(bayesplot); library(DHARMa.helpers); library(DHARMa); library(bayestestR); library(plotrix); library(SIBER); library(RInSp)
+
+# Make custom theme
+theme_custom <- function() {
+  theme_classic()+
+  theme(panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.background = element_rect(fill = "white", color = NA),
+        plot.title = element_text(size = 7),
+        strip.background = element_blank(),
+        axis.text.y = element_text(size=7),
+        axis.text.x = element_text(size=10),
+        axis.title.y = element_text(size=12),
+        axis.title.x = element_text(size=12))}
+
+select <- dplyr::select
+```
+
+# DHGLMs
+
+## Prepare data
+
+```{r}
+# Load data frame
+data <- read.csv("Cleaned_Data/cleaned_whiskerdata.csv")
+
+# Create df for models
+dhglm_df_livecap <- data %>% 
+  filter(dead != "roadkill") %>% 
+  dplyr::select(SampleID, seg_num, C_raw, N_raw, individual, whisker, count, urban, sex, dead, site, group) %>% 
+  filter(count >=3) # remove whiskers with less than three segments
+
+nrow(dhglm_df_livecap) # 440 whisker segments
+
+summary.data <- dhglm_df_livecap %>% 
+  distinct(whisker, .keep_all = TRUE)
+
+table(summary.data$urban) # 7 marin coyotes and 32 sf coyotes
+```
+
+## Construct Models
+
+```{r}
+my.cores <- detectCores()
+
+# Construct models
+dhglm_N <- bf(scale(N_raw) ~ urban + sex + (1|a|whisker),
+               sigma ~ urban + sex + (1|a|whisker))
+
+dhglm_N_livecap <- brm(dhglm_N,
+              data   = dhglm_df_livecap, 
+              family = skew_normal(),
+              warmup = 1000,iter = 5000, thin=2,
+              chains = 4,
+              seed = 12345,
+              cores  = my.cores,
+              control = list(adapt_delta = 0.95))
+
+dhglm_C <- bf(scale(C_raw) ~ urban + sex + (1|a|whisker),
+               sigma ~ urban + sex + (1|a|whisker))
+
+dhglm_C_livecap <- brm(dhglm_C,
+              data   = dhglm_df_livecap, 
+              family = skew_normal(),
+              warmup = 1000,iter = 5000, thin=2,
+              chains = 4,
+              seed = 12345,
+              cores  = my.cores,
+              control = list(adapt_delta = 0.95))
+
+# Save models
+# saveRDS(dhglm_N_livecap, "Model_Output/dhglm_N_livecap.rds")
+# saveRDS(dhglm_C_livecap, "Model_Output/dhglm_C_livecap.rds")
+
+# Load models
+dhglm_N_livecap <- readRDS("Model_Output/dhglm_N_livecap.rds")
+dhglm_C_livecap <- readRDS("Model_Output/dhglm_C_livecap.rds")
+```
+
+## Assess model fit and covariate effects
+
+```{R}
+# Check model fit
+pp_check(dhglm_N_livecap, ndraws=100)
+dh_check_brms(dhglm_N_livecap)
+
+pp_check(dhglm_C_livecap, ndraws=100)
+dh_check_brms(dhglm_C_livecap)
+
+# Conditional effects
+conditional_effects(dhglm_C_livecap) # urban sig; sex not
+conditional_effects(dhglm_N_livecap) # urban sig; sex not
+
+# R2
+performance::r2_bayes(dhglm_N_livecap)
+performance::r2_bayes(dhglm_C_livecap)
+
+# ICC
+ICC(data=dhglm_df_livecap, outcome="N_raw", group="whisker")
+ICC(data=dhglm_df_livecap, outcome="C_raw", group="whisker")
+```
+
+## Extract model results
+
+```{r}
+colnames(posterior_samples(dhglm_N_livecap))[1:8]
+
+# Extract model results
+models_dhglm <- list(
+  dhglm_N_livecap = dhglm_N_livecap,
+  dhglm_C_livecap = dhglm_C_livecap)
+
+# Function to summarize posterior estimates and calculate 95% HPD using coda's HPDinterval
+summarize_posteriors_dhglm <- function(model, model_name) {
+  posterior_estimates <- posterior_samples(model)[1:8]  # Use as_draws for extraction
+  
+  do.call(rbind, lapply(names(posterior_estimates), function(param) {
+    values <- posterior_estimates[[param]]
+    
+    # Convert the values to an MCMC object
+    mcmc_values <- as.mcmc(values)
+    
+    # Calculate the 95% HPD interval using coda::HPDinterval
+    hpd_vals <- HPDinterval(mcmc_values, prob = 0.95)
+    
+    # Create a data frame for the results
+    data.frame(
+      Model = model_name,
+      Effect = param,
+      Estimate = round(mean(values, na.rm = TRUE), 4),
+      lower = round(hpd_vals[1], 4),
+      upper = round(hpd_vals[2], 4)
+    )
+  }))
+}
+
+# Loop through all models and combine results
+dhglm_livecap_results <- do.call(rbind, lapply(names(models_dhglm), function(model_name) {
+  summarize_posteriors_dhglm(models_dhglm[[model_name]], model_name)
+}))
+
+custom_order <- c("b_Intercept", "b_urbanurban", "b_sexmale", "sd_whisker__Intercept", "b_sigma_Intercept", "b_sigma_urbanurban", "b_sigma_sexmale", "sd_whisker__sigma_Intercept")
+
+dhglm_livecap_results <- dhglm_livecap_results %>% 
+  mutate(Effect = factor(Effect, levels = custom_order)) %>%
+  arrange(Effect) %>% 
+  group_by(Effect) %>%
+  mutate(Result = paste(Estimate, " (", lower, ", ", upper, ")", sep = "")) %>%
+  select(-c(Estimate, lower, upper)) %>% 
+  pivot_wider(
+    names_from = Model,
+    values_from = Result
+  ) 
+
+dhglm_livecap_results
+```
+
+## Repeatability
+
+```{r}
+# Extract site-specific individuals
+urban_ids <- dhglm_df_livecap %>% filter(urban == "urban") %>% pull(whisker) %>% unique()
+nonurban_ids <- dhglm_df_livecap %>% filter(urban == "nonurban") %>% pull(whisker) %>% unique()
+
+# Variance Components
+posterior_samples_N <- posterior_samples(dhglm_N_livecap)
+posterior_samples_C <- posterior_samples(dhglm_C_livecap)
+
+# Extract random effects for each site
+urban_effects_N <- posterior_samples_N %>%
+  dplyr::select(matches(paste0("r_whisker\\[(", paste(urban_ids, collapse = "|"), "),Intercept\\]")))
+
+nonurban_effects_N <- posterior_samples_N %>%
+  dplyr::select(matches(paste0("r_whisker\\[(", paste(nonurban_ids, collapse = "|"), "),Intercept\\]")))
+
+urban_effects_C <- posterior_samples_C %>%
+  dplyr::select(matches(paste0("r_whisker\\[(", paste(urban_ids, collapse = "|"), "),Intercept\\]")))
+
+nonurban_effects_C <- posterior_samples_C %>%
+  dplyr::select(matches(paste0("r_whisker\\[(", paste(nonurban_ids, collapse = "|"), "),Intercept\\]")))
+
+# Calculate whisker variances
+var_whisker_urban_N <- apply(urban_effects_N, 1, var)
+var_whisker_nonurban_N <- apply(nonurban_effects_N, 1, var)
+var_whisker_urban_C <- apply(urban_effects_C, 1, var)
+var_whisker_nonurban_C <- apply(nonurban_effects_C, 1, var)
+
+# Calculate residual variances
+var_residual_urban_N <- (exp(posterior_samples_N$`b_sigma_Intercept` +
+                           posterior_samples_N$`b_sigma_urbanurban`))^2
+var_residual_nonurban_N <- (exp(posterior_samples_N$`b_sigma_Intercept`))^2
+var_residual_urban_C <- (exp(posterior_samples_C$`b_sigma_Intercept` +
+                           posterior_samples_C$`b_sigma_urbanurban`))^2
+var_residual_nonurban_C <- (exp(posterior_samples_C$`b_sigma_Intercept`))^2
+
+# Calculate repeatability for each group
+rpt_urban_N <- var_whisker_urban_N / (var_whisker_urban_N + var_residual_urban_N)
+rpt_nonurban_N <- var_whisker_nonurban_N / (var_whisker_nonurban_N + var_residual_nonurban_N)
+rpt_urban_C <- var_whisker_urban_C / (var_whisker_urban_C + var_residual_urban_C)
+rpt_nonurban_C <- var_whisker_nonurban_C / (var_whisker_nonurban_C + var_residual_nonurban_C)
+
+mean(rpt_urban_N);bci(rpt_urban_N) # urban N
+mean(rpt_nonurban_N);bci(rpt_nonurban_N) # nonurban N
+mean(rpt_urban_C);bci(rpt_urban_C) # urban C
+mean(rpt_nonurban_C);bci(rpt_nonurban_C) # nonurban C
+```
+
+## Plot
+
+### Carbon
+
+```{r}
+s.C_raw <- scale(dhglm_df_livecap$C_raw)
+
+colnames(posterior_samples(dhglm_C_livecap))
+
+# Mean Carbon
+posterior_type_C <- posterior_samples(dhglm_C_livecap)[,11:49] %>%
+  gather(whisker, value, 
+         "r_whisker[S19-8744,Intercept]" : "r_whisker[S24-1425,Intercept]")%>%
+  separate(whisker, 
+           c(NA,NA,"whisker",NA), 
+           sep = "([\\_\\[\\,])", fill = "right") %>%
+  left_join(dplyr::select(dhglm_df_livecap[!duplicated(dhglm_df_livecap$whisker),],whisker, sex, urban, count))
+
+# Add population intercept and coefficient for sex and urban to each value
+posterior_type_C[posterior_type_C$sex == "female",]$value <- 
+  posterior_type_C[posterior_type_C$sex == "female",]$value + fixef(dhglm_C_livecap, pars = "Intercept")[1]
+
+posterior_type_C[posterior_type_C$sex == "male",]$value <- 
+  posterior_type_C[posterior_type_C$sex == "male",]$value + fixef(dhglm_C_livecap, pars = "Intercept")[1] +  fixef(dhglm_C_livecap, pars = "sexmale")[1] 
+
+posterior_type_C[posterior_type_C$urban == "urban",]$value <- 
+  posterior_type_C[posterior_type_C$urban == "urban",]$value + fixef(dhglm_C_livecap, pars = "urbanurban")[1] 
+
+# Calculate individual means and back-transform
+posterior_type_C <- posterior_type_C %>%
+    dplyr::group_by(whisker) %>%
+    dplyr::mutate(value_tf= value * attr(s.C_raw, 'scaled:scale')+ 
+                      attr(s.C_raw, 'scaled:center'),
+                  hpd = list(HPDinterval(as.mcmc(value_tf), prob = 0.95)),
+                  lower = hpd[[1]][1],
+                  upper = hpd[[1]][2]) %>% 
+    filter(value_tf >= lower & value_tf <= upper) %>% 
+    dplyr::mutate(mean_C = mean(value_tf)) %>%
+    dplyr::ungroup()
+
+# Plot
+fig.3a <- ggplot() +
+  geom_errorbar(data = posterior_type_C[!duplicated(posterior_type_C$whisker),], 
+                aes(y = mean_C, ymin = lower, ymax = upper, 
+                    x= reorder(as.factor(whisker), mean_C), color=urban),
+                width = 0, linewidth=0.5) +
+  geom_point(data = posterior_type_C[!duplicated(posterior_type_C$whisker),],
+             aes(y = mean_C,  x= reorder(as.factor(whisker), mean_C)),
+             size = 0.5, color = "black") +
+  labs(x = "Individual", y = expression("Mean"~delta^{13}~C)) +
+  scale_y_continuous(limits=c(-24.3,-15), breaks=seq(-24,-15,by=1)) +
+  theme_custom() +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+fig.3a
+
+
+# rIIV Carbon
+posterior_var_C <- posterior_samples(dhglm_C_livecap)[,50:88] %>%
+  gather(whisker, value, 
+          "r_whisker__sigma[S19-8744,Intercept]" : "r_whisker__sigma[S24-1425,Intercept]")%>%
+  separate(whisker, c(NA,NA,NA,NA,"whisker",NA), 
+           sep = "([\\__\\[\\,])", fill = "right") %>%
+  left_join(dplyr::select(dhglm_df_livecap[!duplicated(dhglm_df_livecap$whisker),],whisker, sex, urban, count))
+
+# Add population level mean residual variance and coefficients for sex and urban to each value
+posterior_var_C[posterior_var_C$sex == "female",]$value <- 
+  posterior_var_C[posterior_var_C$sex == "female",]$value + fixef(dhglm_C_livecap, pars = "sigma_Intercept")[1]
+
+posterior_var_C[posterior_var_C$sex == "male",]$value <- 
+  posterior_var_C[posterior_var_C$sex == "male",]$value + fixef(dhglm_C_livecap, pars = "sigma_Intercept")[1] +  fixef(dhglm_C_livecap, pars = "sigma_sexmale")[1] 
+
+posterior_var_C[posterior_var_C$urban == "urban",]$value <- 
+  posterior_var_C[posterior_var_C$urban == "urban",]$value + fixef(dhglm_C_livecap, pars = "sigma_urbanurban")[1] 
+
+# exponentiate to get back to original scale, calculate mean values per individual, and back-transform
+posterior_var_C <- posterior_var_C %>%
+  dplyr::group_by(whisker) %>%
+  dplyr::mutate(exp_value = exp(value),
+                meanrIIV = mean(exp_value),
+                rIIV_tf = exp_value * sd(dhglm_df$C_raw),
+                mean_rIIV_tf = meanrIIV * sd(dhglm_df$C_raw),
+                hpd = list(HPDinterval(as.mcmc(rIIV_tf), prob = 0.95)),
+                lower = hpd[[1]][1],
+                upper = hpd[[1]][2]) %>% 
+  filter(rIIV_tf >= lower & rIIV_tf <= upper) %>% 
+  dplyr::ungroup()
+
+# plot
+fig.3c <- ggplot() +
+  geom_errorbar(data = posterior_var_C[!duplicated(posterior_var_C$whisker),], 
+                aes(y = mean_rIIV_tf, ymin = lower, ymax = upper, 
+                    x= reorder(as.factor(whisker), mean_rIIV_tf), color=urban),
+                width = 0, linewidth=0.5) +
+  geom_point(data = posterior_var_C[!duplicated(posterior_var_C$whisker),],
+             aes(y = mean_rIIV_tf,  x= reorder(as.factor(whisker), mean_rIIV_tf)),
+             size = 0.5, color = "black") +
+  labs(x = "Individual", y = expression("rIIV"~delta^{13}~C)) +
+  scale_y_continuous(limits=c(0,3), breaks=c(0,1,2,3))+
+  theme_custom() +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+fig.3c
+```
+
+### Nitrogen
+
+```{r}
+s.N_raw <- scale(dhglm_df_livecap$N_raw)
+
+colnames(posterior_samples(dhglm_N_livecap))
+
+## Mean nitrogen
+posterior_type_N <- posterior_samples(dhglm_N_livecap)[,11:49] %>%
+  gather(whisker, value, 
+         "r_whisker[S19-8744,Intercept]" : "r_whisker[S24-1425,Intercept]")%>%
+  separate(whisker, 
+           c(NA,NA,"whisker",NA), 
+           sep = "([\\_\\[\\,])", fill = "right") %>%
+  left_join(dplyr::select(dhglm_df_livecap[!duplicated(dhglm_df_livecap$whisker),],whisker, sex, urban, count))
+
+# Add population intercept and coefficient for sex and urban to each value
+posterior_type_N[posterior_type_N$sex == "female",]$value <- 
+  posterior_type_N[posterior_type_N$sex == "female",]$value + fixef(dhglm_N_livecap, pars = "Intercept")[1]
+
+posterior_type_N[posterior_type_N$sex == "male",]$value <- 
+  posterior_type_N[posterior_type_N$sex == "male",]$value + fixef(dhglm_N_livecap, pars = "Intercept")[1] +  fixef(dhglm_N_livecap, pars = "sexmale")[1] 
+
+posterior_type_N[posterior_type_N$urban == "urban",]$value <- 
+  posterior_type_N[posterior_type_N$urban == "urban",]$value + fixef(dhglm_N_livecap, pars = "urbanurban")[1] 
+
+# Calculate individual means and back-transform
+posterior_type_N <- posterior_type_N %>%
+    dplyr::group_by(whisker) %>%
+    dplyr::mutate(value_tf= value * attr(s.N_raw, 'scaled:scale')+ 
+                      attr(s.N_raw, 'scaled:center'),
+                  hpd = list(HPDinterval(as.mcmc(value_tf), prob = 0.95)),
+                  lower = hpd[[1]][1],
+                  upper = hpd[[1]][2]) %>% 
+    filter(value_tf >= lower & value_tf <= upper) %>% 
+    dplyr::mutate(mean_N = mean(value_tf)) %>%
+    dplyr::ungroup()
+
+# Plot
+fig.3b <- ggplot() +
+  geom_errorbar(data = posterior_type_N[!duplicated(posterior_type_N$whisker),], 
+                aes(y = mean_N, ymin = lower, ymax = upper, 
+                    x= reorder(as.factor(whisker), mean_N), color=urban),
+                width = 0, linewidth=0.5) +
+  geom_point(data = posterior_type_N[!duplicated(posterior_type_N$whisker),],
+             aes(y = mean_N,  x= reorder(as.factor(whisker), mean_N)),
+             size = 0.5, color = "black") +
+  labs(x = "Individual", y = expression("Mean"~delta^{15}~N)) +
+  scale_y_continuous(limits=c(6,12.1), breaks=c(6,7,8,9,10,11,12)) +
+  theme_custom() +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+fig.3b
+
+# rIIV Nitrogen
+posterior_var_N <- posterior_samples(dhglm_N_livecap)[,50:88] %>%
+  gather(whisker, value, 
+         "r_whisker__sigma[S19-8744,Intercept]" : "r_whisker__sigma[S24-1425,Intercept]")%>%
+  separate(whisker, c(NA,NA,NA,NA,"whisker",NA), 
+           sep = "([\\__\\[\\,])", fill = "right") %>%
+  left_join(dplyr::select(dhglm_df_livecap[!duplicated(dhglm_df_livecap$whisker),],whisker, sex, urban, count))
+
+# Add population level mean residual variance and coefficients for sex and urban to each value
+posterior_var_N[posterior_var_N$sex == "female",]$value <- 
+  posterior_var_N[posterior_var_N$sex == "female",]$value + fixef(dhglm_N_livecap, pars = "sigma_Intercept")[1]
+
+posterior_var_N[posterior_var_N$sex == "male",]$value <- 
+  posterior_var_N[posterior_var_N$sex == "male",]$value + fixef(dhglm_N_livecap, pars = "sigma_Intercept")[1] +  fixef(dhglm_N_livecap, pars = "sigma_sexmale")[1] 
+
+posterior_var_N[posterior_var_N$urban == "urban",]$value <- 
+  posterior_var_N[posterior_var_N$urban == "urban",]$value + fixef(dhglm_N_livecap, pars = "sigma_urbanurban")[1] 
+
+
+# exponentiate to get back to original scale, apply 95% HPD, calculate mean values per individual, and back-transform
+posterior_var_N <- posterior_var_N %>%
+  dplyr::group_by(whisker) %>%
+  dplyr::mutate(exp_value = exp(value),
+                meanrIIV = mean(exp_value),
+                rIIV_tf = exp_value * sd(dhglm_df_livecap$N_raw),
+                mean_rIIV_tf = meanrIIV * sd(dhglm_df_livecap$N_raw),
+                hpd = list(HPDinterval(as.mcmc(rIIV_tf), prob = 0.95)),
+                lower = hpd[[1]][1],
+                upper = hpd[[1]][2]) %>% 
+  filter(rIIV_tf >= lower & rIIV_tf <= upper) %>% 
+  dplyr::ungroup()
+
+# plot
+fig.3d <- ggplot() +
+  geom_errorbar(data = posterior_var_N[!duplicated(posterior_var_N$whisker),], 
+                aes(y = mean_rIIV_tf, ymin = lower, ymax = upper, 
+                    x= reorder(as.factor(whisker), mean_rIIV_tf), color=urban),
+                width = 0, linewidth=0.5) +
+  geom_point(data = posterior_var_N[!duplicated(posterior_var_N$whisker),],
+             aes(y = mean_rIIV_tf,  x= reorder(as.factor(whisker), mean_rIIV_tf)),
+             size = 0.5, color = "black") +
+  labs(x = "Individual", y = expression("rIIV"~delta^{15}~N)) +
+  scale_y_continuous(limits=c(0,3), breaks=c(0,1,2,3))+
+  theme_custom() +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+fig.3d
+```
+
+# SIBER
+
+```{r}
+## POPULATION LEVEL ##
+
+# Create SIBER dataframe
+siber_df_livecap <- data %>% 
+  filter(dead != "roadkill") %>% 
+  dplyr::select(SampleID, seg_num, C_raw, N_raw, individual, whisker, count, urban, sex, dead, site, group) %>% 
+  filter(count >=5) # remove whiskers with less than five segments
+
+# Make SIBER dataframe
+siber.data <- data.frame(
+  iso1 = siber_df_livecap$C_raw,
+  iso2 = siber_df_livecap$N_raw,
+  group = siber_df_livecap$urban,
+  community = siber_df_livecap$urban) %>% 
+  mutate_if(is.character, as.factor) # turn group and community into factors
+
+# Create SIBER object
+siber.object <- createSiberObject(siber.data)
+
+# Set model options
+parms <- list()
+parms$n.iter <- 20000   # number of iterations to run the model for
+parms$n.burnin <- 1000 # discard the first set of values
+parms$n.thin <- 10     # thin the posterior by this many
+parms$n.chains <- 2        # run this many chains
+
+# Define the priors
+priors <- list()
+priors$R <- 1 * diag(2)
+priors$k <- 2
+priors$tau.mu <- 1.0E-3
+
+# Fit the ellipses
+ellipses.posterior <- siberMVN(siber.object, parms, priors)
+
+# Extract posterior estimates for each population and calculate mean with 95% HPD intervals
+SEA.B <- siberEllipses(ellipses.posterior)
+
+mean(SEA.B[,1]) %>% round(2); HPDinterval(as.mcmc(SEA.B[,1])) %>% round(2) # nonurban
+mean(SEA.B[,2]) %>% round(2); HPDinterval(as.mcmc(SEA.B[,2])) %>% round(2) # urban
+
+# Plot distribution of population-level ellipses
+
+SEA.B.pops <- as.data.frame(SEA.B) %>% 
+  dplyr::rename("Marin County" = V1,
+         "San Francisco" = V2) %>% 
+  pivot_longer(cols = everything(), names_to = "Site", values_to = "Value") %>% 
+  mutate(Site = factor(Site, levels = c("San Francisco", "Marin County")))
+  
+fig.3e <- ggplot(SEA.B.pops, aes(x = Site, y = Value, fill = Site, color=Site)) +
+    geom_boxplot(alpha = 0.6, linewidth=0.2, outlier.shape=1) +
+    labs(y = "Bayesian Standard Ellipse Area", x = "Region") +
+    scale_fill_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#9292B1")) +
+    scale_color_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#9292B1")) +
+    scale_y_continuous(limits=c(0,20), breaks=c(0,5,10,15,20), expand = c(0, 0)) +
+    theme_custom() +
+    theme(legend.position = "none")
+
+fig.3e
+
+## INDIVIDUAL LEVEL ##
+
+# Make SIBER dataframe
+siber.data.inds <- data.frame(
+  iso1 = siber_df_livecap$C_raw,
+  iso2 = siber_df_livecap$N_raw,
+  group = siber_df_livecap$individual,
+  community = siber_df_livecap$urban) %>% 
+  mutate_if(is.character, as.factor) # turn group and community into factors
+
+# Create SIBER object
+siber.object.inds <- createSiberObject(siber.data.inds)
+
+# fit the ellipses
+ellipses.posterior.inds <- siberMVN(siber.object.inds, parms, priors)
+
+# calculate SEA.B values for each individual in each population
+SEA.B.all.inds <- siberEllipses(ellipses.posterior.inds)
+
+names_df <- siber_df_livecap %>% distinct(individual,urban) %>% arrange(urban)
+
+names <- names_df$individual
+
+colnames(SEA.B.all.inds) <- names
+
+# Calculate means and 95% HPD intervals for each individual
+extract_vals <- SEA.B.all.inds %>%
+  as.data.frame() %>% 
+  dplyr::summarise(across(everything(), list(
+    mean = ~ mean(.),
+    hpd = ~ HPDinterval(as.mcmc(.), prob = 0.95)
+  ))) %>% 
+   pivot_longer(cols = everything(), names_to = c("sampleID", "stat"), names_sep = "_") %>%
+   pivot_wider(names_from = stat, values_from = value)
+  
+results_df <- data.frame(individual = extract_vals$sampleID,
+                       SEAb = extract_vals$mean[,1],
+                       lower = extract_vals$hpd[,1],
+                       upper = extract_vals$hpd[,2])  %>% 
+  left_join(data %>% select(sex, individual, urban) %>% distinct()) # add sex/site info
+
+# Calculate individual mean for SF and Marin
+results_df %>% 
+  group_by(urban) %>% 
+  summarize(meanSEAb = mean(SEAb),
+            medianSEAb = median(SEAb),
+            seSEAb = std.error(SEAb))
+
+# Plot
+fig.3f <- ggplot(data=results_df) +
+  geom_errorbar(aes(y = SEAb, ymin = lower, ymax = upper, 
+                    x= reorder(as.factor(individual), SEAb), color=urban),
+                width = 0, linewidth=0.5) +
+  geom_point(aes(y = SEAb,  x= reorder(as.factor(individual), SEAb)),
+             size = 0.5, color = "black") +
+  labs(x = "Individual", y = "Bayesian Standard Ellipse Area") +
+  scale_y_continuous(limits=c(0,10.2), breaks=c(0,2,4,6,8,10), expand = c(0, 0)) +
+  theme_custom() +
+  scale_color_manual(values = c("urban" = "#C0362D", "nonurban" = "#9292B1")) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+fig.3f
+```
+
+# Arrange plots
+
+To complete figure 3, fig 3e and 3f must be generated in the SIBER.Rmd file.
+
+```{r}
+ggarrange(
+  fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
+  ncol = 2, nrow = 3, 
+  labels = c("a", "b", "c", "d", "e", "f"),
+  label.x = 0.135,
+  align = "hv")
+
+ggsave("Figures/DHGLM_stratified.png",dpi=600, height=7, width=8)
+```
+
+# RInSp
+
+```{r}
+# Load and format isotope data
+data.rinsp <- data %>% 
+  filter(dead != "roadkill") %>% 
+  filter(count >=3) %>% # remove whiskers with less than three segments
+  mutate(C_adj = abs(C_raw)) # convert delta13C values to positive
+
+# Create metadata df
+metadata <- data.rinsp %>% 
+  select(c(whisker, individual, urban, sex)) %>% 
+  distinct() %>% 
+  replace(is.na(.), "unknown")
+
+table(metadata$urban) # check sample counts
+
+# Separate into C and N
+C_all <- as.data.frame(data.rinsp %>% 
+      select(whisker, seg_num, C_adj) %>% 
+      pivot_wider(names_from = seg_num, values_from = C_adj) %>% 
+      left_join(metadata) %>% 
+      relocate(individual, .after = whisker) %>% 
+      relocate(urban, .after = individual) %>% 
+      relocate(sex, .after = urban) %>% 
+      replace(is.na(.), 0) %>%
+      mutate(ID = seq(1:nrow(.))) %>% 
+      relocate(ID, .before=whisker)) %>% 
+      mutate(urban = as.factor(urban))
+
+N_all <- as.data.frame(data.rinsp %>% 
+      select(whisker, seg_num, N_raw) %>% 
+      pivot_wider(names_from = seg_num, values_from = N_raw) %>% 
+      left_join(metadata) %>% 
+      relocate(individual, .after = whisker) %>% 
+      relocate(urban, .after = individual) %>% 
+      relocate(sex, .after = urban) %>% 
+      replace(is.na(.), 0) %>%
+      mutate(ID = seq(1:nrow(.))) %>% 
+      relocate(ID, .before=whisker)) %>% 
+      mutate(urban = as.factor(urban))
+
+# Import RInSp objects
+ris_carbon_all = import.RInSp(C_all, col.header = T, row.names = 1, info.cols=2:5, data.type = "double")
+ris_nitrogen_all = import.RInSp(N_all, col.header = T, row.names = 1, info.cols=2:5, data.type = "double")
+
+# Calculate niche components by region
+decomp_C <- Hier2L(ris_carbon_all, factor=3, weight.type = "equal")
+decomp_N <- Hier2L(ris_nitrogen_all, factor=3, weight.type = "equal")
+
+# Extract niche components
+round(decomp_C,2)
+round(decomp_N,2)
+```
+

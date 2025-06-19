@@ -16,11 +16,11 @@ library(ggpubr)
 library(usmap)
 
 # Set colors for each territory
-colors <- c("#C8BFE7", "#2E2585", "#7E2954", "#94CBEC", "#DCCD7D", "#FDB462FF", "#C26A77",  "blue", "lightgreen", "pink")
+colors <- c("#C8BFE7",  "#94CBEC", "#000000","#2E2585", "#F0E442", "#FDB462FF", "blue", "#C26A77", "lightgreen", "pink")
 
 family_colors <- c("Bernal" = colors[1],
                    "Coit" = colors[2],
-                   "Corona" = colors[3],
+                   "Corona Heights" = colors[3],
                    "GGP - West" = colors[4],
                    "GGP - East" = colors[5],
                    "Glen" = colors[6],
@@ -110,7 +110,7 @@ locs <- data_inds %>%
 table(locs$dead.cat) # check that names are correct
 ```
 
-# Make whisker map
+## Make whisker map
 
 ```{r}
 bbox <- c(left = -122.6, right = -122.35, bottom = 37.68, top = 37.88) # bounding box
@@ -139,7 +139,8 @@ p.map <- ggplot() +
         legend.text = element_text(size = 6),  # Make legend text smaller
         legend.key.size = unit(0.2, "cm"),  # Reduce legend key (color box) size
         legend.spacing.y = unit(0.05, "cm"),
-        legend.key.height = unit(0.25, "cm"))+
+        legend.key.height = unit(0.25, "cm"),
+        plot.margin = margin(0, 0, 0, 0))+
   
   annotation_scale(location = "bl", width_hint = 0.2) +
   coord_sf(
@@ -166,7 +167,7 @@ clean_scat_data <- scat_data %>%
     Site == "BERN" | Site == "STMA" ~ "Bernal",
     Site == "GLEN" | Site == "LAGU" | Site == "TWIN" | Site == "MTDA" | Site == "GGHP" ~ "Glen",
     Site == "SFGC" | Site == "OLYM" | Site == "LAKE" | Site == "FTFU" ~ "Merced",
-    Site == "BVP" | Site == "CHP" ~ "Corona",
+    Site == "BVP" | Site == "CHP" ~ "Corona Heights",
     Site == "TGPH" | Site == "HYDE" | Site == "FORT" ~ "Coit",
     Site == "GGPE" ~ "GGP - East",
     Site == "GGPW" | Site == "GGP" ~ "GGP - West",
@@ -228,7 +229,8 @@ p.scat <- ggplot() +
         legend.text = element_text(size = 6),  # Make legend text smaller
         legend.key.size = unit(0.2, "cm"),  # Reduce legend key (color box) size
         legend.spacing.y = unit(0.05, "cm"),
-        legend.key.height = unit(0.25, "cm"))+
+        legend.key.height = unit(0.25, "cm"),
+        plot.margin = margin(0, 0, 0, 0))+
   
   annotation_scale(location = "bl", width_hint = 0.2) + 
   coord_sf(

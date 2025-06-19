@@ -48,7 +48,7 @@ In the `Data` folder, you will find a number of files:
 > `whisker_metadata.csv`: csv file containing metadata for whisker samples.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
-|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|------------------------------------------------------------|
 | whisker        | Label for sample                                                                                                                                                                                                                                                                                                       |
 | date_clean     | Date sample was rinsed                                                                                                                                                                                                                                                                                                 |
 | date_chopped   | Date sample was chopped                                                                                                                                                                                                                                                                                                |
@@ -69,16 +69,36 @@ In the `Data` folder, you will find a number of files:
 > `individual_ids.csv`
 
 | Column     | Description                                                               |
-|------------|---------------------------------------------------------------------------|
+|---------------|---------------------------------------------------------|
 | individual | Individual coyote labels that match up with whisker data                  |
 | sfcoy      | Unique name for each individual identified by genotyping in San Francisco |
 | sex        | Sex as identified by genotyping                                           |
 | group      | Family group assignment                                                   |
 
+> `territory_covs.csv`: metadata associated with coyote fecal samples analyzed in Caspi, T., Serrano, M.G., Vanderzwan, S.L., Kessler, J., Schell, C.J. & Sacks, B.N. (2025). Impervious surface cover and number of restaurants shape diet variation in an urban carnivore. *Ecosphere*, 16, e70152.
+
+| Column     | Description                                          |
+|------------|------------------------------------------------------|
+| SampleID   | Coyote family group/territory                        |
+| Replicate  | Whether or not a PCR replicate was conducted         |
+| Name       | Unique field identifier for the sample               |
+| Site       | Location sample was collected                        |
+| Initials   | Initials of the person who collected the sample      |
+| Year       | Year sample was collected                            |
+| Month      | Month sample was collected                           |
+| Day        | Day sample was collected                             |
+| Lat        | Latitude of sample location                          |
+| Long       | Longitude of sample location                         |
+| Sus.sp     | Suspected species ID at the time of collection       |
+| Genotype   | Whether or not the sample was successfully genotyped |
+| Geno.Sp    | Species identification from genotyping               |
+| Individual | Individual coyote sample was assigned to             |
+| Cytb_Sp    | Species identification from cytochrome b sequencing  |
+
 > `territory_covs.csv`
 
 | Column           | Description                                                 |
-|------------------|-------------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | group            | Coyote family group/territory                               |
 | lat              | Location of territory center point - latitude               |
 | long             | Location of territory center point - longitude              |
@@ -92,7 +112,7 @@ In the `Data` folder, you will find a number of files:
 
 The scripts for the full workflow are available as R and Rmd files in the `Code` folder. All files are R scripts that were run in R version 4.2.1. The output of the models are not stored on github due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (doi: XXXX).
 
--   `Sample_Collection_Map.R`: this script generates a study site map indicating where samples were collected.
+-   `Sample_Collection_Maps.Rmd`: this script generates a study site map indicating where samples were collected.
 
 -   `Clean_Data.Rmd`: this script takes the raw isotope data and creates cleaned data frames that can be used in data visualization and analysis. The script also calculates some basic summary statistics presented in the manuscript.
 
@@ -103,6 +123,8 @@ The scripts for the full workflow are available as R and Rmd files in the `Code`
 -   `RInSp.Rmd`: this script uses the *RInSp* package to calculate niche components and the WIC/TNW index of individual dietary specialization.
 
 -   `DHGLMs.Rmd`: this script uses the *brms* package to construct double-hierarchical generalized linear models that assess the effect of sex and region on among-individual differences in isotopic means and variances.
+
+-   `Stratified-Data.Rmd`: this script redos the SIBER, RInSp, and DHGLM analyses after excluding roadkilled individuals.
 
 -   `GLMMs.Rmd`: this script uses the *brms* package to construct generalized linear mixed-effect models that assess effect of impervious surface cover on d13C and d15N values.
 

@@ -21,10 +21,10 @@ theme_custom <- function() {
         plot.background = element_rect(fill = "white", color = NA),
         plot.title = element_text(size = 7),
         strip.background = element_blank(),
-        axis.text.y = element_text(size=7),
-        axis.text.x = element_text(size=10),
-        axis.title.y = element_text(size=12),
-        axis.title.x = element_text(size=12))}
+        axis.text.y = element_text(size=10, color="black"),
+        axis.text.x = element_text(size=10, color="black"),
+        axis.title.y = element_text(size=12, color="black"),
+        axis.title.x = element_text(size=12, color="black"))}
 
 select <- dplyr::select
 ```
@@ -40,7 +40,7 @@ dhglm_df <- data %>%
   dplyr::select(SampleID, seg_num, C_raw, N_raw, individual, whisker, count, urban, sex) %>% 
   filter(count >=3) # remove whiskers with less than three segments
 
-nrow(dhglm_df) # 14167 whisker segments
+nrow(dhglm_df) # 1417 whisker segments
 
 # Investigate data distribution
 ggdensity(scale(dhglm_df$C_raw)) # left skew
@@ -103,20 +103,13 @@ dh_check_brms(dhglm_N_skew)
 pp_check(dhglm_C_skew, ndraws=100)
 dh_check_brms(dhglm_C_skew)
 
-pp_check(bivariate_model, resp="scaleCraw", ndraws=100)
-pp_check(bivariate_model, resp="scaleNraw", ndraws=100)
-dh_check_brms(bivariate_model, resp="scaleNraw")
-dh_check_brms(bivariate_model, resp="scaleCraw")
-
 # Conditional effects
 conditional_effects(dhglm_C_skew) # urban sig; sex not
 conditional_effects(dhglm_N_skew) # urban sig; sex not
-conditional_effects(bivariate_model)
 
 # R2
 performance::r2_bayes(dhglm_N_skew)
 performance::r2_bayes(dhglm_C_skew)
-performance::r2_bayes(bivariate_model)
 
 # ICC
 ICC(data=dhglm_df, outcome="N_raw", group="whisker")
@@ -177,7 +170,6 @@ dhglm_results <- dhglm_results %>%
 
 dhglm_results
 ```
-
 
 # Repeatability
 
@@ -286,9 +278,6 @@ fig.3a <- ggplot() +
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
 
-fig.3a
-
-
 # rIIV Carbon
 posterior_var_C <- posterior_samples(dhglm_C_skew)[,115:218] %>%
   gather(whisker, value, 
@@ -336,8 +325,6 @@ fig.3c <- ggplot() +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
-
-fig.3c
 ```
 
 ## Nitrogen
@@ -395,8 +382,6 @@ fig.3b <- ggplot() +
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
 
-fig.3b
-
 # rIIV Nitrogen
 posterior_var_N <- posterior_samples(dhglm_N_skew)[,115:218] %>%
   gather(whisker, value, 
@@ -445,8 +430,6 @@ fig.3d <- ggplot() +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
-
-fig.3d
 ```
 
 ## Arrange plots
@@ -458,10 +441,10 @@ ggarrange(
   fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
   ncol = 2, nrow = 3, 
   labels = c("a", "b", "c", "d", "e", "f"),
-  label.x = 0.135,
+  label.x = 0.155,
   align = "hv")
 
-ggsave("Figures/Figure3.png",dpi=600, height=7, width=8)
+# ggsave("Figures/Figure3.png",dpi=600, height=7, width=8.5)
 ```
 
 
