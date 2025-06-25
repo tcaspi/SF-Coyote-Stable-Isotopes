@@ -191,7 +191,7 @@ ggplot()+
   scale_linewidth_manual(values = linewidth_vals, labels=names)+
   scale_shape_manual(values=shape_vals, labels=names)
 
-# ggsave("Figures/all_prey_biplot.png", dpi=600, height=3.5, width=4)
+# ggsave("Figures/FigureS1.png", dpi=600, height=3.5, width=4)
 
 # MANOVA test to assess significance in difference among skunks, cats, and raccoons
 iso_df <- prey %>%
