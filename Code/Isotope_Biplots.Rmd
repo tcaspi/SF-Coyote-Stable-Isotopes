@@ -72,13 +72,14 @@ fig2a <- data_average %>%
   geom_errorbar(aes(ymin=N_avg-N_se, ymax=N_avg+N_se, color=urban), alpha=0.7)+
   geom_errorbar(aes(xmin=C_avg-C_se, xmax=C_avg+C_se, color=urban), alpha=0.7)+
   geom_point(size=0.4,alpha=0.7)+
-  scale_color_manual(values=c("#9292B1", "#c0362d"))+
+  scale_color_manual(values=c("#9292B1", "#c0362d"), labels=c("Nonurban", "Urban"))+
   xlab(expression({delta}^13*C))+
   ylab(expression({delta}^15*N))+
   scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1))+
   scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1))+
   theme_custom()+
-  theme(legend.position = "none")
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        legend.key.height = unit(0.01, "cm"))
 
 fig2a
 
@@ -126,9 +127,6 @@ fig.2b
 
 # ggsave("Figures/Figure2b.png",dpi=600, width=3.4, height=2.8)
 
-
-leg <- get_legend(fig.2b)
-
 # Combine plots
 ggarrange(
   fig2a, fig.2b,
@@ -137,11 +135,9 @@ ggarrange(
   common.legend=F,
   align = "hv",
   label.x = 0.15,
-  widths=c(1,1), heights=c(1,1),
-  legend="bottom",
-  legend.grob = leg)
+  legend="bottom")
 
-# ggsave("Figures/Figure2.png",dpi=600, width=3.4, height=6)
+ ggsave("Figures/Figure2.png",dpi=600, width=4, height=6.5)
  
 # Plot all SF individuals, highlighting repeatedly sampled individuals
 fig.S2 <- data_average_sf %>% 

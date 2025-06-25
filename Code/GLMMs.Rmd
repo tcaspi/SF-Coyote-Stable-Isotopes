@@ -21,14 +21,13 @@ theme_custom <- function() {
         plot.background = element_rect(fill = "white", color = NA),
         plot.title = element_text(size = 7),
         strip.background = element_blank(),
-        axis.text.y = element_text(size=5),
-        axis.text.x = element_text(size=10),
-        axis.title.y = element_text(size=12),
-        axis.title.x = element_text(size=12))}
+        axis.text.y = element_text(size=10, color="black"),
+        axis.text.x = element_text(size=10, color="black"),
+        axis.title.y = element_text(size=12, color="black"),
+        axis.title.x = element_text(size=12, color="black"))}
 ```
 
-
-The goal of this analysis is to model the relationship between isotope values and impervious surface cover for coyotes in San Francisco that are assigned to family groups.
+The goal of this analysis is to model the relationship between isotope values and impervious surface cover for coyotes in San Francisco that are assigned to territories.
 
 # Load data and prepare data frame
 
@@ -234,7 +233,7 @@ ggarrange(
   labels = c("a", "b"),
   common.legend=F,
   align = "hv",
-  label.x = 0.125,
+  label.x = 0.16,
   widths=c(1,1), heights=c(1,1))
 
 # ggsave("Figures/FigureS5.png",dpi=600, width=8, height=3)
