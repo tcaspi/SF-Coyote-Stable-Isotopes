@@ -4,7 +4,7 @@ This repository contains all raw data, plots and scripts for the data analysis i
 
 Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript.
 
-## Data files
+## Data Files
 
 In the `Data` folder, you will find a number of files:
 
@@ -48,7 +48,7 @@ In the `Data` folder, you will find a number of files:
 > `whisker_metadata.csv`: csv file containing metadata for whisker samples.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
-|------------|------------------------------------------------------------|
+|----------------|--------------------------------------------------------|
 | whisker        | Label for sample                                                                                                                                                                                                                                                                                                       |
 | date_clean     | Date sample was rinsed                                                                                                                                                                                                                                                                                                 |
 | date_chopped   | Date sample was chopped                                                                                                                                                                                                                                                                                                |
@@ -69,13 +69,13 @@ In the `Data` folder, you will find a number of files:
 > `individual_ids.csv`
 
 | Column     | Description                                                               |
-|---------------|---------------------------------------------------------|
+|-----------------|-------------------------------------------------------|
 | individual | Individual coyote labels that match up with whisker data                  |
 | sfcoy      | Unique name for each individual identified by genotyping in San Francisco |
 | sex        | Sex as identified by genotyping                                           |
 | group      | Family group assignment                                                   |
 
-> `territory_covs.csv`: metadata associated with coyote fecal samples analyzed in Caspi, T., Serrano, M.G., Vanderzwan, S.L., Kessler, J., Schell, C.J. & Sacks, B.N. (2025). Impervious surface cover and number of restaurants shape diet variation in an urban carnivore. *Ecosphere*, 16, e70152.
+> `scat_metadata.csv`: metadata associated with coyote fecal samples analyzed in Caspi, T., Serrano, M.G., Vanderzwan, S.L., Kessler, J., Schell, C.J. & Sacks, B.N. (2025). Impervious surface cover and number of restaurants shape diet variation in an urban carnivore. *Ecosphere*, 16, e70152.
 
 | Column     | Description                                          |
 |------------|------------------------------------------------------|
@@ -98,7 +98,7 @@ In the `Data` folder, you will find a number of files:
 > `territory_covs.csv`
 
 | Column           | Description                                                 |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | group            | Coyote family group/territory                               |
 | lat              | Location of territory center point - latitude               |
 | long             | Location of territory center point - longitude              |
@@ -130,7 +130,9 @@ The scripts for the full workflow are available as R and Rmd files in the `Code`
 
 -   `Mixing_Models.Rmd`: this script uses the *MixSIAR* package to construct Bayesian-based stable isotope mixing models to estimate mean proportions of different dietary sources. These models are computationally intensive and take a long time to run. Thus, it is recommended to run them on an HPC cluster rather than on a personal laptop.
 
-## Clean data
+-   `Prey_Map_Supp_Info.Rmd`: this script makes a map of prey sampling locations and generates Supplementary Figure 1, an isotope biplot of all food sources.
+
+## Clean Data
 
 In the `Cleaned_Data` folder, you will find a number of cleaned up files that are generated within the R scripts described above.
 
@@ -154,7 +156,7 @@ For MixSIAR models:
 >
 > -   `coyote_discrimination_three.csv`: generated as an intermediate file in the `Mixing_Models.Rmd` script for the three-source mixing model.
 
-## Model output
+## Model Output
 
 The output of the models are not stored on GitHub in the `Model_Output` folder due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (doi: XXXX). The `.rds` that can be downloaded from Dryad are described below.
 

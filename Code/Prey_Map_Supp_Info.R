@@ -30,7 +30,7 @@ bbox <- c(left = -122.52, right = -122.35, bottom = 37.7, top = 37.82)
 
 study_map <- get_stadiamap(bbox, zoom = 14, maptype = "stamen_terrain", scale=2)
 
-ggmap(study_map)+
+prey.map <- ggmap(study_map)+
   geom_jitter(data = prey, aes(x = long, y = lat, color = species), 
              size = 3, alpha=0.7, position=position_jitter(width=.002, height = .002)) +
   scale_color_manual(values=c( "#D81B60","#004D40", "#3E6C92",  "#120961", "grey"),
@@ -54,7 +54,7 @@ ggmap(study_map)+
   labs(caption = missing_caption) +
   theme(plot.caption = element_text(size = 6, hjust = 1, face = "italic"))
 
-# ggsave("Figures/prey_map.png", dpi=600, height=5, width=5.7)
+# ggsave(prey.map, "Figures/prey_map.png", dpi=600, height=5, width=5.7)
 
 ### ISOSPACE PLOT OF ALL PREY DATA ### 
 
