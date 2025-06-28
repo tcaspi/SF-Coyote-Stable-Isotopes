@@ -262,7 +262,7 @@ posterior_type_C <- posterior_type_C %>%
     dplyr::ungroup()
 
 # Plot
-fig.3a <- ggplot() +
+fig.2e <- ggplot() +
   geom_errorbar(data = posterior_type_C[!duplicated(posterior_type_C$whisker),], 
                 aes(y = mean_C, ymin = lower, ymax = upper, 
                     x= reorder(as.factor(whisker), mean_C), color=urban),
@@ -310,7 +310,7 @@ posterior_var_C <- posterior_var_C %>%
   dplyr::ungroup()
 
 # plot
-fig.3c <- ggplot() +
+fig.2c <- ggplot() +
   geom_errorbar(data = posterior_var_C[!duplicated(posterior_var_C$whisker),], 
                 aes(y = mean_rIIV_tf, ymin = lower, ymax = upper, 
                     x= reorder(as.factor(whisker), mean_rIIV_tf), color=urban),
@@ -366,7 +366,7 @@ posterior_type_N <- posterior_type_N %>%
     dplyr::ungroup()
 
 # Plot
-fig.3b <- ggplot() +
+fig.2f <- ggplot() +
   geom_errorbar(data = posterior_type_N[!duplicated(posterior_type_N$whisker),], 
                 aes(y = mean_N, ymin = lower, ymax = upper, 
                     x= reorder(as.factor(whisker), mean_N), color=urban),
@@ -415,7 +415,7 @@ posterior_var_N <- posterior_var_N %>%
   dplyr::ungroup()
 
 # plot
-fig.3d <- ggplot() +
+fig.2d <- ggplot() +
   geom_errorbar(data = posterior_var_N[!duplicated(posterior_var_N$whisker),], 
                 aes(y = mean_rIIV_tf, ymin = lower, ymax = upper, 
                     x= reorder(as.factor(whisker), mean_rIIV_tf), color=urban),
@@ -438,13 +438,13 @@ To complete figure 3, fig 3e and 3f must be generated in the SIBER.Rmd file.
 
 ```{r}
 ggarrange(
-  fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
+  fig.2a, fig.2b, fig.2c, fig.2d, fig.2e, fig.2f,
   ncol = 2, nrow = 3, 
   labels = c("a", "b", "c", "d", "e", "f"),
   label.x = 0.155,
   align = "hv")
 
-# ggsave("Figures/Figure3.png",dpi=600, height=7, width=8.5)
+# ggsave("Figures/Figure2.png",dpi=600, height=8, width=8.5)
 ```
 
 

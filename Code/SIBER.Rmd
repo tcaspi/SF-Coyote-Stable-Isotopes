@@ -123,16 +123,14 @@ SEA.B.pops <- as.data.frame(SEA.B) %>%
   pivot_longer(cols = everything(), names_to = "Site", values_to = "Value") %>% 
   mutate(Site = factor(Site, levels = c("San Francisco", "Marin County")))
   
-fig.3e <- ggplot(SEA.B.pops, aes(x = Site, y = Value, fill = Site, color=Site)) +
+fig.2a <- ggplot(SEA.B.pops, aes(x = Site, y = Value, fill = Site, color=Site)) +
     geom_boxplot(alpha = 0.6, linewidth=0.2, outlier.shape=1) +
-    labs(y = "Bayesian Standard Ellipse Area", x = "Region") +
+    labs(y = expression(SEA[b]), x = "Region") +
     scale_fill_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#9292B1")) +
     scale_color_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#9292B1")) +
     scale_y_continuous(limits=c(0,20), breaks=c(0,5,10,15,20), expand = c(0, 0)) +
     theme_custom() +
     theme(legend.position = "none")
-
-fig.3e
 ```
 
 # Comparing SF and Marin (individual-level)
@@ -194,34 +192,32 @@ results_df %>%
             seSEAb = std.error(SEAb))
 
 # Plot
-fig.3f <- ggplot(data=results_df) +
+fig.2b <- ggplot(data=results_df) +
   geom_errorbar(aes(y = SEAb, ymin = lower, ymax = upper, 
                     x= reorder(as.factor(individual), SEAb), color=urban),
                 width = 0, linewidth=0.5) +
   geom_point(aes(y = SEAb,  x= reorder(as.factor(individual), SEAb)),
              size = 0.5, color = "black") +
-  labs(x = "Individual", y = "Bayesian Standard Ellipse Area") +
+  labs(x = "Individual", y = expression(SEA[b])) +
   scale_y_continuous(limits=c(0,10.2), breaks=c(0,2,4,6,8,10), expand = c(0, 0)) +
   theme_custom() +
   scale_color_manual(values = c("urban" = "#C0362D", "nonurban" = "#9292B1")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
-
-fig.3f
 ```
 
 Arrange plots for Figure 3. Note - to complete figure 3, fig 3a, 3b, 3c, and 3d must be generated in the DHGLMs.Rmd file.
 
 ```{r}
 ggarrange(
-  fig.3a, fig.3b, fig.3c, fig.3d, fig.3e, fig.3f,
+  fig.2a, fig.2b, fig.2c, fig.2d, fig.2e, fig.2f,
   ncol = 2, nrow = 3, 
   labels = c("a", "b", "c", "d", "e", "f"),
   label.x = 0.155,
   align = "hv")
 
-# ggsave("Figures/Figure3.png",dpi=600, height=7, width=8.5)
+ ggsave("Figures/Figure2.png",dpi=600, height=8, width=8.5)
 ```
 
 
