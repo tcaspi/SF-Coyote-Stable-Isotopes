@@ -273,7 +273,7 @@ fig.2e <- ggplot() +
   labs(x = "Individual", y = expression("Mean"~delta^{13}~C)) +
   scale_y_continuous(limits=c(-24.3,-15), breaks=seq(-24,-15,by=1)) +
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#8686DA")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -321,7 +321,7 @@ fig.2c <- ggplot() +
   labs(x = "Individual", y = expression("rIIV"~delta^{13}~C)) +
   scale_y_continuous(limits=c(0,3), breaks=c(0,1,2,3))+
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#8686DA")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -377,7 +377,7 @@ fig.2f <- ggplot() +
   labs(x = "Individual", y = expression("Mean"~delta^{15}~N)) +
   scale_y_continuous(limits=c(6,12.1), breaks=c(6,7,8,9,10,11,12)) +
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#8686DA")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
@@ -426,7 +426,7 @@ fig.2d <- ggplot() +
   labs(x = "Individual", y = expression("rIIV"~delta^{15}~N)) +
   scale_y_continuous(limits=c(0,3), breaks=c(0,1,2,3))+
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#9292B1")) +
+  scale_color_manual(values = c("urban" = "#c0362d", "nonurban" = "#8686DA")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
