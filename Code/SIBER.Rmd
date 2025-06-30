@@ -126,8 +126,8 @@ SEA.B.pops <- as.data.frame(SEA.B) %>%
 fig.2a <- ggplot(SEA.B.pops, aes(x = Site, y = Value, fill = Site, color=Site)) +
     geom_boxplot(alpha = 0.6, linewidth=0.2, outlier.shape=1) +
     labs(y = expression(SEA[b]), x = "Region") +
-    scale_fill_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#9292B1")) +
-    scale_color_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#9292B1")) +
+    scale_fill_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#8686DA")) +
+    scale_color_manual(values = c("San Francisco" = "#C0362D", "Marin County" = "#8686DA")) +
     scale_y_continuous(limits=c(0,20), breaks=c(0,5,10,15,20), expand = c(0, 0)) +
     theme_custom() +
     theme(legend.position = "none")
@@ -201,7 +201,7 @@ fig.2b <- ggplot(data=results_df) +
   labs(x = "Individual", y = expression(SEA[b])) +
   scale_y_continuous(limits=c(0,10.2), breaks=c(0,2,4,6,8,10), expand = c(0, 0)) +
   theme_custom() +
-  scale_color_manual(values = c("urban" = "#C0362D", "nonurban" = "#9292B1")) +
+  scale_color_manual(values = c("urban" = "#C0362D", "nonurban" = "#8686DA")) +
   theme(legend.position = "none",
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())

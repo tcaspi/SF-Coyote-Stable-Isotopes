@@ -54,7 +54,7 @@ fig.S3 <- data_clean %>%
   ggplot(aes(x=C_raw, y=N_raw, color=urban)) +
   geom_point(size=1, alpha=0.4)+
   stat_ellipse(level=0.95)+
-  scale_color_manual(values=c("#9292B1", "#c0362d"))+
+  scale_color_manual(values=c("#8686DA", "#c0362d"))+
   xlab(expression({delta}^13*C))+
   ylab(expression({delta}^15*N))+
   scale_x_continuous(limits=c(-25.2,-15), breaks=seq(-25,-15,by=1))+
@@ -72,14 +72,14 @@ fig3a <- data_average %>%
   geom_errorbar(aes(ymin=N_avg-N_se, ymax=N_avg+N_se, color=urban), alpha=0.7)+
   geom_errorbar(aes(xmin=C_avg-C_se, xmax=C_avg+C_se, color=urban), alpha=0.7)+
   geom_point(size=0.4,alpha=0.7)+
-  scale_color_manual(values=c("#9292B1", "#c0362d"), labels=c("Nonurban", "Urban"))+
+  scale_color_manual(values=c("#8686DA", "#c0362d"), labels=c("Nonurban", "Urban"))+
   xlab(expression({delta}^13*C))+
   ylab(expression({delta}^15*N))+
   scale_x_continuous(limits=c(-24,-15), breaks=seq(-24,-15,by=1))+
   scale_y_continuous(limits=c(6.5,12), breaks=seq(7,12,by=1))+
   theme_custom()+
   theme(legend.position = "bottom", legend.title = element_blank(),
-        legend.key.height = unit(0.01, "cm"))
+        legend.key.height = unit(0.01, "cm"), legend.text = element_text(size=9))
 
 fig3a
 
@@ -119,7 +119,7 @@ fig.3b <- data_with_centers %>%
   scale_y_continuous(limits=c(6.5,10), breaks=seq(7,10,by=1)) +
   theme_custom() +
   theme(legend.position = "bottom",
-        legend.text = element_text(size=5),
+        legend.text = element_text(size=9),
         legend.key.size = unit(0.1, 'cm'),
         legend.title = element_blank())
 
@@ -130,14 +130,14 @@ fig.3b
 # Combine plots
 ggarrange(
   fig3a, fig.3b,
-  ncol = 1, nrow = 2, 
+  ncol = 2, nrow = 1, 
   labels = c("a", "b"),
   common.legend=F,
   align = "hv",
-  label.x = 0.13,
+  label.x = 0.11,
   legend="bottom")
 
- ggsave("Figures/Figure3.png",dpi=600, width=4, height=6.5)
+# ggsave("Figures/Figure3.png",dpi=600, width=10, height=4)
  
 # Plot all SF individuals, highlighting repeatedly sampled individuals
 fig.S2 <- data_average_sf %>% 

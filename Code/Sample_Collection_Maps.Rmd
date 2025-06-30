@@ -133,10 +133,10 @@ p.map <- ggplot() +
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.title = element_blank(),
-        legend.position = c(0.13, 0.12),
+        legend.position = c(0.18, 0.125),
         legend.background = element_rect(fill = "white", color = "black", linewidth = 0.5), 
         legend.box.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 6),  # Make legend text smaller
+        legend.text = element_text(size = 10),  # Make legend text smaller
         legend.key.size = unit(0.2, "cm"),  # Reduce legend key (color box) size
         legend.spacing.y = unit(0.05, "cm"),
         legend.key.height = unit(0.25, "cm"),
@@ -223,10 +223,10 @@ p.scat <- ggplot() +
         axis.title.x = element_blank(),
         axis.title.y = element_blank(),
         legend.title = element_blank(),
-        legend.position = c(0.11, 0.18),
+        legend.position = c(0.15, 0.21),
         legend.background = element_rect(fill = "white", color = "black", linewidth = 0.5), 
         legend.box.background = element_rect(fill = "white", color = "black"),
-        legend.text = element_text(size = 6),  # Make legend text smaller
+        legend.text = element_text(size = 10),  # Make legend text smaller
         legend.key.size = unit(0.2, "cm"),  # Reduce legend key (color box) size
         legend.spacing.y = unit(0.05, "cm"),
         legend.key.height = unit(0.25, "cm"),

@@ -363,24 +363,24 @@ mean.names <- c("Chicken", "Cat Food", "Medium-Sized \nMammals", "Rats", "Fruit"
 
 # plot
 fig.4b <- ind.props_plotting_all %>%
-  ggplot(aes(x=reorder(whisker, group), y=Proportion, fill=Source)) +
-  geom_col()+
-  scale_y_continuous(expand = c(0,0))+
-  facet_grid(~group, scales = "free", space = "free",
-             labeller = labeller(group = label_wrap_gen(width = 1)))+
-  ylab("Proportion") + xlab(NULL)+
-  theme_custom()+
-  scale_fill_manual(values=cols.paired, labels=mean.names)+
-  scale_x_discrete(labels = whisker_to_sfcoy)+
-  theme(axis.text.x = element_text(angle = 45, vjust = 1.15, hjust=1, size=4.5),
-        axis.ticks.x = element_blank(),
-        strip.text.x = element_text(size = 3, angle = 0, hjust=0.5, vjust=.5),
-        strip.background.x = element_blank(),
-        legend.title=element_blank(),
-        legend.text = element_text(size = 8),
-        legend.key.size = unit(0.5, "cm"),
-        legend.position = "bottom")+
-        guides(fill = guide_legend(nrow = 1))
+    ggplot(aes(y = reorder(whisker, group), x = Proportion, fill = Source)) +
+    geom_col() +
+    scale_x_continuous(expand = c(0, 0)) +
+    facet_grid(group ~ ., scales = "free", space = "free",
+               labeller = labeller(group = label_wrap_gen(width = 1))) +
+    xlab("Proportion") + ylab(NULL) +
+    theme_custom() +
+    scale_fill_manual(values = cols.paired, labels = mean.names) +
+    scale_y_discrete(labels = whisker_to_sfcoy) +
+    theme(axis.text.y = element_text(size = 4),
+          axis.ticks.y = element_blank(),
+          strip.text.y = element_text(size = 4, angle = 0, hjust = 0.5, vjust = 0.5),
+          strip.background.y = element_blank(),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 7),
+          legend.key.size = unit(0.5, "cm"),
+          legend.position = "bottom") +
+    guides(fill = guide_legend(nrow = 1))
 
 fig.4b
 ```
@@ -594,7 +594,8 @@ fig.4c <- ggplot() +
                     values=c("#db8c87", "#8C8076","#65948d" ),
                     labels=c("Anthropogenic \nFood", "High-Trophic \nFood", "Low-Trophic \nFood"),
                     guide = guide_legend(override.aes = list(alpha = 1)))+
-  theme(legend.position = "none")
+  theme(legend.position = "bottom",
+        legend.text = element_text(size=7),legend.key.size = unit(0.5, "cm"))
 
 fig.4c
 ```
@@ -602,23 +603,20 @@ fig.4c
 # Arrange figure:
 
 ```{r}
-library(cowplot)
+# Combine 4a and 4c vertically first
+left_column <- ggarrange(fig.4a, fig.4c,
+                         ncol = 1, 
+                         nrow = 2,
+                         align = "v")
 
-# Create top row with proper alignment
-top_row <- plot_grid(fig.4a, fig.4c, 
-                     ncol = 2, labels = c("a", "c"), 
-                     label_x = 0.135, align = "hv", axis = "tblr")
+# now add figure 4b
+fig.4 <- ggarrange(left_column, fig.4b,
+                   ncol = 2, 
+                   widths = c(1, 1.5))
 
-# Create bottom row (full width)
-bottom_row <- plot_grid(fig.4b, ncol = 1, label_x = 0.135)
+fig.4
 
-# Stack top and bottom row
-Fig.4 <- plot_grid(top_row, bottom_row, 
-                        ncol = 1, rel_heights = c(1, 1.5))
-
-Fig.4
-
-# ggsave("Figures/Figure4.png", dpi=600, height=6, width=8.5)
+# ggsave("Figures/Figure4.png", dpi=600,height=6, width=8.2)
 ```
 
 
