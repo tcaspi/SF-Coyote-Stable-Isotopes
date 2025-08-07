@@ -579,7 +579,7 @@ ggarrange(
   label.x = 0.135,
   align = "hv")
 
-ggsave("Figures/DHGLM_stratified.png",dpi=600, height=7, width=8)
+# ggsave("Figures/DHGLM_stratified.png",dpi=600, height=7, width=8)
 ```
 
 # RInSp

@@ -68,7 +68,7 @@ data_clean <- joined %>%
   # Remove samples without sex data
   filter(!is.na(sex))
 
-write.csv(data_clean, "Cleaned_Data/cleaned_whiskerdata.csv", row.names=F)  
+# write.csv(data_clean, "Cleaned_Data/cleaned_whiskerdata.csv", row.names=F)  
 
 
 # Sample counts
@@ -92,7 +92,7 @@ data_average <- data_clean %>%
   left_join(metadata, by="whisker") %>% 
   left_join(ids, by="individual")
 
-write.csv(data_average, "Cleaned_Data/averaged_whiskerdata.csv", row.names=F)
+# write.csv(data_average, "Cleaned_Data/averaged_whiskerdata.csv", row.names=F)
 
 # Sample counts
 table(data_average$urban) # 10 marin, 97 sf

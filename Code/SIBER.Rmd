@@ -217,7 +217,7 @@ ggarrange(
   label.x = 0.155,
   align = "hv")
 
- ggsave("Figures/Figure2.png",dpi=600, height=8, width=8.5)
+# ggsave("Figures/Figure2.png",dpi=600, height=8, width=8.5)
 ```
 
 
