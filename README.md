@@ -1,8 +1,8 @@
 # SF-Coyote-Stable-Isotopes
 
-This repository contains all raw data, plots and scripts for the data analysis implemented in Caspi et al. (2025) (In Preparation) titled: *Urbanization facilitates intrapopulation niche diversity in a generalist carnivore* and published in XXXXX.
+This repository contains all raw data, plots and scripts for the data analysis implemented in Caspi *et al.* (2025) titled: *Urbanization facilitates intrapopulation dietary niche diversity in a generalist carnivore* and published in *Ecology Letters*.
 
-Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript.
+Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript. Theses files can be accessed by downloading the `SF-Coyote-Stable-Isotopes-main.zip`. 
 
 ## Data Files
 
@@ -48,7 +48,7 @@ In the `Data` folder, you will find a number of files:
 > `whisker_metadata.csv`: csv file containing metadata for whisker samples.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
-|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|------------------------------------------------------------|
 | whisker        | Label for sample                                                                                                                                                                                                                                                                                                       |
 | date_clean     | Date sample was rinsed                                                                                                                                                                                                                                                                                                 |
 | date_chopped   | Date sample was chopped                                                                                                                                                                                                                                                                                                |
@@ -69,7 +69,7 @@ In the `Data` folder, you will find a number of files:
 > `individual_ids.csv`
 
 | Column     | Description                                                               |
-|------------|---------------------------------------------------------------------------|
+|---------------|---------------------------------------------------------|
 | individual | Individual coyote labels that match up with whisker data                  |
 | sfcoy      | Unique name for each individual identified by genotyping in San Francisco |
 | sex        | Sex as identified by genotyping                                           |
@@ -98,7 +98,7 @@ In the `Data` folder, you will find a number of files:
 > `territory_covs.csv`
 
 | Column           | Description                                                 |
-|------------------|-------------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | group            | Coyote family group/territory                               |
 | lat              | Location of territory center point - latitude               |
 | long             | Location of territory center point - longitude              |
@@ -166,7 +166,7 @@ The output of the models are not stored on GitHub in the `Model_Output` folder d
 
     > `jags.full.rds`: model output for the six-source, categorical effect Bayesian-based stable isotope mixing model. This file is generated in the `Mixing_Models.Rmd` script.
     >
-    > `jags.ISA.rds`: model output for the three-source, continuous effect Bayesian-based stable isotope mixing model. This file is generated in the `Mixing_Models.Rmd` script.
+    > `jags.ISA.rds` and `jags.ISA.null.rds`: model output for the three-source, continuous effect Bayesian-based stable isotope mixing model and a comparative null model. These files are generated in the `Mixing_Models.Rmd` script.
 
     </div>
 
