@@ -2,7 +2,7 @@
 
 This repository contains all raw data, plots and scripts for the data analysis implemented in Caspi *et al.* (2025) titled: *Urbanization facilitates intrapopulation dietary niche diversity in a generalist carnivore* and published in *Ecology Letters*.
 
-Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript. Theses files can be accessed by downloading the `SF-Coyote-Stable-Isotopes-main.zip`. 
+Please find below a description of all raw and clean data sets and the scripts used to clean the raw data, run the models, and create the figures presented in the manuscript. Theses files can be accessed by downloading the `SF-Coyote-Stable-Isotopes-main.zip` file. 
 
 ## Data Files
 
