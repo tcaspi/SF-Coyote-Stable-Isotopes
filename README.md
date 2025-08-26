@@ -114,7 +114,7 @@ In the `Data` folder, you will find a number of files:
 
 ## Scripts
 
-The scripts for the full workflow are available as R and Rmd files in the `Code` folder. All files are R scripts that were run in R version 4.2.1. The output of the models are not stored on github due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (doi: XXXX).
+The scripts for the full workflow are available as R and Rmd files in the `Code` folder. All files are R scripts that were run in R version 4.2.1. The output of the models are not stored on GitHub due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (DOI: 10.5061/dryad.b5mkkwhq8).
 
 -   `Sample_Collection_Maps.Rmd`: this script generates a study site map indicating where samples were collected.
 
