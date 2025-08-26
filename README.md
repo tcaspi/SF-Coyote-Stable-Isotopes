@@ -162,7 +162,7 @@ For MixSIAR models:
 
 ## Model Output
 
-The output of the models are not stored on GitHub in the `Model_Output` folder due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (doi: XXXX). The `.rds` that can be downloaded from Dryad are described below.
+The output of the models are not stored on GitHub in the `Model_Output` folder due to the large file sizes, but can be generated on your own device, or are available on Dryad Digital Repository (DOI: 10.5061/dryad.b5mkkwhq8). The `.rds` that can be downloaded from Dryad are described below.
 
 -   <div>
 
