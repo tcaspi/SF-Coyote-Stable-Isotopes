@@ -13,10 +13,10 @@ In the `Data` folder, you will find a number of files:
 | Column     | Description                                                |
 |------------|------------------------------------------------------------|
 | SampleID   | Label for whisker segment                                  |
-| C_raw      | Raw d13C value                                             |
-| N_raw      | Raw d15N values                                            |
-| C_total    | Total C                                                    |
-| N_total    | Total N                                                    |
+| C_raw      | Raw d13C value; NA values represent missing data           |
+| N_raw      | Raw d15N values; NA values represent missing data          |
+| C_total    | Total C; NA values represent missing data                  |
+| N_total    | Total N; NA values represent missing data                  |
 | individual | Identifier for individual coyote                           |
 | whisker    | Identifier for whisker                                     |
 | tray       | Tray number sample was processed on                        |
@@ -24,17 +24,19 @@ In the `Data` folder, you will find a number of files:
 
 > `prey_data_si.csv`: csv file containing the raw isotopic data for dietary sources.
 
-| Column   | Description                         |
-|----------|-------------------------------------|
-| SampleID | Label for sample                    |
-| d13C     | Raw d13C value                      |
-| TotalC   | Total C                             |
-| d15N     | Raw d15N value                      |
-| TotalN   | Total N                             |
-| tray     | Tray number sample was processed on |
-| well     | Well sample was processed in        |
-| material | Tissue type (hair, feather, etc.)   |
-| species  | Species sample came from            |
+| Column   | Description                                                                                                                           |
+|-----------------|-------------------------------------------------------|
+| SampleID | Label for sample                                                                                                                      |
+| d13C     | Raw d13C value; NA values represent missing data                                                                                      |
+| TotalC   | Total C; NA values represent missing data                                                                                             |
+| d15N     | Raw d15N value; NA values represent missing data                                                                                      |
+| TotalN   | Total N; NA values represent missing data                                                                                             |
+| tray     | Tray number sample was processed on                                                                                                   |
+| well     | Well sample was processed in                                                                                                          |
+| material | Tissue type (hair, feather, etc.)                                                                                                     |
+| species  | Species sample came from                                                                                                              |
+| lat      | Latitude of sample location; NA for vertebrate prey represent missing location data; NA for freeze-dried meat means "non-applicable"  |
+| long     | Longitude of sample location; NA for vertebrate prey represent missing location data; NA for freeze-dried meat means "non-applicable" |
 
 > `fastfood_si.csv`: csv file containing raw data for chicken and beef samples from San Francisco taken from A.H. Jahren & R.A. Kraft, Carbon and nitrogen stable isotopes in fast food: Signatures of corn and confinement, Proc. Natl. Acad. Sci. U.S.A. 105 (46) 17855-17860, <https://doi.org/10.1073/pnas.0809870105> (2008).
 
@@ -45,10 +47,10 @@ In the `Data` folder, you will find a number of files:
 | d13C     | Raw d13C value             |
 | d15N     | Raw d15N value             |
 
-> `whisker_metadata.csv`: csv file containing metadata for whisker samples.
+> `whisker_metadata.csv`: csv file containing metadata for whisker samples\*.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
-|------------|------------------------------------------------------------|
+|----------------|--------------------------------------------------------|
 | whisker        | Label for sample                                                                                                                                                                                                                                                                                                       |
 | date_clean     | Date sample was rinsed                                                                                                                                                                                                                                                                                                 |
 | date_chopped   | Date sample was chopped                                                                                                                                                                                                                                                                                                |
@@ -66,39 +68,41 @@ In the `Data` folder, you will find a number of files:
 | sex            | Sex of coyote                                                                                                                                                                                                                                                                                                          |
 | dead           | Sample collection type: roadkill = coyote killed by vehicle strike; sick.euth = coyote euthanized for medical reasons; live cap = live capture; euthanized = coyote lethally removed by wildlife officials for aggression; sick.release = sick coyote treated and released; unknown = no information on cause of death |
 
+*\*NA values in any column represent missing data*
+
 > `individual_ids.csv`
 
-| Column     | Description                                                               |
-|---------------|---------------------------------------------------------|
-| individual | Individual coyote labels that match up with whisker data                  |
-| sfcoy      | Unique name for each individual identified by genotyping in San Francisco |
-| sex        | Sex as identified by genotyping                                           |
-| group      | Family group assignment                                                   |
+| Column     | Description                                                                                          |
+|-----------------|-------------------------------------------------------|
+| individual | Individual coyote labels that match up with whisker data                                             |
+| sfcoy      | Unique name for each individual identified by genotyping in San Francisco                            |
+| sex        | Sex as identified by genotyping                                                                      |
+| group      | Family group assignment; NA values represent individuals that could not be assigned to family groups |
 
 > `scat_metadata.csv`: metadata associated with coyote fecal samples analyzed in Caspi, T., Serrano, M.G., Vanderzwan, S.L., Kessler, J., Schell, C.J. & Sacks, B.N. (2025). Impervious surface cover and number of restaurants shape diet variation in an urban carnivore. *Ecosphere*, 16, e70152.
 
-| Column     | Description                                          |
-|------------|------------------------------------------------------|
-| SampleID   | Coyote family group/territory                        |
-| Replicate  | Whether or not a PCR replicate was conducted         |
-| Name       | Unique field identifier for the sample               |
-| Site       | Location sample was collected                        |
-| Initials   | Initials of the person who collected the sample      |
-| Year       | Year sample was collected                            |
-| Month      | Month sample was collected                           |
-| Day        | Day sample was collected                             |
-| Lat        | Latitude of sample location                          |
-| Long       | Longitude of sample location                         |
-| Sus.sp     | Suspected species ID at the time of collection       |
-| Genotype   | Whether or not the sample was successfully genotyped |
-| Geno.Sp    | Species identification from genotyping               |
-| Individual | Individual coyote sample was assigned to             |
-| Cytb_Sp    | Species identification from cytochrome b sequencing  |
+| Column     | Description                                                                                                |
+|------------|------------------------------------------------------------------------------------------------------------|
+| SampleID   | Coyote family group/territory                                                                              |
+| Replicate  | Whether or not a PCR replicate was conducted                                                               |
+| Name       | Unique field identifier for the sample                                                                     |
+| Site       | Location sample was collected                                                                              |
+| Initials   | Initials of the person who collected the sample                                                            |
+| Year       | Year sample was collected                                                                                  |
+| Month      | Month sample was collected                                                                                 |
+| Day        | Day sample was collected                                                                                   |
+| Lat        | Latitude of sample location                                                                                |
+| Long       | Longitude of sample location                                                                               |
+| Sus.sp     | Suspected species ID at the time of collection                                                             |
+| Genotype   | Whether or not the sample was successfully genotyped                                                       |
+| Geno.Sp    | Species identification from genotyping; NA means "non-applicable", sample was not genotyped successfully   |
+| Individual | Individual coyote sample was assigned to; NA means "non-applicable", sample was not genotyped successfully |
+| Cytb_Sp    | Species identification from cytochrome b sequencing; NA means "non-applicable", Cytb not run on sample     |
 
 > `territory_covs.csv`
 
 | Column           | Description                                                 |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | group            | Coyote family group/territory                               |
 | lat              | Location of territory center point - latitude               |
 | long             | Location of territory center point - longitude              |
@@ -189,7 +193,3 @@ The output of the models are not stored on GitHub in the `Model_Output` folder d
     > `dhglm_N_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
 
     </div>
-
-## Figures
-
-In the folder `Figures` you will find `.png` files for figures in the manuscript, which are generated by the scripts above.
