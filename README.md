@@ -25,7 +25,7 @@ In the `Data` folder, you will find a number of files:
 > `prey_data_si.csv`: csv file containing the raw isotopic data for dietary sources.
 
 | Column   | Description                                                                                                                           |
-|-----------------|-------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | SampleID | Label for sample                                                                                                                      |
 | d13C     | Raw d13C value; NA values represent missing data                                                                                      |
 | TotalC   | Total C; NA values represent missing data                                                                                             |
@@ -50,7 +50,7 @@ In the `Data` folder, you will find a number of files:
 > `whisker_metadata.csv`: csv file containing metadata for whisker samples\*.
 
 | Column         | Description                                                                                                                                                                                                                                                                                                            |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | whisker        | Label for sample                                                                                                                                                                                                                                                                                                       |
 | date_clean     | Date sample was rinsed                                                                                                                                                                                                                                                                                                 |
 | date_chopped   | Date sample was chopped                                                                                                                                                                                                                                                                                                |
@@ -73,7 +73,7 @@ In the `Data` folder, you will find a number of files:
 > `individual_ids.csv`
 
 | Column     | Description                                                                                          |
-|-----------------|-------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | individual | Individual coyote labels that match up with whisker data                                             |
 | sfcoy      | Unique name for each individual identified by genotyping in San Francisco                            |
 | sex        | Sex as identified by genotyping                                                                      |
@@ -82,7 +82,7 @@ In the `Data` folder, you will find a number of files:
 > `scat_metadata.csv`: metadata associated with coyote fecal samples analyzed in Caspi, T., Serrano, M.G., Vanderzwan, S.L., Kessler, J., Schell, C.J. & Sacks, B.N. (2025). Impervious surface cover and number of restaurants shape diet variation in an urban carnivore. *Ecosphere*, 16, e70152.
 
 | Column     | Description                                                                                                |
-|------------|------------------------------------------------------------------------------------------------------------|
+|--------------|----------------------------------------------------------|
 | SampleID   | Coyote family group/territory                                                                              |
 | Replicate  | Whether or not a PCR replicate was conducted                                                               |
 | Name       | Unique field identifier for the sample                                                                     |
@@ -102,7 +102,7 @@ In the `Data` folder, you will find a number of files:
 > `territory_covs.csv`
 
 | Column           | Description                                                 |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | group            | Coyote family group/territory                               |
 | lat              | Location of territory center point - latitude               |
 | long             | Location of territory center point - longitude              |
@@ -193,3 +193,7 @@ The output of the models are not stored on GitHub in the `Model_Output` folder d
     > `dhglm_N_skew.rds`: model output for the d13C DHGLM. This file is generated in the `DHGLMs.Rmd` script.
 
     </div>
+
+## Figures
+
+This folder contains figures generated from the `Code` folder.
